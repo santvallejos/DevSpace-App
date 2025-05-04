@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "electron": "^36.1.0"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm:dev:*\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:api": "cd api && dotnet run",
+    "dev:electron": "cd electron && electron ."
+  }
+}
