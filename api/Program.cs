@@ -1,4 +1,11 @@
-// program.cs (punto de entrada de la API)
+using System.ComponentModel.Design;
+using api.Data.Models;
+using api.Data.Repositories.Collection;
+using api.Data.Repositories.Interfaces;
+using api.Services;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +14,19 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddCors(); // permitimos configurar CORS
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<FolderServices>();
+builder.Services.AddScoped<ResourceServices>();
+builder.Services.AddSwaggerGen();
+
+//Configuracion de MongoDB
+builder.Services.AddSingleton<IMongoClient>(new MongoClient("mongodb://localhost:27017/DevSpace"));
+builder.Services.AddSingleton<IMongoDatabase>(sp => sp.GetService<IMongoClient>()!.GetDatabase("Unity"));
+
+//Repositorios
+builder.Services.AddScoped<IFolderCollection, FolderCollection>();
+builder.Services.AddScoped<IResourceCollection, ResourceCollection>();
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -22,35 +42,13 @@ app.UseCors(policy =>
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
