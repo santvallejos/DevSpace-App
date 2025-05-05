@@ -1,4 +1,5 @@
-﻿using api.Data.Models;
+﻿using System.Runtime.CompilerServices;
+using api.Data.Models;
 using api.Data.Repositories.Interfaces;
 using api.Infrastructure.Dto;
 using api.Services;
@@ -135,6 +136,19 @@ namespace api.Controllers
             try
             {
                 return Ok(await _resourceCollection.GetResourcesByFolderId(folderId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("recents")]
+        public async Task<IActionResult> GetResourcesRecents()
+        {
+            try
+            {
+                return Ok(await _resourceServices.GetResourcesRecentsAsync());
             }
             catch (Exception ex)
             {

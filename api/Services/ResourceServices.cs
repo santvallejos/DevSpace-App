@@ -20,6 +20,17 @@ namespace api.Services
             _folderCollection = folderCollection;
         }
 
+        public async Task<List<Resource>> GetResourcesRecentsAsync()
+        {
+            //Obtengo todos los recursos
+            var resources = await _resourceCollection.GetResources();
+            //Ordeno por fecha de creacion
+            resources = resources.OrderByDescending(x => x.CreatedOn).ToList();
+            //Obtengo los 6 ultimos recursos
+            resources = resources.Take(6).ToList();
+            return resources;
+        }
+
         public async Task AddResourceAsync(PostResourceDto resourceDto)
         {
             Resource @resource = new Resource()
@@ -53,6 +64,8 @@ namespace api.Services
                     throw new Exception("No existe una carpeta con ese Id");
                 }
             }
+
+            
 
             //Agrego el recurso
             await _resourceCollection.AddResource(@resource);
