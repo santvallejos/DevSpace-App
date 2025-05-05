@@ -80,7 +80,7 @@ function AppSidebar() {
                             <li className="hs-accordion">
                                 <button
                                     onClick={() => setShowCopyModal(true)}
-                                    className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg dark:text-white w-full text-left hover:bg-accent hover:text-accent-foreground"
+                                    className="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg dark:text-white w-full text-left hover:bg-accent hover:text-accent-foreground cursor-pointer"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="icon icon-tabler icons-tabler-filled icon-tabler-folders"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 2a1 1 0 0 1 .707 .293l1.708 1.707h4.585a3 3 0 0 1 2.995 2.824l.005 .176v7a3 3 0 0 1 -3 3h-1v1a3 3 0 0 1 -3 3h-10a3 3 0 0 1 -3 -3v-9a3 3 0 0 1 3 -3h1v-1a3 3 0 0 1 3 -3zm-6 6h-1a1 1 0 0 0 -1 1v9a1 1 0 0 0 1 1h10a1 1 0 0 0 1 -1v-1h-7a3 3 0 0 1 -3 -3z" /></svg>
                                     Insert or create copy
@@ -94,7 +94,7 @@ function AppSidebar() {
                     <div>
                         <ul className="flex justify-center mt-5 space-x-5">
                             {/* Github */}
-                            <li>
+                            <li className="cursor-pointer">
                                 <a
                                     className="text-gray-500 hover:text-gray-900 dark:hover:text-white dark:text-gray-400"
                                 >
@@ -102,7 +102,7 @@ function AppSidebar() {
                                 </a>
                             </li>
                             {/* LinkedIn */}
-                            <li>
+                            <li className="cursor-pointer">
                                 <a
                                     className="text-gray-500 hover:text-blue-400 dark:hover:text-white dark:text-gray-400"
                                 >
@@ -110,7 +110,7 @@ function AppSidebar() {
                                 </a>
                             </li>
                             {/* Web site */}
-                            <li>
+                            <li className="cursor-pointer">
                                 <a
                                     className="text-gray-500 hover:text-yellow-300 dark:hover:text-white dark:text-gray-400"
                                 >

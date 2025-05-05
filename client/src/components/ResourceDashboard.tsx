@@ -60,21 +60,21 @@ function AppDashboard(){
           <div className="flex border-b mb-6 overflow-x-auto w-full relative">
             <button 
               ref={buttonRefs.recent}
-              className={`px-4 py-2 text-sm ${activeSection === "recent" ? "font-medium" : "text-gray-500"} whitespace-nowrap`}
+              className={`px-4 py-2 text-sm ${activeSection === "recent" ? "font-medium" : "text-gray-500"} whitespace-nowrap cursor-pointer`}
               onClick={() => setActiveSection("recent")}
             >
               Recent Resources
             </button>
             <button 
               ref={buttonRefs.favorites}
-              className={`px-4 py-2 text-sm ${activeSection === "favorites" ? "font-medium" : "text-gray-500"} whitespace-nowrap`}
+              className={`px-4 py-2 text-sm ${activeSection === "favorites" ? "font-medium" : "text-gray-500"} whitespace-nowrap cursor-pointer`}
               onClick={() => setActiveSection("favorites")}
             >
               Favorites
             </button>
             <button 
               ref={buttonRefs.recommended}
-              className={`px-4 py-2 text-sm ${activeSection === "recommended" ? "font-medium" : "text-gray-500"} whitespace-nowrap`}
+              className={`px-4 py-2 text-sm ${activeSection === "recommended" ? "font-medium" : "text-gray-500"} whitespace-nowrap cursor-pointer`}
               onClick={() => setActiveSection("recommended")}
             >
               Recommended
