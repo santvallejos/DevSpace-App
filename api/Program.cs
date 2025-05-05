@@ -14,9 +14,12 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddCors(); // permitimos configurar CORS
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Services
 builder.Services.AddScoped<FolderServices>();
 builder.Services.AddScoped<ResourceServices>();
-builder.Services.AddSwaggerGen();
+builder.Services.AddHostedService<MongoDbInitializer>();
 
 //Configuracion de MongoDB
 builder.Services.AddSingleton<IMongoClient>(new MongoClient("mongodb://localhost:27017/DevSpace"));
