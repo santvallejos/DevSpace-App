@@ -36,7 +36,7 @@ interface ResourceProps {
     code?: string;
     text?: string;
     favorite: boolean;
-    onDelete?: () => void;
+    onDelete?: (resourceId: string) => void;
 }
 
 function CardResource(props: ResourceProps) {
@@ -117,7 +117,7 @@ function CardResource(props: ResourceProps) {
         try{
             await DeleteResource(id);
             if (props.onDelete) {
-                props.onDelete();
+                props.onDelete(id);
             }
         } catch (error) {
             console.error("Error al eliminar el recurso:", error);
