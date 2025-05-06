@@ -10,6 +10,7 @@ namespace api.Data.Repositories.Interfaces
     {
         Task<List<Folder>> GetFolders();
         Task<Folder> GetFolderById(string id);
+        Task<List<Folder>> GetFoldersByParentFolderID(string parentFolderID);
         Task<List<Folder>> GetFoldersByName(string name);
         Task<List<string>> GetSubFolders(string id);
         Task AddFolder(Folder folder);

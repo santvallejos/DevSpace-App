@@ -49,6 +49,20 @@ namespace api.Controllers
             }
         }
 
+        [HttpGet("parent/{parentFolderID?}")]
+        public async Task<IActionResult> GetFoldersByParentFolderID(string? parentFolderID = null)
+        {
+            try
+            {
+                var folders = await _folderCollection.GetFoldersByParentFolderID(parentFolderID);
+                return Ok(folders);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddFolder([FromBody] PostFolderDto folderDto)
         {

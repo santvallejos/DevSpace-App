@@ -33,6 +33,13 @@ namespace api.Data.Repositories.Collection
             return await Collection.FindAsync(filter).Result.FirstOrDefaultAsync();
         }
 
+        //[Get]
+        public async Task<List<Folder>> GetFoldersByParentFolderID(string parentFolderID)
+        {
+            var filter = Builders<Folder>.Filter.Eq("parentFolderID", parentFolderID);
+            return await Collection.FindAsync(filter).Result.ToListAsync();
+        }
+
         //[Get]  
         public async Task<List<Folder>> GetFoldersByName(string name)
         {
