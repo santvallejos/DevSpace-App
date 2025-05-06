@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Copy } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/shared/Button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -24,7 +24,7 @@ import {
     DialogFooter,
     DialogClose
 } from "@/components/ui/dialog"
-import { DeleteResource } from '@/services/resourcesServices';
+import { DeleteResource } from '@/services/ResourcesServices';
 
 interface ResourceProps {
     id: string
