@@ -29,3 +29,4 @@ dist-ssr
 # api
 api/bin
 api/obj
+.fake

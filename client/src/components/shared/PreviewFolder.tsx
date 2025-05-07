@@ -1,6 +1,11 @@
-function PreviewFolder() {
+interface PreviewFolderProps {
+  name?: string;
+  onClick?: () => void;
+}
+
+function PreviewFolder({ name = "Carpeta", onClick }: PreviewFolderProps) {
     return (
-        <div className="p-4 border rounded-md hover:bg-accent cursor-pointer">
+        <div className="p-4 border rounded-md hover:bg-accent cursor-pointer" onClick={onClick}>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <svg
@@ -18,11 +23,15 @@ function PreviewFolder() {
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" />
                     </svg>
-                    <span>Carpeta de Ejemplo</span>
+                    <span>{name}</span>
                 </div>
                 <button
                     className="p-1 rounded-full hover:bg-gray-200 focus:outline-none"
-                    aria-label="Folder options"
+                    aria-label="Opciones de carpeta"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Aquí puedes agregar la lógica para mostrar opciones
+                    }}
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

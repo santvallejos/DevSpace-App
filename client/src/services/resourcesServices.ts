@@ -1,16 +1,20 @@
-import api from './api';
-import { Resource } from '@/models/resourceModel';
+import api from './Api';
+import { Resource } from '../models/ResourceModel';
 
-// Obtener todos los recursos
-export const GetFavoriteResources = async (): Promise<Resource[]> => {
-    const response = await api.get('Resource/favorites');
-    return response.data
+export const GetResourceByFolderId = async (folderId: string | null): Promise<Resource[]> => {
+    const response = await api.get(`Resource/folder/${folderId}`);
+    return response.data;
 };
 
 // Obtener los recursos recientes
 export const GetRecentsResources = async (): Promise<Resource[]> => {
     const response = await api.get('Resource/recents');
     return response.data
+};
+
+export const GetFavoriteResources = async (): Promise<Resource[]> => {
+    const response = await api.get('Resource/favorites');
+    return response.data;
 };
 
 // Obtener los recursos recomendados

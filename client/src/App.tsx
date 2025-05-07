@@ -14,6 +14,8 @@ function App() {
         <Routes>
           <Route path="/" element={<AppDashboard />} />
           <Route path="/unity" element={<MyUnit />} />
+          {/* Mostrara la carpeta a la cual se hace navegacio */}
+          <Route path="/unity/:folderId" element={<MyUnit />} />
           <Route path="/trash" element={<Delete />} />
         </Routes>
       </Layout>

@@ -39,18 +39,6 @@ function AppDashboard() {
   const [favoritesLoaded, setFavoritesLoaded] = useState<boolean>(false);
   const [recentsLoaded, setRecentsLoaded] = useState<boolean>(false);
 
-  // Actualizar la posición del indicador cuando cambia la sección activa
-  useEffect(() => {
-    const activeButton = buttonsDashboard.find(button => button.activeSection === activeSection)?.ref.current;
-    if (activeButton) {
-      setIndicatorStyle({
-        left: `${activeButton.offsetLeft}px`,
-        width: `${activeButton.offsetWidth}px`,
-        transition: 'all 0.3s ease'
-      });
-    }
-  }, [activeSection]);
-
   // Obtener los recursos favoritos del usuario
   const fetchFavoriteResources = async (forceReload = false) => {
     // Solo cargar si estamos en la sección de favoritos o si se fuerza la recarga
@@ -122,6 +110,16 @@ function AppDashboard() {
   };
 
   useEffect(() => {
+    // Actualizar la posición del indicador cuando cambia la sección activa
+    const activeButton = buttonsDashboard.find(button => button.activeSection === activeSection)?.ref.current;
+    if (activeButton) {
+      setIndicatorStyle({
+        left: `${activeButton.offsetLeft}px`,
+        width: `${activeButton.offsetWidth}px`,
+        transition: 'all 0.3s ease'
+      });
+    }
+
     // Cargar datos según la sección activa
     if (activeSection === "favorites") {
       fetchFavoriteResources();

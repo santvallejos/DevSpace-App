@@ -14,5 +14,5 @@ export interface Folder {
     id: string;
     name: string;
     parentFolderID: string | null;
-    subFolders: Folder[];
+    subFolders: string[];
 }
