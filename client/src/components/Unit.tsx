@@ -90,17 +90,10 @@ function MyUnit() {
     try {
       setIsLoading(true);
 
-      const allResources = await GetResourceByFolderId("");
-      
-      // Filtramos para obtener solo los recursos de raíz
-      const rootResources = allResources.filter(resource => 
-        resource.folderId === null || 
-        resource.folderId === "" || 
-        resource.folderId === undefined
-      );
+      const resources = await GetResourceByFolderId("");
 
-      setCurrentResourceFolder(rootResources);
-      return rootResources;
+      setCurrentResourceFolder(resources);
+      return resources;
     } catch (error) {
       console.error("Error al cargar los recursos de la carpeta raíz:", error);
       return [];
