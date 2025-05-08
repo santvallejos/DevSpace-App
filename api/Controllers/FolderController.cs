@@ -49,12 +49,12 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("parent/{parentFolderID?}")]
-        public async Task<IActionResult> GetFoldersByParentFolderID(string? parentFolderID = null)
+        [HttpGet("parent/{ParentFolderID?}")]
+        public async Task<IActionResult> GetFoldersByParentFolderID(string? ParentFolderID = null)
         {
             try
             {
-                var folders = await _folderCollection.GetFoldersByParentFolderID(parentFolderID);
+                var folders = await _folderCollection.GetFoldersByParentFolderID(ParentFolderID);
                 return Ok(folders);
             }
             catch (Exception ex)

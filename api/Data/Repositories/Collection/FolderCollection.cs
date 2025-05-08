@@ -34,9 +34,9 @@ namespace api.Data.Repositories.Collection
         }
 
         //[Get]
-        public async Task<List<Folder>> GetFoldersByParentFolderID(string parentFolderID)
+        public async Task<List<Folder>> GetFoldersByParentFolderID(string ParentFolderID)
         {
-            var filter = Builders<Folder>.Filter.Eq("parentFolderID", parentFolderID);
+            var filter = Builders<Folder>.Filter.Eq("ParentFolderID", ParentFolderID);
             return await Collection.FindAsync(filter).Result.ToListAsync();
         }
 
