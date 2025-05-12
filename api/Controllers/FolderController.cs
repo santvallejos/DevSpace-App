@@ -21,12 +21,11 @@ namespace api.Controllers
             _folderServices = folderServices;
         }
 
-        [HttpGet]
+        [HttpGet] // Traer todas las carpetas
         public async Task<IActionResult> GetFolders()
         {
             try
             {
-                //Obtenemos todas las carpetas
                 return Ok(await _folderCollection.GetFolders());
             }
             catch (Exception ex)
@@ -35,12 +34,11 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}")] // Traer una carpeta por id
         public async Task<IActionResult> GetFolderById(string id)
         {
             try
             {
-                //Obtenemos la carpeta por id
                 return Ok(await _folderCollection.GetFolderById(id));
             }
             catch (Exception ex)
@@ -49,12 +47,12 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("parent/{ParentFolderID?}")]
-        public async Task<IActionResult> GetFoldersByParentFolderID(string? ParentFolderID = null)
+        [HttpGet("parent/{parentFolderID?}")] // Traer todas las carpetas por id de la carpeta padre
+        public async Task<IActionResult> GetFoldersByParentFolderID(string? parentFolderID = null)
         {
             try
             {
-                var folders = await _folderCollection.GetFoldersByParentFolderID(ParentFolderID);
+                var folders = await _folderCollection.GetFoldersByParentFolderID(parentFolderID);
                 return Ok(folders);
             }
             catch (Exception ex)
@@ -63,12 +61,11 @@ namespace api.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddFolder([FromBody] PostFolderDto folderDto)
+        [HttpPost] // Crear una carpeta
+        public async Task<IActionResult> AddFolder([FromBody] FolderDto folderDto)
         {
             try
             {
-                //Agregamos la carpeta indepedientemente y si tiene padre, agregamos la referencia al padre s
                 await _folderServices.AddFolderAsync(folderDto);
                 return Ok();
             }
@@ -78,10 +75,10 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateFolder(string id, [FromBody] PutFolderDto folderDto)
+        [HttpPut] // Actualizar una carpeta
+        public async Task<IActionResult> UpdateFolder(string id, [FromBody] NameFolderDto folderDto)
         {
-            //validamos que el id no sea nulo
+            // Validacion del id
             if (id == null)
             {
                 return BadRequest();
@@ -89,8 +86,7 @@ namespace api.Controllers
 
             try
             {
-                //Actualizamos el name de la carpeta
-                await _folderServices.UpdateFolderAsync(id, folderDto);
+                await _folderServices.UpdateNameFolderAsync(id, folderDto);
                 return Ok();
             }
             catch (Exception ex)
@@ -99,12 +95,31 @@ namespace api.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpPut("parent")] // Actualizar la referencia de una carpeta
+        public async Task<IActionResult> UpdateReferenceFolder(string id, ParentFolderDto folderDto)
+        {
+            // Validacion del id
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await _folderServices.UpdateParentFolderAsync(id, folderDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")] // Eliminar una carpeta (si tiene hijos, se eliminan)
         public async Task<IActionResult> DeleteFolder(string id)
         {
             try
             {
-                //Eliminamos la carpeta y si tiene subcarpetas las elimina tambien
                 await _folderServices.DeleteFolderAsync(id);
                 return Ok();
             }
@@ -114,12 +129,11 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("subfolders/{id}")]
+        [HttpGet("subfolders/{id}")] // Traer las subcarpetas de una carpeta padre
         public async Task<IActionResult> GetSubFolders(string id)
         {
             try
             {
-                //Obtenemos las subcarpetas de la carpeta padre
                 return Ok(await _folderCollection.GetSubFolders(id));
             }
             catch (Exception ex)
@@ -128,7 +142,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("folders/{name}")]
+        [HttpGet("folders/{name}")] // Traer carpetas por nombre
         public async Task<IActionResult> GetFoldersByName(string name)
         {
             try
