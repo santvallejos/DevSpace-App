@@ -43,30 +43,51 @@ namespace api.Services
             }
         }
 
-        public async Task UpdateFolderAsync(string Id, FolderDto folderDto)
+        public async Task UpdateNameFolderAsync(string Id, NameFolderDto folderDto)
         {
             var folder = await _folderCollection.GetFolderById(Id); //Obtenemos la carpeta
             if (folder != null)
             {
                 folder.Name = folderDto.Name;                       //Actualizo el nombre
-                // Evaluamos el valor del padre id
-                if (folderDto.ParentFolderID != folder.ParentFolderID)
-                {
-                    var oldParentFolder = await _folderCollection.GetFolderById(folder.ParentFolderID);
-                    if (oldParentFolder != null)
-                    {
-                        // Removemos la referencia del padre antiguo sabiendo que existe
-                        await DeleteReferenceFolder(folder.Id, oldParentFolder.Id);
-                        // Agregamos la referencia al padre nuevo
-                        await UpdateReferenceFolder(folder.Id, folderDto.ParentFolderID);
-                        folder.ParentFolderID = folderDto.ParentFolderID;
-                    }
-                }
                 await _folderCollection.UpdateFolder(folder);       //Guardado de la actualizacion
             }
             else
             {
                 throw new Exception("La carpeta no existe");
+            }
+        }
+
+        public async Task UpdateParentFolderAsync(string Id, ParentFolderDto folderDto)
+        {
+            var folder = await _folderCollection.GetFolderById(Id); //Obtenemos la carpeta
+            if (folder == null)
+                throw new Exception("La carpeta no existe");
+
+            // Mover a la raiz de la uniad
+            if (folderDto.ParentFolderID == null && folder.ParentFolderID != null)
+            {
+                await DeleteReferenceFolder(folder.Id, folder.ParentFolderID);
+                folder.ParentFolderID = null;
+                await _folderCollection.UpdateFolder(folder);
+            }
+            else if (folderDto.ParentFolderID != folder.ParentFolderID && folderDto.ParentFolderID != null) // Mover a otra carpeta
+            {
+                var newParentFolder = await _folderCollection.GetFolderById(folderDto.ParentFolderID); //Obtenemos el nuevo padre
+
+                if(newParentFolder != null)
+                {
+                    if (folder.ParentFolderID != null)
+                    {
+                        await DeleteReferenceFolder(folder.Id, folder.ParentFolderID); // Removemos la referencia del padre antiguo sabiendo que existe
+                    }
+                    await UpdateReferenceFolder(folder.Id, newParentFolder.Id); // Agregamos la referencia al padre nuevo
+                    folder.ParentFolderID = folderDto.ParentFolderID;
+                    await _folderCollection.UpdateFolder(folder);
+                }
+            }
+            else
+            {
+                throw new Exception("No hay cambios en la carpeta padre");
             }
         }
 
