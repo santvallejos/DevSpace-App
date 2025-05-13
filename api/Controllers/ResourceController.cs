@@ -63,11 +63,25 @@ namespace api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateResource([FromBody] Resource resource)
+        public async Task<IActionResult> UpdateResource(string id ,[FromBody] PutResourceDto resourceDto)
         {
             try
             {
-                await _resourceCollection.UpdateResource(resource);
+                await _resourceServices.UpdateResourceAsync(id, resourceDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("folderid")]
+        public async Task<IActionResult> UpdateResourceFolderId(string id, [FromBody] FolderIDResourceDto resourceDto)
+        {
+            try
+            {
+                await _resourceServices.UpdateResourceFolderIdAsync(id, resourceDto);
                 return Ok();
             }
             catch (Exception ex)

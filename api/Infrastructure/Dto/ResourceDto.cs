@@ -13,4 +13,18 @@ namespace api.Infrastructure.Dto
         public string? Code { get; set; }
         public string? Text { get; set; }
     }
+
+        public class PutResourceDto
+    {
+        public required string Name { get; set; }
+        public string? Description { get; set; }
+        public string? Url { get; set; }
+        public string? Code { get; set; }
+        public string? Text { get; set; }
+    }
+
+    public class FolderIDResourceDto
+    {
+        public string? FolderId { get; set; }
+    }
 }

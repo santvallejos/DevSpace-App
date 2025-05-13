@@ -33,42 +33,97 @@ namespace api.Services
 
         public async Task AddResourceAsync(PostResourceDto resourceDto)
         {
-            Resource @resource = new Resource()
+            if (resourceDto.FolderId != null)
             {
-                Id = ObjectId.GenerateNewId().ToString(),
-                FolderId = resourceDto.FolderId,
-                FolderName = "",
-                Name = resourceDto.Name,
-                Description = resourceDto.Description,
-                Type = resourceDto.Type,
-                Url = resourceDto.Url,
-                Code = resourceDto.Code,
-                Text = resourceDto.Text,
-                Favorite = false,
-                CreatedOn = DateTime.UtcNow
-            };
-
-            //Si el archivo no esta en la raiz de la carpeta
-            if (@resource.FolderId != null)
-            {
-                //Obtenemos la carpete
-                var folder = await _folderCollection.GetFolderById(@resource.FolderId);
-                //Si la carpeta existe
+                var folder = await _folderCollection.GetFolderById(resourceDto.FolderId);
+                
                 if (folder != null)
                 {
-                    //Obtenemos el nombre de la carpeta
-                    @resource.FolderName = folder.Name;
-                }
-                else
-                {
-                    throw new Exception("No existe una carpeta con ese Id");
+                    Resource @resource = new Resource()
+                    {
+                        Id = ObjectId.GenerateNewId().ToString(),
+                        FolderId = resourceDto.FolderId,
+                        Name = resourceDto.Name,
+                        Description = resourceDto.Description,
+                        Type = resourceDto.Type,
+                        Url = resourceDto.Url,
+                        Code = resourceDto.Code,
+                        Text = resourceDto.Text,
+                        Favorite = false,
+                        CreatedOn = DateTime.UtcNow
+                    };
+                    await _resourceCollection.AddResource(@resource);
                 }
             }
+            else
+            {
+                Resource @resource = new Resource()
+                    {
+                        Id = ObjectId.GenerateNewId().ToString(),
+                        FolderId = null,
+                        Name = resourceDto.Name,
+                        Description = resourceDto.Description,
+                        Type = resourceDto.Type,
+                        Url = resourceDto.Url,
+                        Code = resourceDto.Code,
+                        Text = resourceDto.Text,
+                        Favorite = false,
+                        CreatedOn = DateTime.UtcNow
+                    };
+                await _resourceCollection.AddResource(@resource);
+            }
+        }
 
-            
+        public async Task UpdateResourceAsync(string Id, PutResourceDto resourceDto)
+        {
+            var resource = await _resourceCollection.GetResourceById(Id);
+            //Verificamos que exista el recurso
+            if (resource != null)
+            {
+                resource.Name = resourceDto.Name;
+                resource.Description = resourceDto.Description;
+                resource.Url = resourceDto.Url;
+                resource.Code = resourceDto.Code;
+                resource.Text = resourceDto.Text;
+                await _resourceCollection.UpdateResource(resource);
+            }
+            else
+            {
+                throw new Exception("No se encontro el recurso");
+            }
+        }
 
-            //Agrego el recurso
-            await _resourceCollection.AddResource(@resource);
+        public async Task UpdateResourceFolderIdAsync(string Id, FolderIDResourceDto resourceDto)
+        {
+            var resource = await _resourceCollection.GetResourceById(Id);
+            // Verificamos que exista el recurso
+            if (resource != null)
+            {
+                //Si se quiere pasar a la raiz de la carpeta
+                if (resourceDto.FolderId == null)
+                {
+                    resource.FolderId = null;
+                    await _resourceCollection.UpdateResource(resource);
+                }
+                else // Si se quiere pasar a otra carpeta
+                {
+                    var folder = await _folderCollection.GetFolderById(resourceDto.FolderId);
+                    //Si la carpeta existe
+                    if (folder != null)
+                    {
+                        resource.FolderId = resourceDto.FolderId;
+                        await _resourceCollection.UpdateResource(resource);
+                    }
+                    else
+                    {
+                        throw new Exception("No existe una carpeta con ese Id");
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("No se encontro el recurso");
+            }
         }
 
         public async Task UpdateResourceFavoriteAsync(string Id)
