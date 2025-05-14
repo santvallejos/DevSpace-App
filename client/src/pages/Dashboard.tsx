@@ -1,4 +1,5 @@
 import CardResource from "../components/shared/CardResource";
+import CardResourceRecommended from "@/components/shared/CardRespurceRecommended";
 import { useState, useRef, useEffect } from "react";
 import { useResourceStore } from "../stores/resourceStore";
 import Loading from "../components/shared/Loading";
@@ -118,16 +119,14 @@ function AppDashboard() {
               <Loading/>
             ) : recommendedResources.length > 0 ? (
               recommendedResources.map((resource, index) => (
-                <CardResource
+                <CardResourceRecommended
                   key={resource.id || index}
-                  id={resource.id || ''}
                   name={resource.name || ''}
                   description={resource.description || ''}
                   type={resource.type}
                   url={resource.url || ''}
                   code={resource.code || ''}
                   text={resource.text || ''}
-                  favorite={resource.favorite}
                 />
               ))
             ) : (

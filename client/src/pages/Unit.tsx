@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Folder } from "@/models/FolderModel";
-import { Resource } from "@/models/resourceModel";
+import { Resource } from "@/models/ResourceModel";
 import PreviewFolder from "../components/shared/PreviewFolder";
 //import Loading from "./shared/Loading";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
