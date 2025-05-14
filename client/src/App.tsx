@@ -2,7 +2,7 @@ import './App.css'
 import Layout from './layout'
 import AppDashboard from './pages/Dashboard'
 import MyUnit from './pages/Unit';
-import Delete from './pages/Trash';
+/* import Delete from './pages/Trash'; */
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
           <Route path="/unity" element={<MyUnit />} />
           {/* Mostrara la carpeta a la cual se hace navegacio */}
           <Route path="/unity/:folderId" element={<MyUnit />} />
-          <Route path="/trash" element={<Delete />} />
+          {/* <Route path="/trash" element={<Delete />} /> */}
         </Routes>
       </Layout>
     </Router>
