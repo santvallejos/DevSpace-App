@@ -9,7 +9,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { GetFolderById, GetFoldersByParentFolderId } from '@/services/FolderServices';
-import { GetResourceByFolderId } from '@/services/ResourcesServices';
+import { GetResourceByFolderId } from '@/services/ResourceServices';
 import Loading from '../components/shared/Loading';
 import CardResource from '../components/shared/CardResource';
 

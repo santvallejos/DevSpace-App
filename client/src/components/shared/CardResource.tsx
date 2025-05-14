@@ -24,7 +24,7 @@ import {
     DialogFooter,
     DialogClose
 } from "@/components/ui/dialog"
-import { DeleteResource } from '@/services/ResourcesServices';
+import { DeleteResource } from '@/services/ResourceServices';
 
 interface ResourceProps {
     id: string
