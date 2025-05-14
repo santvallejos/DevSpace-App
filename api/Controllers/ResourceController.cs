@@ -76,7 +76,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut("folderid")]
+        [HttpPut("folderid/{id}")]
         public async Task<IActionResult> UpdateResourceFolderId(string id, [FromBody] FolderIDResourceDto resourceDto)
         {
             try
@@ -104,7 +104,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("resources/{name}")]
+        [HttpGet("name/{name}")]
         public async Task<IActionResult> GetResourcesByName(string name)
         {
             try

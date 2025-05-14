@@ -95,7 +95,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut("parent")] // Actualizar la referencia de una carpeta
+        [HttpPut("parent/{id}")] // Actualizar la referencia de una carpeta
         public async Task<IActionResult> UpdateReferenceFolder(string id, ParentFolderDto folderDto)
         {
             // Validacion del id
@@ -142,7 +142,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("folders/{name}")] // Traer carpetas por nombre
+        [HttpGet("name/{name}")] // Traer carpetas por nombre
         public async Task<IActionResult> GetFoldersByName(string name)
         {
             try

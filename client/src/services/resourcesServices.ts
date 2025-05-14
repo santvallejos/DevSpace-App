@@ -1,6 +1,7 @@
 import api from '../contexts/Api';
 import { Resource } from '../models/ResourceModel';
 
+// Obtener recurso por carpeta
 export const GetResourceByFolderId = async (folderId: string | null): Promise<Resource[]> => {
     const response = await api.get(`Resource/folder/${folderId}`);
     return response.data;
@@ -12,6 +13,7 @@ export const GetRecentsResources = async (): Promise<Resource[]> => {
     return response.data
 };
 
+// Obtener los recursos favoritos
 export const GetFavoriteResources = async (): Promise<Resource[]> => {
     const response = await api.get('Resource/favorites');
     return response.data;
@@ -28,6 +30,36 @@ export const GetRecommendedResources = async (): Promise<Resource[]> => {
 
     const data: Resource[] = await response.json();
     return data;
+};
+
+// Obtener un recurso por su nombre
+export const GetResourceByName = async (name: string): Promise<Resource> => {
+    const response = await api.get(`Resource/name/${name}`);
+    return response.data;
+}
+
+// Crear un recurso
+export const CreatResource = async (resource: Resource): Promise<Resource> => {
+    const response = await api.post('Resource', resource);
+    return response.data;
+};
+
+// Actualizar un recurso
+export const UpdateResource = async (resource: Resource): Promise<Resource> => {
+    const response = await api.put(`Resource/${resource.id}`, resource);
+    return response.data;
+};
+
+// Mover un recurso a una carpeta
+export const UpdateResourceFolder = async (id: string, folderId: string | null): Promise<Resource> => {
+    const response = await api.put(`Resource/folderid/${id}`, folderId);
+    return response.data;
+};
+
+// Actualizar estdado a favorito o no favorito
+export const UpdateResourceFavorite = async (id: string): Promise<Resource> => {
+    const response = await api.put(`Resource/favorite/${id}`);
+    return response.data;
 };
 
 // Eliminar un recurso
