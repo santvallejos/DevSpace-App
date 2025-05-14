@@ -29,7 +29,6 @@ import { DeleteResource } from '@/services/ResourcesServices';
 interface ResourceProps {
     id: string
     name: string;
-    folderName: string;
     description?: string;
     type: number;
     url: string;
@@ -41,7 +40,7 @@ interface ResourceProps {
 
 function CardResource(props: ResourceProps) {
     //Propiedades que se tienen que pasar al recurso
-    const { id, name, folderName, description, type, url, code, text, favorite } = props;
+    const { id, name, description, type, url, code, text, favorite } = props;
     const [isFavorite, setIsFavorite] = useState(favorite); // Estado para controlar si el recurso está marcado como favorito
 
     // Estados para el formulario de edición
@@ -153,11 +152,6 @@ function CardResource(props: ResourceProps) {
                     </label>
                 </div>
 
-                {/* Folder */}
-                <div className="text-sm text-gray-500 dark:text-gray-400 mb-2 truncate" title={folderName}>
-                    {folderName}
-                </div>
-
                 {/* Content Card: Resource Preview */}
                 <div className="mb-4 flex">
                     {renderResourcePreview()}
@@ -173,9 +167,6 @@ function CardResource(props: ResourceProps) {
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>{name}</DialogTitle>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                                    {folderName}
-                                </div>
                                 <DialogDescription><span className="font-medium">Description:</span> {description || "No description available."}</DialogDescription>
                                 <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-900 mb-4">
                                     {type === 0 && (

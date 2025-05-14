@@ -1,7 +1,6 @@
 export interface Resource {
     id: string;
     folderId: string;
-    folderName: string;
     name: string;
     description: string;
     type: number;
@@ -17,7 +16,6 @@ export interface Resource {
   {
     "id": "67f5952c794c2e42a9fed6df",
     "folderId": null,
-    "folderName": "",
     "name": "Prueba type de recursos",
     "description": "string",
     "type": 0,

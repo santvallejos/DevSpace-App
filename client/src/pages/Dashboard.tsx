@@ -167,7 +167,6 @@ function AppDashboard() {
                   key={resource.id || index}
                   id={resource.id || ''}
                   name={resource.name || ''}
-                  folderName={resource.folderName || ''}
                   description={resource.description || ''}
                   type={resource.type}
                   url={resource.url || ''}
@@ -194,7 +193,6 @@ function AppDashboard() {
                   key={resource.id || index}
                   id={resource.id || ''}
                   name={resource.name || ''}
-                  folderName={resource.folderName || ''}
                   description={resource.description || ''}
                   type={resource.type}
                   url={resource.url || ''}
@@ -221,7 +219,6 @@ function AppDashboard() {
                   key={resource.id || index}
                   id={resource.id || ''}
                   name={resource.name || ''}
-                  folderName={resource.folderName || ''}
                   description={resource.description || ''}
                   type={resource.type}
                   url={resource.url || ''}
