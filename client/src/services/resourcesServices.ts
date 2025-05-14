@@ -1,4 +1,4 @@
-import api from './Api';
+import api from '../contexts/Api';
 import { Resource } from '../models/ResourceModel';
 
 export const GetResourceByFolderId = async (folderId: string | null): Promise<Resource[]> => {

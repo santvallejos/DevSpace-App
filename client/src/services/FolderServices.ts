@@ -1,4 +1,4 @@
-import api from "./Api";
+import api from "../contexts/Api";
 import { Folder } from "@/models/FolderModel";
 
 /* Nesito llamar a las carpetas por su ParentFolderId que puede ser null */

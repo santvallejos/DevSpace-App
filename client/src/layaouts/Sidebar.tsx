@@ -2,7 +2,7 @@ import { Sidebar } from "@/components/ui/sidebar"
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { ThemeToggle } from "./ui/theme-toggle";
+import { ThemeToggle } from "../components/ui/theme-toggle";
 
 function AppSidebar() {
     const location = useLocation();
@@ -25,13 +25,6 @@ function AppSidebar() {
                     </Link>
                     {/* Theme toggle button */}
                     <ThemeToggle />
-                    {/* Close sidebar */}
-                    <div className="lg:hidden -me-2">
-                        <button type="button" className="flex justify-center items-center gap-x-3 size-6 bg-white border border-gray-200 text-sm text-gray-600 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:hover:text-neutral-200 dark:focus:text-neutral-200" data-hs-overlay="#hs-sidebar-content-push">
-                            <svg className="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
-                            <span className="sr-only">Close</span>
-                        </button>
-                    </div>
                 </header>
                 {/* list of items */}
                 <nav className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">

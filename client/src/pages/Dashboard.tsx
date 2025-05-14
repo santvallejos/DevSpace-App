@@ -1,8 +1,8 @@
-import CardResource from "./shared/CardResource";
+import CardResource from "../components/shared/CardResource";
 import { useState, useRef, useEffect } from "react";
 import { Resource } from "@/models/resourceModel";
 import { GetFavoriteResources, GetRecentsResources, GetRecommendedResources } from "@/services/ResourcesServices";
-import Loading from "./shared/Loading";
+import Loading from "../components/shared/Loading";
 
 function AppDashboard() {
   const buttonsDashboard = [

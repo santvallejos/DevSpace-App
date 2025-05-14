@@ -3,15 +3,15 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Folder } from "@/models/FolderModel";
 import { Resource } from "@/models/resourceModel";
-import PreviewFolder from "./shared/PreviewFolder";
+import PreviewFolder from "../components/shared/PreviewFolder";
 //import Loading from "./shared/Loading";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { GetFolderById, GetFoldersByParentFolderId } from '@/services/FolderServices';
 import { GetResourceByFolderId } from '@/services/ResourcesServices';
-import Loading from './shared/Loading';
-import CardResource from './shared/CardResource';
+import Loading from '../components/shared/Loading';
+import CardResource from '../components/shared/CardResource';
 
 function MyUnit() {
   const [folderCache, setFolderCache] = useState<Record<string, Folder>>({});             // Estado para almacenar las carpetas en caché (solo las que se han cargado)
