@@ -1,209 +1,78 @@
 import React from 'react';
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Folder } from "@/models/FolderModel";
-import { Resource } from "@/models/ResourceModel";
 import PreviewFolder from "../components/shared/PreviewFolder";
-//import Loading from "./shared/Loading";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { GetFolderById, GetFoldersByParentFolderId } from '@/services/FolderServices';
-import { GetResourceByFolderId } from '@/services/ResourceServices';
+import { useFolderStore } from '@/stores/FolderStore';
+import { useResourceStore } from '@/stores/ResourceStore';
 import Loading from '../components/shared/Loading';
 import CardResource from '../components/shared/CardResource';
 
 function MyUnit() {
-  const [folderCache, setFolderCache] = useState<Record<string, Folder>>({});             // Estado para almacenar las carpetas en caché (solo las que se han cargado)
-  const [currentFolders, setCurrentFolders] = useState<Folder[]>([]);                     // Estado para almacenar las carpetas actuales (las que se muestran)
-  const [currentFolder, setCurrentFolder] = useState<Folder | null>(null);                // Estado para almacenar la carpeta actual (si estamos dentro de una)
-  const [breadcrumbPath, setBreadcrumbPath] = useState<Folder[]>([]);                     // Estado para almacenar la ruta de navegación (breadcrumb)
-  const [isLoading, setIsLoading] = useState<boolean>(true);                              // Estado para controlar la carga
-  const [currentResourceFolder, setCurrentResourceFolder] = useState<Resource[]>([]);     // Estado para almacenar los recursos de la carpeta actual
+  // Usar el store de carpetas
+  const {
+    folderCache,
+    currentFolders,
+    currentFolder,
+    breadCrumbPath,
+    isLoading: folderIsLoading,
+    fetchFolder,
+    fetchRootFolder,
+    fetchSubFolders,
+    buildBreadCrumbPath,
+    setIsLoading: setFolderIsLoading
+  } = useFolderStore();
 
-  const { folderId } = useParams<{ folderId: string }>(); // Obtener parámetros de la URL
+  // Usar el store de recursos
+  const {
+    currentResourceFolder,
+    isLoading: resourceIsLoading,
+    fetchResourcesRoot,
+    fetchResources,
+    setIsLoading: setResourceIsLoading
+  } = useResourceStore();
+
+  // Combinar los estados de carga
+  const isLoading = folderIsLoading || resourceIsLoading;
+
+  const { folderId } = useParams<{ folderId: string }>();
   const navigate = useNavigate();
 
-  /* ==================================================
-    Cargar una carpeta específica por su ID
-    ================================================== */
-  const loadFolder = async (id: string): Promise<Folder | null> => {
-    if (folderCache[id]) return folderCache[id];  // Si ya esta en caché, la devolvemos
-
-    try {
-      const folder = await GetFolderById(id);
-
-      if (folder) {
-        // Actualizar la caché con la nueva carpeta
-        setFolderCache(prev => ({
-          ...prev,
-          [id]: folder
-        }));
-        return folder;
-      }
-
-      return null;
-    } catch (error) {
-      console.error(`Error al cargar la carpeta ${id}:`, error);
-      return null;
-    }
+  const navigateToFolder = (folder: Folder) => { 
+    navigate(`/unity/${folder.id}`); 
   };
 
-  /* ==================================================
-    Cargar las carpetas de nivel raíz 
-    ================================================== */
-  const loadRootFolders = async (): Promise<Folder[]> => {
-    try {
-      setIsLoading(true);
-
-      // Pasamos un string vacío ya que null no funciona
-      const allFolders = await GetFoldersByParentFolderId(""); 
-      
-      // Filtramos para obtener solo las carpetas de raíz (con parentFolderID null o vacío)
-      const folderRoot = allFolders.filter(folder => 
-        folder.parentFolderID === null || 
-        folder.parentFolderID === "" || 
-        folder.parentFolderID === undefined
-      );
-
-      // Actualizar la caché con las carpetas raíz
-      const newCache = { ...folderCache };
-      folderRoot.forEach(folder => {
-        newCache[folder.id] = folder;
-      });
-
-      setFolderCache(newCache);
-      console.log(folderRoot);
-      return folderRoot;
-    } catch (error) {
-      console.error("Error al cargar las carpetas raíz:", error);
-      return [];
-    } finally {
-      setIsLoading(false);
-    }
+  const navigateToRoot = () => { 
+    navigate('/unity'); 
   };
 
-  /* ==================================================
-    Cargar los recursos de nivel raíz
-    ================================================== */
-  const loadRootResources = async (): Promise<Resource[]> => {
-    try {
-      setIsLoading(true);
-
-      const resources = await GetResourceByFolderId("");
-
-      setCurrentResourceFolder(resources);
-      return resources;
-    } catch (error) {
-      console.error("Error al cargar los recursos de la carpeta raíz:", error);
-      return [];
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  /* ==================================================
-    Cargar las subcarpetas de una carpeta específica
-    ================================================== */
-  const loadSubFolders = async (parentFolder: Folder): Promise<Folder[]> => {
-    try {
-      setIsLoading(true);
-
-      if (!parentFolder.subFolders || parentFolder.subFolders.length === 0) return []; // Si no hay subcarpetas, devolvemos un array vacío
-
-      // Cargar cada subcarpeta
-      const subFolderPromises = parentFolder.subFolders.map(id => loadFolder(id));
-      const subFolders = await Promise.all(subFolderPromises);
-
-      return subFolders.filter((folder): folder is Folder => folder !== null); // Filtrar las carpetas nulas (por si alguna carga falló)
-    } catch (error) {
-      console.error(`Error al cargar las subcarpetas de ${parentFolder.id}:`, error);
-      return [];
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  /* ==================================================
-    Cargar los recursos de una carpeta específica
-    ================================================== */
-  const loadResources = async (folderId: string | null): Promise<Resource[]> => {
-    try {
-      setIsLoading(true);
-      const resources = await GetResourceByFolderId(folderId)
-
-      setCurrentResourceFolder(resources);
-      return resources;
-    } catch (error) {
-      console.error(`Error al cargar los recursos de la carpeta ${folderId}:`, error);
-      return [];
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  /* ==================================================
-    Construccion del path de navegacion
-    ================================================== */
-  const buildBreadcrumbPath = async (currentFolderId: string | null): Promise<Folder[]> => {
-    if (!currentFolderId) return []; // Si no hay Id devolvemos un array vacío
-
-    const path: Folder[] = [];
-    let currentId: string | null = currentFolderId;
-
-    // Construir el path recursivamente desde la carpeta actual hasta la raíz
-    while (currentId !== null) {
-      // Intentar obtener la carpeta del caché primero
-      const cachedFolder: Folder | undefined = folderCache[currentId];
-      let folder: Folder | null = cachedFolder || null;
-
-      // Si no está en caché, cargarla
-      if (!folder) {
-        folder = await loadFolder(currentId);
-        if (!folder) break;
-      }
-
-      path.unshift(folder); // Añadir la carpeta al inicio del path (para mantener el orden correcto)
-      currentId = folder.parentFolderID;
-    }
-
-    return path;
-  };
-
-  const navigateToFolder = (folder: Folder) => { navigate(`/unity/${folder.id}`); }; // Función para navegar a una carpeta
-
-  const navigateToRoot = () => { navigate('/unity'); }; // Función para volver a la raíz
-
-  /* **********************************************
-    Cargar las carpetas cuando cambia el ID de la carpeta en la URL
-    ********************************************** */
+  // Cargar las carpetas y recursos cuando cambia el ID de la carpeta en la URL
   useEffect(() => {
     const loadCurrentView = async () => {
-      setIsLoading(true);
+      setFolderIsLoading(true);
+      setResourceIsLoading(true);
 
       try {
         if (folderId) {
           // Estamos en una carpeta específica
-          // 1. Cargar la carpeta actual si no está en caché
-          const cachedFolder: Folder | undefined = folderCache[folderId];
-          let folder: Folder | null = cachedFolder || null;
-
-          if (!folder) folder = await loadFolder(folderId);
+          // 1. Cargar la carpeta actual
+          const folder = await fetchFolder(folderId);
 
           if (folder) {
-            setCurrentFolder(folder);
-
             // 2. Cargar las subcarpetas
-            const subFolders = await loadSubFolders(folder);
-            setCurrentFolders(subFolders);
-
-            // 3. Cagar los recursos de la carpeta
-            const resources = await loadResources(folderId);
-            setCurrentResourceFolder(resources); 
-
+            await fetchSubFolders(folder);
+            
+            // 3. Cargar los recursos de la carpeta
+            await fetchResources(folderId);
+            
             // 4. Construir el path de navegación
-            const path = await buildBreadcrumbPath(folderId);
-            setBreadcrumbPath(path);
+            await buildBreadCrumbPath(folderId);
+            
+            // 5. Actualizar la carpeta actual
+            set({ currentFolder: folder });
           } else {
             // La carpeta no existe, redirigir a la raíz
             console.error(`La carpeta con ID ${folderId} no existe`);
@@ -211,22 +80,20 @@ function MyUnit() {
           }
         } else {
           // Estamos en la raíz
-          setCurrentFolder(null);
-
-          // Cargar las carpetas de nivel raíz
-          const rootFolders = await loadRootFolders();
-          setCurrentFolders(rootFolders);
-
-          // Cargar los recursos de la raíz
-          const rootResources = await loadRootResources();
-          setCurrentResourceFolder(rootResources);
-
-          setBreadcrumbPath([]);
+          // 1. Cargar las carpetas de nivel raíz
+          await fetchRootFolder();
+          
+          // 2. Cargar los recursos de la raíz
+          await fetchResourcesRoot();
+          
+          // 3. Limpiar el path de navegación cuando estamos en la raíz
+          set({ breadCrumbPath: [] });
         }
       } catch (error) {
         console.error("Error al cargar la vista actual:", error);
       } finally {
-        setIsLoading(false);
+        setFolderIsLoading(false);
+        setResourceIsLoading(false);
       }
     };
 
@@ -313,11 +180,11 @@ function MyUnit() {
               </BreadcrumbLink>
             </BreadcrumbItem>
 
-            {breadcrumbPath.map((folder, index) => (
+            {breadCrumbPath.map((folder, index) => (
               <React.Fragment key={folder.id}>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  {index === breadcrumbPath.length - 1 ? (
+                  {index === breadCrumbPath.length - 1 ? (
                     <BreadcrumbPage>{folder.name}</BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink

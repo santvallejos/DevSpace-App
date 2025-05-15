@@ -3,20 +3,27 @@ import { Resource } from "@/models/ResourceModel";
 import {
     GetRecentsResources,
     GetFavoriteResources,
-    GetRecommendedResources
+    GetRecommendedResources,
+    GetResourceByFolderId
 } from "@/services/ResourceServices";
 
 interface ResourceState {
     // Estados
+    currentResourceFolder: Resource[];
     recentsResources: Resource[];
     favoritesResources: Resource[];
     recommendedResources: Resource[];
     isLoading: boolean;
     error: string | null;
 
+    // Cargar recursos
     fetchRecentResources: () => Promise<Resource[]>;
     fetchFavoriteResources: () => Promise<Resource[]>;
     fetchRecommendedResources: () => Promise<Resource[]>;
+    fetchResourcesRoot: () => Promise<Resource[]>;
+    fetchResources: (folderId: string | null) => Promise<Resource[]>;
+    // Manipular recursos
+
 
     setIsLoading: (isLoading: boolean) => void;
     setError: (error: string | null) => void;
@@ -28,6 +35,7 @@ interface ResourceState {
 
 export const useResourceStore = create<ResourceState>((set) => ({
     // Estados iniciales
+    currentResourceFolder: [],
     recentsResources: [],
     favoritesResources: [],
     recommendedResources: [],
@@ -74,12 +82,42 @@ export const useResourceStore = create<ResourceState>((set) => ({
             set({ isLoading: false });
         }
     },
+    fetchResourcesRoot: async () => {
+        try{
+            set({ isLoading: true })
+            const resources = await GetResourceByFolderId("");
+            set({ currentResourceFolder: resources});
+            return resources;
+        } catch (error) {
+            console.error(error);
+            set({ error: 'Error al cargar los recursos de la raiz', isLoading: false });
+            return [];
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+    fetchResources: async (folderId: string | null) => {
+        try{
+            set({ isLoading: true })
+            const resources = await GetResourceByFolderId(folderId);
+            set({ currentResourceFolder: resources });
+            return resources;
+        } catch (error) {
+            console.error(error);
+            set({ error: 'Error al cargar los recursos de la raiz', isLoading: false });
+            return [];
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
     setIsLoading: (isLoading: boolean) => set({ isLoading }),
     setError: (error: string | null) => set({ error }),
     
     // Utilidades
     clearError: () => set({ error: null }),
-    resetState: () => set({ 
+    resetState: () => set({
+        currentResourceFolder: [],
         recentsResources: [],
         favoritesResources: [],
         recommendedResources: [],
