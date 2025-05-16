@@ -1,5 +1,5 @@
 import CardResource from "../components/shared/CardResource";
-import CardResourceRecommended from "@/components/shared/CardRespurceRecommended";
+import CardResourceRecommended from "@/components/shared/CardResourceRecommended";
 import { useState, useRef, useEffect } from "react";
 import { useResourceStore } from "../stores/resourceStore";
 import Loading from "../components/shared/Loading";

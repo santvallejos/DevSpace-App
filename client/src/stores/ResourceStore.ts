@@ -20,10 +20,10 @@ interface ResourceState {
     fetchRecentResources: () => Promise<Resource[]>;
     fetchFavoriteResources: () => Promise<Resource[]>;
     fetchRecommendedResources: () => Promise<Resource[]>;
-    fetchResourcesRoot: () => Promise<Resource[]>;
-    fetchResources: (folderId: string | null) => Promise<Resource[]>;
-    // Manipular recursos
+    fetchResourcesRoot: () => Promise<Resource[]>;                               // Cargar los recursos del nivel raiz
+    fetchResources: (folderId: string | null) => Promise<Resource[]>;            // Cargar los recursos de una carpeta especifica
 
+    setCurrentResourceFolder: (folder: Resource[]) => void;
 
     setIsLoading: (isLoading: boolean) => void;
     setError: (error: string | null) => void;
@@ -110,6 +110,8 @@ export const useResourceStore = create<ResourceState>((set) => ({
             set({ isLoading: false });
         }
     },
+
+    setCurrentResourceFolder: (folder: Resource[]) => set({ currentResourceFolder: folder }),
 
     setIsLoading: (isLoading: boolean) => set({ isLoading }),
     setError: (error: string | null) => set({ error }),

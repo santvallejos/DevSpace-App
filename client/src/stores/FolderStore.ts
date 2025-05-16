@@ -7,19 +7,23 @@ import {
 
 interface FolderStore {
     // Estados
-    folderCache: Record<string, Folder>;
-    currentFolders: Folder[];
-    currentFolder: Folder | null;
-    breadCrumbPath: Folder[];
-    isLoading: boolean;
-    error: string | null;
+    folderCache: Record<string, Folder>;   // Almacenar las carpetas en cache (solo las que se han cargado)
+    currentFolders: Folder[];              // Almacenar las carpetas actuales (las que se muestran)
+    currentFolder: Folder | null;          // Almacenar la carpeta actual (si estamos dentro de una)
+    breadCrumbPath: Folder[];              // Almacenar ruta de navegacion (para el breadcrumb)
+    isLoading: boolean;                    // Controlar la carga
+    error: string | null;                  // Controlar errores
 
     // Cargar carpetas
-    fetchFolder: (id: string) => Promise<Folder | null>;
-    fetchRootFolder: () => Promise<Folder[]>;
-    fetchSubFolders: (parentFolder: Folder) => Promise<Folder[]>;
-    buildBreadCrumbPath: (currentFolderId: string | null) => Promise<Folder[]>;
+    fetchFolder: (id: string) => Promise<Folder | null>;                                // Cargar una carpeta especifica por su Id
+    fetchSubFolders: (parentFolder: Folder) => Promise<Folder[]>;                      // Cargar las subcarpetas de una carpeta especifica
+    fetchRootSubFolders: () => Promise<Folder[]>;                                      // Cargar las carpetas del nivel raiz
+    buildBreadCrumbPath: (currentFolderId: string | null) => Promise<Folder[]>;        // Construccion del path de navegacion
 
+    // Actualizar estados
+    setCurrentFolder: (folder: Folder | null) => void;
+    setCurrentFolders: (folder: Folder[]) => void;
+    setBreadCrumbPath: (folder: Folder[]) => void;
     setIsLoading: (isLoading: boolean) => void;
     setError: (error: string | null) => void;
 
@@ -55,35 +59,6 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
             set({ isLoading: false });
         }
     },
-    fetchRootFolder: async () => {
-        try{
-            set({ isLoading: true });
-
-            const allFolder = await GetFoldersByParentFolderId(""); // Pasamos un string vacío ya que null no funciona
-
-            const folderRoot = allFolder.filter(folder =>
-                folder.parentFolderID === null || 
-                folder.parentFolderID === "" || 
-                folder.parentFolderID === undefined
-            );
-            // Actualizar la cache con las carpetas raiz
-            const newCache = {...get().folderCache};
-            folderRoot.forEach(folder => {
-                newCache[folder.id] = folder;
-            });
-            set({ 
-                folderCache: newCache,
-                currentFolders: folderRoot // Actualizar currentFolders con las carpetas raíz
-            });
-            return folderRoot;
-        }catch(error){
-            console.error("Error fetching root folder:", error);
-            set({ error: "Error fetching root folder" });
-            return [];
-        }finally{
-            set({ isLoading: false });
-        }
-    },
     fetchSubFolders: async (parentFolder: Folder) => {
         try{
             set({ isLoading: true });
@@ -107,6 +82,35 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
             set({ error: "Error fetching subfolders" });
             return [];
         } finally {
+            set({ isLoading: false });
+        }
+    },
+    fetchRootSubFolders: async () => {
+        try{
+            set({ isLoading: true});
+
+            const allFolders = await GetFoldersByParentFolderId("");
+
+            const fetchRootSubFolders = allFolders.filter(folder =>
+                folder.parentFolderID === null ||
+                folder.parentFolderID === "" ||
+                folder.parentFolderID === undefined
+            );
+
+            const newCache = {...get().folderCache};
+            fetchRootSubFolders.forEach(folder => {
+                newCache[folder.id] = folder;
+            });
+            set({
+                folderCache: newCache,
+                currentFolders: fetchRootSubFolders
+            });
+            return fetchRootSubFolders;
+        }catch(error){
+            console.error("Error fetching root subfolders:", error);
+            set({ error: "Error fetching root subfolders" });
+            return [];
+        }finally{
             set({ isLoading: false });
         }
     },
@@ -141,6 +145,9 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
         return path; // Devolver el path completo
     },
 
+    setCurrentFolder: (folder: Folder | null) => set({ currentFolder: folder }),
+    setCurrentFolders: (folder: Folder[]) => set({ currentFolders: folder }),
+    setBreadCrumbPath: (folder: Folder[]) => set({ breadCrumbPath: folder}),
     setIsLoading: (isLoading: boolean) => set({ isLoading }),
     setError: (error: string | null) => set({ error }),
 
