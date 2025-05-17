@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Loading from '../components/shared/Loading';
 import CardResource from '../components/shared/CardResource';
+import Search from "@/components/shared/Search";
 
 function MyUnit() {
   const { folderId } = useParams<{ folderId: string }>(); //Obtener parametos de la URL
@@ -105,60 +106,75 @@ function MyUnit() {
 
           <div className="flex items-center gap-2">
             {/* Buscar carpetas o recursos */}
-            <div className="flex items-center border w-80 focus-within:border-indigo-500 transi
-tion duration-300 pr-3 gap-2 bg-white border-gray-500/30 h-[30px] rounded-[5px] overflow-hidden
-">
-              <input
-                type="text"
-                placeholder="Buscar carpetas o recursos"
-                className="w-full h-full pl-4 outline-none placeholder-gray-500 text-sm"
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                x="0px"
-                y="0px"
-                width="22"
-                height="22"
-                viewBox="0 0 30 30"
-                fill="#6B7280"
-              >
-                <path d="M 13 3 C 7.4889971 3 3 7.4889971 3 13 C 3 18.511003 7.4889971 23 13 23
-C 15.396508 23 17.597385 22.148986 19.322266 20.736328 L 25.292969 26.707031 A 1.0001 1.0001 0
-1 0 26.707031 25.292969 L 20.736328 19.322266 C 22.148986 17.597385 23 15.396508 23 13 C 23 7.
-4889971 18.511003 3 13 3 z M 13 5 C 17.430123 5 21 8.5698774 21 13 C 21 17.430123 17.430123 21 
-13 21 C 8.5698774 21 5 17.430123 5 13 C 5 8.5698774 8.5698774 5 13 5 z"></path>
-              </svg>
-            </div>
+            <Search />
 
             {/* Boton de crear carpeta o recurso */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="bg-blue-500 text-white px-4 py-0.5 rounded-md fle
-x items-center cursor-pointer">
+              <DropdownMenuTrigger className="bg-blue-500 text-white px-4 py-0.5 rounded-md flex items-center cursor-pointer">
                 <span className="mr-1 text-lg">+</span>Nuevo
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 {/* Add Resource */}
-                <DropdownMenuItem>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                   <Dialog>
-                    <DialogTrigger onClick={(e) => e.stopPropagation()}>
-                      Carpeta
+                    <DialogTrigger asChild>
+                      <button className="w-full text-left" onClick={() => {
+                        // Cerrar el dropdown al abrir el dialog
+                        document.body.click();
+                      }}>
+                        Carpeta
+                      </button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent onCloseAutoFocus={(e) => {
+                      // Prevenir el comportamiento predeterminado de enfoque
+                      e.preventDefault();
+                      // Asegurarse de que el documento tenga el foco
+                      document.body.focus();
+                      // Simular un clic para restablecer los manejadores de eventos
+                      setTimeout(() => {
+                        const clickEvent = new MouseEvent('click', {
+                          bubbles: true,
+                          cancelable: true,
+                          view: window
+                        });
+                        document.body.dispatchEvent(clickEvent);
+                      }, 0);
+                    }}>
+                      <DialogTitle>Agregar una carpeta</DialogTitle>
+                      <DialogDescription>
+                        Crea una nueva carpeta para organizar tus recursos.
+                      </DialogDescription>
                       <DialogHeader>
-                        <DialogTitle>Agregar una carpeta</DialogTitle>
-                        <DialogDescription>
-                          Crea una nueva carpeta para organizar tus recursos.
-                        </DialogDescription>
+                        
                       </DialogHeader>
                     </DialogContent>
                   </Dialog>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                   <Dialog>
-                    <DialogTrigger onClick={(e) => e.stopPropagation()}>
-                      Recurso
+                    <DialogTrigger asChild>
+                      <button className="w-full text-left" onClick={() => {
+                        // Cerrar el dropdown al abrir el dialog
+                        document.body.click();
+                      }}>
+                        Recurso
+                      </button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent onCloseAutoFocus={(e) => {
+                      // Prevenir el comportamiento predeterminado de enfoque
+                      e.preventDefault();
+                      // Asegurarse de que el documento tenga el foco
+                      document.body.focus();
+                      // Simular un clic para restablecer los manejadores de eventos
+                      setTimeout(() => {
+                        const clickEvent = new MouseEvent('click', {
+                          bubbles: true,
+                          cancelable: true,
+                          view: window
+                        });
+                        document.body.dispatchEvent(clickEvent);
+                      }, 0);
+                    }}>
                       <DialogHeader>
                         <DialogTitle>Agregar un recurso</DialogTitle>
                         <DialogDescription>
