@@ -10,7 +10,7 @@
     ]
 */
 
-export interface Folder {
+export interface FolderModel {
     id: string;
     name: string;
     parentFolderID: string | null;

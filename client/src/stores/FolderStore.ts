@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Folder } from "@/models/FolderModel";
+import { FolderModel } from "@/models/FolderModel";
 import {
     GetFolderById,
     GetFoldersByParentFolderId
@@ -7,23 +7,23 @@ import {
 
 interface FolderStore {
     // Estados
-    folderCache: Record<string, Folder>;   // Almacenar las carpetas en cache (solo las que se han cargado)
-    currentFolders: Folder[];              // Almacenar las carpetas actuales (las que se muestran)
-    currentFolder: Folder | null;          // Almacenar la carpeta actual (si estamos dentro de una)
-    breadCrumbPath: Folder[];              // Almacenar ruta de navegacion (para el breadcrumb)
+    folderCache: Record<string, FolderModel>;   // Almacenar las carpetas en cache (solo las que se han cargado)
+    currentFolders: FolderModel[];              // Almacenar las carpetas actuales (las que se muestran)
+    currentFolder: FolderModel | null;          // Almacenar la carpeta actual (si estamos dentro de una)
+    breadCrumbPath: FolderModel[];              // Almacenar ruta de navegacion (para el breadcrumb)
     isLoading: boolean;                    // Controlar la carga
     error: string | null;                  // Controlar errores
 
     // Cargar carpetas
-    fetchFolder: (id: string) => Promise<Folder | null>;                                // Cargar una carpeta especifica por su Id
-    fetchSubFolders: (parentFolder: Folder) => Promise<Folder[]>;                      // Cargar las subcarpetas de una carpeta especifica
-    fetchRootSubFolders: () => Promise<Folder[]>;                                      // Cargar las carpetas del nivel raiz
-    buildBreadCrumbPath: (currentFolderId: string | null) => Promise<Folder[]>;        // Construccion del path de navegacion
+    fetchFolder: (id: string) => Promise<FolderModel | null>;                                // Cargar una carpeta especifica por su Id
+    fetchSubFolders: (parentFolder: FolderModel) => Promise<FolderModel[]>;                      // Cargar las subcarpetas de una carpeta especifica
+    fetchRootSubFolders: () => Promise<FolderModel[]>;                                      // Cargar las carpetas del nivel raiz
+    buildBreadCrumbPath: (currentFolderId: string | null) => Promise<FolderModel[]>;        // Construccion del path de navegacion
 
     // Actualizar estados
-    setCurrentFolder: (folder: Folder | null) => void;
-    setCurrentFolders: (folder: Folder[]) => void;
-    setBreadCrumbPath: (folder: Folder[]) => void;
+    setCurrentFolder: (folder: FolderModel | null) => void;
+    setCurrentFolders: (folder: FolderModel[]) => void;
+    setBreadCrumbPath: (folder: FolderModel[]) => void;
     setIsLoading: (isLoading: boolean) => void;
     setError: (error: string | null) => void;
 
@@ -59,7 +59,7 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
             set({ isLoading: false });
         }
     },
-    fetchSubFolders: async (parentFolder: Folder) => {
+    fetchSubFolders: async (parentFolder: FolderModel) => {
         try{
             set({ isLoading: true });
             
@@ -73,7 +73,7 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
             const subFolders = await Promise.all(subFolderPromises);
             
             // Filtrar carpetas nulas y actualizar el estado currentFolders
-            const validSubFolders = subFolders.filter((folder): folder is Folder => folder !== null);
+            const validSubFolders = subFolders.filter((folder): folder is FolderModel => folder !== null);
             set({ currentFolders: validSubFolders });
             
             return validSubFolders;
@@ -120,14 +120,14 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
             return []; // Si no hay Id devolvemos un array vacío
         }
 
-        const path: Folder[] =[];
+        const path: FolderModel[] =[];
         let currentId: string | null = currentFolderId;
 
         // Construir el path recursivamente desde la carpeta actual hasta las raiz
         while (currentId !== null) {
             // Intentar obtener la carpeta del cache primero
-            const cachedFolder: Folder | undefined = get().folderCache[currentId];
-            let folder: Folder | null = cachedFolder || null;
+            const cachedFolder: FolderModel | undefined = get().folderCache[currentId];
+            let folder: FolderModel | null = cachedFolder || null;
 
             // Si no esta en cache, cargamos la carpeta
             if (!folder) {
@@ -145,9 +145,9 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
         return path; // Devolver el path completo
     },
 
-    setCurrentFolder: (folder: Folder | null) => set({ currentFolder: folder }),
-    setCurrentFolders: (folder: Folder[]) => set({ currentFolders: folder }),
-    setBreadCrumbPath: (folder: Folder[]) => set({ breadCrumbPath: folder}),
+    setCurrentFolder: (folder: FolderModel | null) => set({ currentFolder: folder }),
+    setCurrentFolders: (folder: FolderModel[]) => set({ currentFolders: folder }),
+    setBreadCrumbPath: (folder: FolderModel[]) => set({ breadCrumbPath: folder}),
     setIsLoading: (isLoading: boolean) => set({ isLoading }),
     setError: (error: string | null) => set({ error }),
 

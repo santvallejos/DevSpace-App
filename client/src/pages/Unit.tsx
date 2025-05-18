@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Folder } from "@/models/FolderModel";
+import { FolderModel } from "@/models/FolderModel";
 import { useFolderStore } from "@/stores/FolderStore";
 import { useResourceStore } from "@/stores/resourceStore";
 import PreviewFolder from "@/components/shared/PreviewFolder";
@@ -11,6 +11,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import Loading from '../components/shared/Loading';
 import CardResource from '../components/shared/CardResource';
 import Search from "@/components/shared/Search";
+import { Input } from "@/components/ui/input";
+import FolderTree from "@/components/shared/FileTree";
 
 function MyUnit() {
   const { folderId } = useParams<{ folderId: string }>(); //Obtener parametos de la URL
@@ -38,7 +40,7 @@ function MyUnit() {
     fetchResources,
   } = useResourceStore();
 
-  const navigateToFolder = (folder: Folder) => { navigate(`/unity/${folder.id}`); }; //
+  const navigateToFolder = (folder: FolderModel) => { navigate(`/unity/${folder.id}`); }; //
 
   const navigateToRoot = () => { navigate('/unity'); }; // Función para volver a la raíz
 
@@ -50,8 +52,8 @@ function MyUnit() {
         if (folderId) {
           // Si el folderId existe, significa que estamos en una carpeta específica
 
-          const cachedFolder: Folder | undefined = folderCache[folderId];
-          let folder: Folder | null = cachedFolder || null;
+          const cachedFolder: FolderModel | undefined = folderCache[folderId];
+          let folder: FolderModel | null = cachedFolder || null;
 
           if (!folder) folder = await fetchFolder(folderId);
 
@@ -125,27 +127,16 @@ function MyUnit() {
                         Carpeta
                       </button>
                     </DialogTrigger>
-                    <DialogContent onCloseAutoFocus={(e) => {
-                      // Prevenir el comportamiento predeterminado de enfoque
-                      e.preventDefault();
-                      // Asegurarse de que el documento tenga el foco
-                      document.body.focus();
-                      // Simular un clic para restablecer los manejadores de eventos
-                      setTimeout(() => {
-                        const clickEvent = new MouseEvent('click', {
-                          bubbles: true,
-                          cancelable: true,
-                          view: window
-                        });
-                        document.body.dispatchEvent(clickEvent);
-                      }, 0);
-                    }}>
+                    <DialogContent>
                       <DialogTitle>Agregar una carpeta</DialogTitle>
                       <DialogDescription>
                         Crea una nueva carpeta para organizar tus recursos.
                       </DialogDescription>
                       <DialogHeader>
-                        
+                        <Input type="text" placeholder="Name Folder"/>
+                        <br />
+                        <span>Selecciona donde guardar la carpeta</span>
+                        <FolderTree />
                       </DialogHeader>
                     </DialogContent>
                   </Dialog>
@@ -160,21 +151,7 @@ function MyUnit() {
                         Recurso
                       </button>
                     </DialogTrigger>
-                    <DialogContent onCloseAutoFocus={(e) => {
-                      // Prevenir el comportamiento predeterminado de enfoque
-                      e.preventDefault();
-                      // Asegurarse de que el documento tenga el foco
-                      document.body.focus();
-                      // Simular un clic para restablecer los manejadores de eventos
-                      setTimeout(() => {
-                        const clickEvent = new MouseEvent('click', {
-                          bubbles: true,
-                          cancelable: true,
-                          view: window
-                        });
-                        document.body.dispatchEvent(clickEvent);
-                      }, 0);
-                    }}>
+                    <DialogContent>
                       <DialogHeader>
                         <DialogTitle>Agregar un recurso</DialogTitle>
                         <DialogDescription>
@@ -230,8 +207,7 @@ function MyUnit() {
             {/* Titulo de las carpetas */}
             <h2 className="text-xl font-semibold mb-3">Carpetas</h2>
             {currentFolders.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap
--4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {currentFolders.map((folder) => (
                   <div key={folder.id}>
                     <PreviewFolder
