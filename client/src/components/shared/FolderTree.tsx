@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Folder, Tree } from "../ui/FileTree";
 import { GetAllFolders } from "@/services/FolderServices";
 import { FolderModel } from "@/models/FolderModel";
+import { useFolderStore } from "@/stores/FolderStore";
 
 // Agregamos una extensión del modelo
 interface FolderModelWithChildren extends FolderModel {
@@ -9,17 +10,11 @@ interface FolderModelWithChildren extends FolderModel {
 }
 
 function FolderTree() {
+  const {
+    setFolderSelected,
+  } = useFolderStore();
+
   const [folderTree, setFolderTree] = useState<FolderModelWithChildren[]>([]);
-
-  useEffect(() => {
-    const loadAndBuildTree = async () => {
-      const flatFolders = await GetAllFolders();
-      const tree = buildTree(flatFolders);
-      setFolderTree(tree);
-    };
-
-    loadAndBuildTree();
-  }, []);
 
   // Función para construir el árbol jerárquico
   const buildTree = (flatFolders: FolderModel[]): FolderModelWithChildren[] => {
@@ -50,11 +45,21 @@ function FolderTree() {
   // Render recursivo del árbol
   const renderFolders = (folders: FolderModelWithChildren[]) => {
     return folders.map(folder => (
-      <Folder key={folder.id} element={folder.name} value={folder.id}>
+      <Folder key={folder.id} element={folder.name} value={folder.id} onClick={(e) => setFolderSelected(e, folder.name, folder.id)}>
         {folder.children.length > 0 && renderFolders(folder.children)}
       </Folder>
     ));
   };
+
+  useEffect(() => {
+    const loadAndBuildTree = async () => {
+      const flatFolders = await GetAllFolders();
+      const tree = buildTree(flatFolders);
+      setFolderTree(tree);
+    };
+
+    loadAndBuildTree();
+  }, []);
 
   return (
     <Tree
@@ -62,7 +67,7 @@ function FolderTree() {
       initialExpandedItems={["null"]}
       initialSelectedId="null"
     >
-      <Folder element="Unit" value="null">
+      <Folder element="Unit" value="null" onClick={(e) => setFolderSelected(e, "Unit", "")}>
         {renderFolders(folderTree)}
       </Folder>
     </Tree>

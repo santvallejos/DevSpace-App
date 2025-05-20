@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { FolderModel } from "@/models/FolderModel";
+import { FolderModel, FolderSelected } from "@/models/FolderModel";
 import {
     GetFolderById,
     GetFoldersByParentFolderId
@@ -7,6 +7,7 @@ import {
 
 interface FolderStore {
     // Estados
+    folderSelected: FolderSelected[];            // Almacenar la carpeta seleccionada en el ap (para agregar o editar un evento)
     folderCache: Record<string, FolderModel>;   // Almacenar las carpetas en cache (solo las que se han cargado)
     currentFolders: FolderModel[];              // Almacenar las carpetas actuales (las que se muestran)
     currentFolder: FolderModel | null;          // Almacenar la carpeta actual (si estamos dentro de una)
@@ -21,6 +22,7 @@ interface FolderStore {
     buildBreadCrumbPath: (currentFolderId: string | null) => Promise<FolderModel[]>;        // Construccion del path de navegacion
 
     // Actualizar estados
+    setFolderSelected: (event: React.MouseEvent, name: string, id: string) => void;
     setCurrentFolder: (folder: FolderModel | null) => void;
     setCurrentFolders: (folder: FolderModel[]) => void;
     setBreadCrumbPath: (folder: FolderModel[]) => void;
@@ -33,6 +35,7 @@ interface FolderStore {
 }
 
 export const useFolderStore = create<FolderStore>((set, get) => ({
+    folderSelected: [],
     folderCache: {},
     currentFolders: [],
     currentFolder: null,
@@ -150,6 +153,14 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
     setBreadCrumbPath: (folder: FolderModel[]) => set({ breadCrumbPath: folder}),
     setIsLoading: (isLoading: boolean) => set({ isLoading }),
     setError: (error: string | null) => set({ error }),
+    setFolderSelected: (event: React.MouseEvent, name: string, id: string) => {
+        event.stopPropagation();
+        const newFolderSelected: FolderSelected = {
+            name: name,
+            id: id
+        };
+        set({ folderSelected: [newFolderSelected] });
+    },
 
     // Utilidades
     clearError: () => set({ error: null }),

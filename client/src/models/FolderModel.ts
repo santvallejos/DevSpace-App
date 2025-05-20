@@ -16,3 +16,13 @@ export interface FolderModel {
     parentFolderID: string | null;
     subFolders: string[];
 }
+
+export interface FolderSelected{
+    name: string;
+    id: string;
+}
+
+export interface PostFolder{
+    name: string;
+    parentFolderID: string | null;
+}

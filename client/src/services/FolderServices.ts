@@ -1,5 +1,5 @@
 import api from "../contexts/Api";
-import { FolderModel } from "@/models/FolderModel";
+import { FolderModel, PostFolder } from "@/models/FolderModel";
 
 // Obtener todas las carpetas
 export const GetAllFolders = async (): Promise<FolderModel[]> => {
@@ -25,7 +25,7 @@ export const GetFoldersByName = async (name: string): Promise<FolderModel[]> => 
 }
 
 // Crear una carpeta
-export const CreateFolder = async (folder: FolderModel): Promise<FolderModel> => {
+export const CreateFolder = async (folder: PostFolder): Promise<PostFolder> => {
     const response = await api.post('Folder', folder);
     return response.data;
 }

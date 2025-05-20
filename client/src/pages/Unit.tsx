@@ -6,13 +6,10 @@ import { useFolderStore } from "@/stores/FolderStore";
 import { useResourceStore } from "@/stores/resourceStore";
 import PreviewFolder from "@/components/shared/PreviewFolder";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Loading from '../components/shared/Loading';
 import CardResource from '../components/shared/CardResource';
 import Search from "@/components/shared/Search";
-import { Input } from "@/components/ui/input";
-import FolderTree from "@/components/shared/FileTree";
+import CreateElment from "@/components/shared/CreateElement";
 
 function MyUnit() {
   const { folderId } = useParams<{ folderId: string }>(); //Obtener parametos de la URL
@@ -110,59 +107,8 @@ function MyUnit() {
             {/* Buscar carpetas o recursos */}
             <Search />
 
-            {/* Boton de crear carpeta o recurso */}
-            <DropdownMenu>
-              <DropdownMenuTrigger className="bg-blue-500 text-white px-4 py-0.5 rounded-md flex items-center cursor-pointer">
-                <span className="mr-1 text-lg">+</span>Nuevo
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {/* Add Resource */}
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <button className="w-full text-left" onClick={() => {
-                        // Cerrar el dropdown al abrir el dialog
-                        document.body.click();
-                      }}>
-                        Carpeta
-                      </button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogTitle>Agregar una carpeta</DialogTitle>
-                      <DialogDescription>
-                        Crea una nueva carpeta para organizar tus recursos.
-                      </DialogDescription>
-                      <DialogHeader>
-                        <Input type="text" placeholder="Name Folder"/>
-                        <br />
-                        <span>Selecciona donde guardar la carpeta</span>
-                        <FolderTree />
-                      </DialogHeader>
-                    </DialogContent>
-                  </Dialog>
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <button className="w-full text-left" onClick={() => {
-                        // Cerrar el dropdown al abrir el dialog
-                        document.body.click();
-                      }}>
-                        Recurso
-                      </button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Agregar un recurso</DialogTitle>
-                        <DialogDescription>
-                          Agrega un nuevo recurso a tu unidad.
-                        </DialogDescription>
-                      </DialogHeader>
-                    </DialogContent>
-                  </Dialog>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* Crear carpeta o recurso */}
+            <CreateElment />
           </div>
         </div>
 
