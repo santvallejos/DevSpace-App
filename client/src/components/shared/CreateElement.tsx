@@ -19,68 +19,57 @@ function CreateElment() {
             const newFolder = {
                 name: nameNewFolder,
                 parentFolderID: folderId,
-            }
+            };
 
             await CreateFolder(newFolder);
 
             setNameNewFolder("");
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
         }
     }
 
     return (
         <>
-                                <Dialog>
-                            <DialogTrigger>
-                                <button className="w-full text-left" onClick={() => {
-                                    // Cerrar el dropdown al abrir el dialog
-                                    document.body.click();
-                                }}>
-                                    Folder
-                                </button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <form onSubmit={handleCreateFolder}>
-                                    <DialogTitle>Agregar una carpeta</DialogTitle>
-                                    <DialogDescription>
-                                        Crea una nueva carpeta para organizar tus recursos.
-                                    </DialogDescription>
-                                    <DialogHeader>
-                                        <Input type="text" placeholder="Name Folder" value={nameNewFolder} onChange={(e) => setNameNewFolder(e.target.value)} required/>
-                                        <br />
-                                        <div>
-                                            La carpeta se guardara en: {folderSelected[0]?.name || 'Root'}
-                                        </div>
-                                        <span>Selecciona donde guardar la carpeta</span>
-                                        <FolderTree />
-                                    </DialogHeader>
-                                    <DialogFooter>
-                                        <Button type="submit">Save changes</Button>
-                                    </DialogFooter>
-                                </form>
-                            </DialogContent>
-                        </Dialog>
+            <Dialog>
+                <DialogTrigger>
+                        + Folder
+                </DialogTrigger>
+                <DialogContent>
+                    <form onSubmit={handleCreateFolder}>
+                        <DialogTitle>Agregar una carpeta</DialogTitle>
+                        <DialogDescription>
+                            Crea una nueva carpeta para organizar tus recursos.
+                        </DialogDescription>
+                        <DialogHeader>
+                            <Input type="text" placeholder="Name Folder" value={nameNewFolder} onChange={(e) => setNameNewFolder(e.target.value)} required />
+                            <br />
+                            <div>
+                                La carpeta se guardara en: {folderSelected[0]?.name || 'Root'}
+                            </div>
+                            <span>Selecciona donde guardar la carpeta</span>
+                            <FolderTree />
+                        </DialogHeader>
+                        <DialogFooter>
+                            <Button type="submit">Add</Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
 
-                        <Dialog>
-                            <DialogTrigger>
-                                <button className="w-full text-left" onClick={() => {
-                                    // Cerrar el dropdown al abrir el dialog
-                                    document.body.click();
-                                }}>
-                                    Recurso
-                                </button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Agregar un recurso</DialogTitle>
-                                    <DialogDescription>
-                                        Agrega un nuevo recurso a tu unidad.
-                                    </DialogDescription>
-                                </DialogHeader>
-                            </DialogContent>
-                        </Dialog>
+            <Dialog>
+                <DialogTrigger>
+                        + Recurso
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Agregar un recurso</DialogTitle>
+                        <DialogDescription>
+                            Agrega un nuevo recurso a tu unidad.
+                        </DialogDescription>
+                    </DialogHeader>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };

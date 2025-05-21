@@ -66,8 +66,8 @@ namespace api.Controllers
         {
             try
             {
-                await _folderServices.AddFolderAsync(folderDto);
-                return Ok();
+                Folder folder = await _folderServices.AddFolderAsync(folderDto);
+                return Ok( folder );
             }
             catch (Exception ex)
             {

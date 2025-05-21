@@ -1,24 +1,34 @@
 import { create } from "zustand";
-import { FolderModel, FolderSelected } from "@/models/FolderModel";
+import { FolderModel, FolderSelected} from "@/models/FolderModel";
 import {
     GetFolderById,
     GetFoldersByParentFolderId
 } from "../services/FolderServices";
 
 interface FolderStore {
-    // Estados
-    folderSelected: FolderSelected[];            // Almacenar la carpeta seleccionada en el ap (para agregar o editar un evento)
+    // Agregar carpeta
+    folderSelected: FolderSelected[];            // Almacenar la carpeta seleccionada en el app (para agregar o editar un evento)
+    
+    // Cargar la unidad
     folderCache: Record<string, FolderModel>;   // Almacenar las carpetas en cache (solo las que se han cargado)
     currentFolders: FolderModel[];              // Almacenar las carpetas actuales (las que se muestran)
     currentFolder: FolderModel | null;          // Almacenar la carpeta actual (si estamos dentro de una)
+
+    // Paths
     breadCrumbPath: FolderModel[];              // Almacenar ruta de navegacion (para el breadcrumb)
+
+    // Indicaciones de estados
     isLoading: boolean;                    // Controlar la carga
     error: string | null;                  // Controlar errores
 
     // Cargar carpetas
-    fetchFolder: (id: string) => Promise<FolderModel | null>;                                // Cargar una carpeta especifica por su Id
-    fetchSubFolders: (parentFolder: FolderModel) => Promise<FolderModel[]>;                      // Cargar las subcarpetas de una carpeta especifica
+    fetchFolder: (id: string) => Promise<FolderModel | null>;                               // Cargar una carpeta especifica por su Id
+    fetchSubFolders: (parentFolder: FolderModel) => Promise<FolderModel[]>;                 // Cargar las subcarpetas de una carpeta especifica
     fetchRootSubFolders: () => Promise<FolderModel[]>;                                      // Cargar las carpetas del nivel raiz
+
+    // Crud de carpetas
+    //AddFolder: (folder: PostFolder) => void;                                                // Agregar una carpeta
+    // Construccion de path para navegar
     buildBreadCrumbPath: (currentFolderId: string | null) => Promise<FolderModel[]>;        // Construccion del path de navegacion
 
     // Actualizar estados
@@ -147,7 +157,6 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
         
         return path; // Devolver el path completo
     },
-
     setCurrentFolder: (folder: FolderModel | null) => set({ currentFolder: folder }),
     setCurrentFolders: (folder: FolderModel[]) => set({ currentFolders: folder }),
     setBreadCrumbPath: (folder: FolderModel[]) => set({ breadCrumbPath: folder}),

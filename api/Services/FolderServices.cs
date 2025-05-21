@@ -20,7 +20,7 @@ namespace api.Services
             _resourceCollection = resourceCollection;
         }
 
-        public async Task AddFolderAsync(FolderDto folderDto)
+        public async Task<Folder> AddFolderAsync(FolderDto folderDto)
         {
             Folder @folder = new Folder
             {
@@ -29,7 +29,7 @@ namespace api.Services
                 ParentFolderID = folderDto.ParentFolderID,
                 SubFolders = new List<string>()
             };
-
+        
             //Si el padre no es nulo, agregamos la referencia al padre
             if (@folder.ParentFolderID != null)
             {
@@ -41,6 +41,8 @@ namespace api.Services
                 // El padre es nulo, la carpeta esta en la raiz de la unidad
                 await _folderCollection.AddFolder(@folder);
             }
+            
+            return @folder;
         }
 
         public async Task UpdateNameFolderAsync(string Id, NameFolderDto folderDto)
