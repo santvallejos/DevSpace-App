@@ -20,7 +20,7 @@ function AppSidebar() {
                 <header className="p-4 flex justify-between items-center gap-x-2">
                     {/* Logo */}
                     <Link to="/" className="flex justify-between items-center gap-x-2">
-                            <img src="icons/DevSpace-blue-icon.png" alt="" className="w-5 h-5" />
+                            <img src="/icons/DevSpace-blue-icon.png" alt="" className="w-5 h-5" />
                             <h2 className="flex-none font-semibold text-2xl text-black focus:outline-hidden focus:opacity-80 dark:text-white">DevSpace</h2>
                     </Link>
                     {/* Theme toggle button */}

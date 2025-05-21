@@ -25,8 +25,8 @@ export const GetFoldersByName = async (name: string): Promise<FolderModel[]> => 
 }
 
 // Crear una carpeta
-export const CreateFolder = async (folder: PostFolder): Promise<PostFolder> => {
-    const response = await api.post<FolderModel>('Folder', folder);
+export const CreateFolder = async (folder: PostFolder): Promise<FolderModel> => {
+    const response = await api.post<FolderModel>('Folder', folder); // Esperamos que la API nos devuelva un FolderModel (que es el que acabamos de crear)
     return response.data;
 }
 

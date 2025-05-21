@@ -1,12 +1,13 @@
 import { create } from "zustand";
-import { FolderModel, FolderSelected} from "@/models/FolderModel";
+import { FolderModel, FolderSelected, PostFolder} from "@/models/FolderModel";
 import {
+    CreateFolder,
     GetFolderById,
     GetFoldersByParentFolderId
 } from "../services/FolderServices";
 
 interface FolderStore {
-    // Agregar carpeta
+    // Trabajar sobre una carpeta
     folderSelected: FolderSelected[];            // Almacenar la carpeta seleccionada en el app (para agregar o editar un evento)
     
     // Cargar la unidad
@@ -27,7 +28,7 @@ interface FolderStore {
     fetchRootSubFolders: () => Promise<FolderModel[]>;                                      // Cargar las carpetas del nivel raiz
 
     // Crud de carpetas
-    //AddFolder: (folder: PostFolder) => void;                                                // Agregar una carpeta
+    AddFolder: (folder: PostFolder) => void;                                                // Agregar una carpeta
     // Construccion de path para navegar
     buildBreadCrumbPath: (currentFolderId: string | null) => Promise<FolderModel[]>;        // Construccion del path de navegacion
 
@@ -124,6 +125,25 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
             set({ error: "Error fetching root subfolders" });
             return [];
         }finally{
+            set({ isLoading: false });
+        }
+    },
+    // Crud de carpetas
+    AddFolder: async (folder: PostFolder) => {
+        try{
+            set({ isLoading: true });
+            const newFolder = await CreateFolder(folder);
+            if(newFolder){
+                // Actualizar el cache
+                const newCache = {...get().folderCache, [newFolder.id]: newFolder};
+                set({ folderCache: newCache });
+            }
+            return newFolder;
+        } catch (error) {
+            console.error("Error adding folder:", error);
+            set({ error: "Error adding folder" });
+            return null;
+        } finally {
             set({ isLoading: false });
         }
     },

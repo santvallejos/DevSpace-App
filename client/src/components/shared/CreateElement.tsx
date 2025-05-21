@@ -4,12 +4,12 @@ import { Input } from "@/components/ui/input";
 import FolderTree from "@/components/shared/FolderTree";
 import { useFolderStore } from "@/stores/FolderStore";
 import { useState } from "react";
-import { CreateFolder } from "@/services/FolderServices";
 
 function CreateElment() {
     const [nameNewFolder, setNameNewFolder] = useState("");
     const {
         folderSelected,
+        AddFolder,
     } = useFolderStore();
 
     const handleCreateFolder = async () => {
@@ -21,11 +21,11 @@ function CreateElment() {
                 parentFolderID: folderId,
             };
 
-            await CreateFolder(newFolder);
+            await AddFolder(newFolder);
 
             setNameNewFolder("");
         } catch (error) {
-            console.log(error);
+            console.log("No se a creado la carpeta", error);
         }
     }
 
