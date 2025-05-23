@@ -157,6 +157,7 @@ function MyUnit() {
                 {currentFolders.map((folder) => (
                   <div key={folder.id}>
                     <PreviewFolder
+                      id={folder.id}
                       name={folder.name}
                       onClick={() => navigateToFolder(folder)}
                     />

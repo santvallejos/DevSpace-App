@@ -1,71 +1,64 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useState, useEffect, useRef } from "react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useFolderStore } from "@/stores/FolderStore";
 
 /**
  * Interfaz que define las propiedades del componente PreviewFolder
  * @property {string} name - Nombre de la carpeta a mostrar
  * @property {Function} onClick - Función a ejecutar cuando se hace clic en la carpeta
- * @property {Function} onDelete - Función para eliminar la carpeta
- * @property {Function} onRename - Función para renombrar la carpeta
- * @property {Function} onMove - Función para mover la carpeta
- * @property {string} id - Identificador único de la carpeta
  */
 interface PreviewFolderProps {
+    id: string;
     name?: string;
     onClick?: () => void;
-    /* onDelete?: (id: string) => void;
-    onRename?: (id: string, newName: string) => void;
-    onMove?: (id: string, targetFolderId: string) => void;
-    id?: string; */
+    // Estas propiedades se pueden agregar cuando se implementen las funcionalidades
+    // onDelete?: (id: string) => void;
+    // onRename?: (id: string, newName: string) => void;
+    // onMove?: (id: string, targetFolderId: string) => void;
+    // id?: string;
 }
 
 /**
  * Componente que muestra una vista previa de una carpeta con opciones para
  * eliminar, renombrar y mover la carpeta.
- * 
- * 
- * onDelete, onRename, onMove, id = "" 
  */
-function PreviewFolder({ name = "Carpeta", onClick }: PreviewFolderProps) {
-    // Estados para controlar la visibilidad del menú y los diálogos
-    const [showMenu, setShowMenu] = useState(false);
-    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const [showRenameDialog, setShowRenameDialog] = useState(false);
-    const [showMoveDialog, setShowMoveDialog] = useState(false);
-    const [newFolderName, setNewFolderName] = useState(name);
-    const [targetFolderId, setTargetFolderId] = useState("");
-    
-    // Referencias para el menú desplegable y el botón que lo activa
+function PreviewFolder({ name = "Carpeta", onClick, id}: PreviewFolderProps) {
+    const {
+        deleteFolder,
+        renameFolder,
+    } = useFolderStore();
+
+    // Estados para los formularios y diálogos
+    const [showMenu, setShowMenu] = useState(false);                // Estado para mostrar/ocultar el menu
+    const [showRenameDialog, setShowRenameDialog] = useState(false); // Estado para diálogo de renombrar
+    const [showMoveDialog, setShowMoveDialog] = useState(false);     // Estado para diálogo de mover
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false); // Estado para diálogo de eliminar
+    const [newFolderName, setNewFolderName] = useState("");       // Nombre para renombrar
+    const [targetFolderId, setTargetFolderId] = useState("");       // ID de carpeta destino
+
+    // Referencias para el menú desplegable y el botón
     const menuRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     /**
      * Efecto para cerrar el menú cuando se hace clic fuera de él
-     * Se activa solo cuando showMenu es true
      */
     useEffect(() => {
-        // Función que maneja el clic fuera del menú
         const handleClickOutside = (event: MouseEvent) => {
             // Verifica si el clic fue fuera del menú y del botón
-            if (
-                menuRef.current && 
-                !menuRef.current.contains(event.target as Node) &&
-                buttonRef.current && 
-                !buttonRef.current.contains(event.target as Node)
-            ) {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node) && buttonRef.current && !buttonRef.current.contains(event.target as Node)) {
                 setShowMenu(false);
             }
         };
 
-        // Solo agrega el event listener si el menú está visible
         if (showMenu) {
             document.addEventListener('mousedown', handleClickOutside);
         }
 
-        // Limpieza del efecto al desmontar o cuando cambia showMenu
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
@@ -73,106 +66,49 @@ function PreviewFolder({ name = "Carpeta", onClick }: PreviewFolderProps) {
 
     /**
      * Manejador para mostrar/ocultar el menú de opciones
-     * Detiene la propagación para evitar que se active onClick de la carpeta
      */
-    const toggleMenu = useCallback((e: React.MouseEvent) => {
+    const toggleMenu = (e: React.MouseEvent) => {
         e.stopPropagation();
         setShowMenu(!showMenu);
-    }, [showMenu]);
+    };
 
     /**
-     * Manejador para mostrar el diálogo de eliminación
+     * Manejador para prevenir la propagación de eventos
      */
-    const handleDeleteClick = useCallback((e: React.MouseEvent) => {
+    const stopPropagation = (e: React.MouseEvent) => {
         e.stopPropagation();
-        setShowMenu(false);
-        setShowDeleteDialog(true);
-    }, []);
+    };
 
     /**
-     * Manejador para mostrar el diálogo de renombrar
-     * Inicializa el campo con el nombre actual
+     * Manejadores para abrir diálogos
      */
-    const handleRenameClick = useCallback((e: React.MouseEvent) => {
+    const openRenameDialog = (e: React.MouseEvent) => {
         e.stopPropagation();
         setShowMenu(false);
-        setNewFolderName(name);
         setShowRenameDialog(true);
-    }, [name]);
+    };
 
-    /**
-     * Manejador para mostrar el diálogo de mover
-     */
-    const handleMoveClick = useCallback((e: React.MouseEvent) => {
+    const handleRenameFolder = async () => {
+        await renameFolder(id, newFolderName);
+        setShowRenameDialog(false);
+    }
+
+    const openMoveDialog = (e: React.MouseEvent) => {
         e.stopPropagation();
         setShowMenu(false);
         setShowMoveDialog(true);
-    }, []);
+    };
 
-    /**
-     * Manejador para eliminar la carpeta
-     * Llama a la función onDelete proporcionada por el componente padre
-     */
-    /* const handleDelete = useCallback((e?: React.MouseEvent) => {
-        if (e) e.stopPropagation();
-        if (onDelete && id) {
-            onDelete(id);
-        }
-        setShowDeleteDialog(false);
-    }, [onDelete, id]); */
-
-    /**
-     * Manejador para renombrar la carpeta
-     * Llama a la función onRename proporcionada por el componente padre
-     */
-    /* const handleRename = useCallback((e?: React.MouseEvent) => {
-        if (e) e.stopPropagation();
-        if (onRename && id && newFolderName.trim() !== "") {
-            onRename(id, newFolderName);
-        }
-        setShowRenameDialog(false);
-    }, [onRename, id, newFolderName]); */
-
-    /**
-     * Manejador para mover la carpeta
-     * Llama a la función onMove proporcionada por el componente padre
-     */
-    /* const handleMove = useCallback((e?: React.MouseEvent) => {
-        if (e) e.stopPropagation();
-        if (onMove && id && targetFolderId.trim() !== "") {
-            onMove(id, targetFolderId);
-        }
-        setShowMoveDialog(false);
-    }, [onMove, id, targetFolderId]); */
-
-    /**
-     * Manejador para controlar la apertura/cierre de diálogos
-     * Previene la navegación accidental al cerrar diálogos
-     */
-    const handleDialogOpenChange = useCallback((
-        open: boolean, 
-        setDialogState: React.Dispatch<React.SetStateAction<boolean>>
-    ) => {
-        if (!open) {
-            // Usamos setTimeout para asegurar que el evento de clic no se propague
-            setTimeout(() => {
-                setDialogState(false);
-            }, 0);
-        } else {
-            setDialogState(true);
-        }
-    }, []);
-
-    /**
-     * Manejador para cancelar un diálogo
-     */
-    const handleCancel = useCallback((
-        e: React.MouseEvent, 
-        setDialogState: React.Dispatch<React.SetStateAction<boolean>>
-    ) => {
+    const openDeleteDialog = (e: React.MouseEvent) => {
         e.stopPropagation();
-        setDialogState(false);
-    }, []);
+        setShowMenu(false);
+        setShowDeleteDialog(true);
+    };
+
+    const handleDeleteFolder = async () => {
+        await deleteFolder(id);
+        setShowDeleteDialog(false);
+    }
 
     return (
         <div className="p-4 border rounded-md hover:bg-accent cursor-pointer">
@@ -197,7 +133,7 @@ function PreviewFolder({ name = "Carpeta", onClick }: PreviewFolderProps) {
                     </svg>
                     <span>{name}</span>
                 </div>
-                
+
                 {/* Botón de opciones y menú desplegable */}
                 <div className="relative">
                     <button
@@ -228,13 +164,13 @@ function PreviewFolder({ name = "Carpeta", onClick }: PreviewFolderProps) {
                         <div
                             ref={menuRef}
                             className="absolute right-0 mt-1 w-40 bg-white border rounded-md shadow-lg z-10"
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={stopPropagation}
                         >
                             <ul className="py-1">
                                 <li>
                                     <button
                                         className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                        onClick={handleRenameClick}
+                                        onClick={openRenameDialog}
                                     >
                                         Renombrar
                                     </button>
@@ -242,7 +178,7 @@ function PreviewFolder({ name = "Carpeta", onClick }: PreviewFolderProps) {
                                 <li>
                                     <button
                                         className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                        onClick={handleMoveClick}
+                                        onClick={openMoveDialog}
                                     >
                                         Mover
                                     </button>
@@ -250,7 +186,7 @@ function PreviewFolder({ name = "Carpeta", onClick }: PreviewFolderProps) {
                                 <li>
                                     <button
                                         className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                        onClick={handleDeleteClick}
+                                        onClick={openDeleteDialog}
                                     >
                                         Eliminar
                                     </button>
@@ -261,81 +197,50 @@ function PreviewFolder({ name = "Carpeta", onClick }: PreviewFolderProps) {
                 </div>
             </div>
 
-            {/* Diálogo de confirmación para eliminar carpeta */}
-            <Dialog 
-                open={showDeleteDialog} 
-                onOpenChange={(open) => handleDialogOpenChange(open, setShowDeleteDialog)}
-            >
-                <DialogContent onClick={(e) => e.stopPropagation()}>
-                    <DialogHeader>
-                        <DialogTitle>Eliminar carpeta</DialogTitle>
-                        <DialogDescription>
-                            ¿Estás seguro de que deseas eliminar la carpeta "{name}"? Esta acción no se puede deshacer.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                        <Button 
-                            variant="outline" 
-                            onClick={(e) => handleCancel(e, setShowDeleteDialog)}
-                        >
-                            Cancelar
-                        </Button>
-                        <Button 
-                            variant="destructive"
-                        >
-                            Eliminar
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            {/* Diálogo para renombrar carpeta */}
-            <Dialog 
-                open={showRenameDialog} 
-                onOpenChange={(open) => handleDialogOpenChange(open, setShowRenameDialog)}
-            >
-                <DialogContent onClick={(e) => e.stopPropagation()}>
+            {/* Diálogo de Renombrar */}
+            <Dialog open={showRenameDialog} onOpenChange={setShowRenameDialog}>
+                <DialogContent onClick={stopPropagation}>
                     <DialogHeader>
                         <DialogTitle>Renombrar carpeta</DialogTitle>
                         <DialogDescription>
                             Introduce un nuevo nombre para la carpeta.
                         </DialogDescription>
                     </DialogHeader>
+                    <form onSubmit={handleRenameFolder}>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="name" className="text-right">
                                 Nombre
                             </Label>
                             <Input
-                                id="name"
+                                type="text"
                                 value={newFolderName}
                                 onChange={(e) => setNewFolderName(e.target.value)}
                                 className="col-span-3"
                                 autoFocus
-                                onClick={(e) => e.stopPropagation()}
+                                onClick={stopPropagation}
                             />
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button 
-                            variant="outline" 
-                            onClick={(e) => handleCancel(e, setShowRenameDialog)}
-                        >
-                            Cancelar
-                        </Button>
-                        <Button>
-                            Guardar
-                        </Button>
+                        <DialogClose asChild>
+                            <Button variant="outline" onClick={stopPropagation}>
+                                Cancelar
+                            </Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                            <Button type="submit">
+                                Guardar
+                            </Button>
+                        </DialogClose>
                     </DialogFooter>
+                    </form>
                 </DialogContent>
             </Dialog>
 
-            {/* Diálogo para mover carpeta */}
-            <Dialog 
-                open={showMoveDialog} 
-                onOpenChange={(open) => handleDialogOpenChange(open, setShowMoveDialog)}
-            >
-                <DialogContent onClick={(e) => e.stopPropagation()}>
+            {/* Diálogo de Mover */}
+            <Dialog open={showMoveDialog} onOpenChange={setShowMoveDialog}>
+                <DialogContent onClick={stopPropagation}>
                     <DialogHeader>
                         <DialogTitle>Mover carpeta</DialogTitle>
                         <DialogDescription>
@@ -348,30 +253,44 @@ function PreviewFolder({ name = "Carpeta", onClick }: PreviewFolderProps) {
                                 Destino
                             </Label>
                             <div className="col-span-3">
-                                {/* Aquí se podría implementar un selector de carpetas más avanzado */}
                                 <Input
                                     id="destination"
                                     placeholder="Selecciona una carpeta de destino"
                                     value={targetFolderId}
                                     onChange={(e) => setTargetFolderId(e.target.value)}
-                                    onClick={(e) => e.stopPropagation()}
+                                    onClick={stopPropagation}
                                 />
                             </div>
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button 
-                            variant="outline" 
-                            onClick={(e) => handleCancel(e, setShowMoveDialog)}
-                        >
-                            Cancelar
-                        </Button>
-                        <Button>
-                            Mover
-                        </Button>
+                        <DialogClose asChild>
+                            <Button variant="outline" onClick={stopPropagation}>
+                                Cancelar
+                            </Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                            <Button onClick={stopPropagation}>
+                                Mover
+                            </Button>
+                        </DialogClose>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* Diálogo de Eliminar */}
+            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <AlertDialogContent onClick={stopPropagation}>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Do you want to delete this folder?</AlertDialogTitle>
+                        <AlertDialogDescription>If you want to delete the<span className='font-bold text-black dark:text-white'> {name} </span>folder, its folders and resources will also be deleted.</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel >Cancel</AlertDialogCancel>
+                        <AlertDialogAction className="btn btn-error hover:text-white hover:bg-red-500" onClick={handleDeleteFolder}>Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

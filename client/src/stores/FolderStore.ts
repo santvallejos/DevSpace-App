@@ -1,9 +1,11 @@
 import { create } from "zustand";
 import { FolderModel, FolderSelected, PostFolder} from "@/models/FolderModel";
 import {
-    CreateFolder,
     GetFolderById,
-    GetFoldersByParentFolderId
+    GetFoldersByParentFolderId,
+    CreateFolder,
+    UpdateFolder,
+    DeleteFolder,
 } from "../services/FolderServices";
 
 interface FolderStore {
@@ -28,7 +30,9 @@ interface FolderStore {
     fetchRootSubFolders: () => Promise<FolderModel[]>;                                      // Cargar las carpetas del nivel raiz
 
     // Crud de carpetas
-    AddFolder: (folder: PostFolder) => void;                                                // Agregar una carpeta
+    addFolder: (folder: PostFolder) => void;                                                // Agregar una carpeta
+    renameFolder: (id: string, name: string) => void;                                       // Renombrar una carpeta
+    deleteFolder: (id: string) => void;                                                     // Eliminar una carpeta
     // Construccion de path para navegar
     buildBreadCrumbPath: (currentFolderId: string | null) => Promise<FolderModel[]>;        // Construccion del path de navegacion
 
@@ -129,9 +133,8 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
         }
     },
     // Crud de carpetas
-    AddFolder: async (folder: PostFolder) => {
+    addFolder: async (folder: PostFolder) => {
         try{
-            set({ isLoading: true });
             const newFolder = await CreateFolder(folder);
             if(newFolder){
                 // Actualizar el cache
@@ -143,8 +146,55 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
             console.error("Error adding folder:", error);
             set({ error: "Error adding folder" });
             return null;
-        } finally {
-            set({ isLoading: false });
+        }
+    },
+    renameFolder: async (id: string, name: string) => {
+        try{
+            // Actualizar el nombre de una carpeta
+            await UpdateFolder(id, name);
+            // Actualizar el cache
+            const newCache = {...get().folderCache};
+            newCache[id].name = name;
+            set({ folderCache: newCache });
+            // Actualizar el nombre de la carpeta en currentFolders
+            const renameFolder = get().folderCache[id];
+            if(renameFolder){
+                const newCurrentFolders = get().currentFolders.map(folder => {
+                    if(folder.id === id){
+                        folder.name = name;
+                    }
+                    return folder;
+                });
+                set({ currentFolders: newCurrentFolders });
+            }
+            // Actualizar el nombre de la carpeta en breadCrumbPath
+            const renameFolderInBreadCrumbPath = get().breadCrumbPath.find(folder => folder.id === id);
+            if(renameFolderInBreadCrumbPath){
+                renameFolderInBreadCrumbPath.name = name;
+                set({ breadCrumbPath: get().breadCrumbPath });
+            }
+        } catch (error) {
+            console.error("Error renaming folder:", error);
+            set({ error: "Error renaming folder" });
+        }
+    },
+    deleteFolder: async (id: string) => {
+        try{
+            // Eliminar la carpeta
+            await DeleteFolder(id);
+            // Eliminar la carpeta del cache
+            const newCache = {...get().folderCache};
+            delete newCache[id];
+            // Obtener esa carpeta y evaluar si se esta viendo en currentFolders
+            const folderToDelete = get().folderCache[id];
+            if(folderToDelete){
+                const newCurrentFolders = get().currentFolders.filter(folder => folder.id !== id);
+                set({ currentFolders: newCurrentFolders });
+            }
+            set({ folderCache: newCache });
+        } catch (error) {
+            console.error("Error deleting folder:", error);
+            set({ error: "Error deleting folder" });
         }
     },
     buildBreadCrumbPath: async (currentFolderId: string | null) => {

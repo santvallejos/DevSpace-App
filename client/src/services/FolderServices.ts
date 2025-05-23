@@ -31,8 +31,8 @@ export const CreateFolder = async (folder: PostFolder): Promise<FolderModel> => 
 }
 
 // Actualizar una carpeta
-export const UpdateFolder = async (folder: FolderModel): Promise<FolderModel> => {
-    const response = await api.put(`Folder/${folder.id}`, folder);
+export const UpdateFolder = async (id: string, name: string): Promise<string> => {
+    const response = await api.put(`Folder/${id}`, name);
     return response.data;
 }
 

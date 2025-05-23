@@ -9,7 +9,7 @@ function CreateElment() {
     const [nameNewFolder, setNameNewFolder] = useState("");
     const {
         folderSelected,
-        AddFolder,
+        addFolder,
     } = useFolderStore();
 
     const handleCreateFolder = async () => {
@@ -21,7 +21,7 @@ function CreateElment() {
                 parentFolderID: folderId,
             };
 
-            await AddFolder(newFolder);
+            await addFolder(newFolder);
 
             setNameNewFolder("");
         } catch (error) {
