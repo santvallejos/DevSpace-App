@@ -1,5 +1,5 @@
 import api from "../contexts/Api";
-import { FolderModel, PostFolder } from "@/models/FolderModel";
+import { FolderModel, PostFolder, RenameFolder } from "@/models/FolderModel";
 
 // Obtener todas las carpetas
 export const GetAllFolders = async (): Promise<FolderModel[]> => {
@@ -31,7 +31,7 @@ export const CreateFolder = async (folder: PostFolder): Promise<FolderModel> => 
 }
 
 // Actualizar una carpeta
-export const UpdateFolder = async (id: string, name: string): Promise<string> => {
+export const UpdateFolder = async (id: string, name: RenameFolder): Promise<RenameFolder> => {
     const response = await api.put(`Folder/${id}`, name);
     return response.data;
 }

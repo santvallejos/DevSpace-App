@@ -75,7 +75,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut] // Actualizar una carpeta
+        [HttpPut("{id}")] // Actualizar una carpeta
         public async Task<IActionResult> UpdateFolder(string id, [FromBody] NameFolderDto folderDto)
         {
             // Validacion del id

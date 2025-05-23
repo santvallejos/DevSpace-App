@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFolderStore } from "@/stores/FolderStore";
+import { RenameFolder } from "@/models/FolderModel";
 
 /**
  * Interfaz que define las propiedades del componente PreviewFolder
@@ -89,7 +90,10 @@ function PreviewFolder({ name = "Carpeta", onClick, id}: PreviewFolderProps) {
     };
 
     const handleRenameFolder = async () => {
-        await renameFolder(id, newFolderName);
+        const renameFolderModel: RenameFolder = {
+            name: newFolderName,
+        }
+        await renameFolder(id, renameFolderModel);
         setShowRenameDialog(false);
     }
 

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { FolderModel, FolderSelected, PostFolder} from "@/models/FolderModel";
+import { FolderModel, FolderSelected, PostFolder, RenameFolder} from "@/models/FolderModel";
 import {
     GetFolderById,
     GetFoldersByParentFolderId,
@@ -31,7 +31,7 @@ interface FolderStore {
 
     // Crud de carpetas
     addFolder: (folder: PostFolder) => void;                                                // Agregar una carpeta
-    renameFolder: (id: string, name: string) => void;                                       // Renombrar una carpeta
+    renameFolder: (id: string, name: RenameFolder) => void;                                       // Renombrar una carpeta
     deleteFolder: (id: string) => void;                                                     // Eliminar una carpeta
     // Construccion de path para navegar
     buildBreadCrumbPath: (currentFolderId: string | null) => Promise<FolderModel[]>;        // Construccion del path de navegacion
@@ -148,30 +148,15 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
             return null;
         }
     },
-    renameFolder: async (id: string, name: string) => {
+    renameFolder: async (id: string, name: RenameFolder) => {
         try{
             // Actualizar el nombre de una carpeta
             await UpdateFolder(id, name);
             // Actualizar el cache
             const newCache = {...get().folderCache};
-            newCache[id].name = name;
-            set({ folderCache: newCache });
-            // Actualizar el nombre de la carpeta en currentFolders
-            const renameFolder = get().folderCache[id];
-            if(renameFolder){
-                const newCurrentFolders = get().currentFolders.map(folder => {
-                    if(folder.id === id){
-                        folder.name = name;
-                    }
-                    return folder;
-                });
-                set({ currentFolders: newCurrentFolders });
-            }
-            // Actualizar el nombre de la carpeta en breadCrumbPath
-            const renameFolderInBreadCrumbPath = get().breadCrumbPath.find(folder => folder.id === id);
-            if(renameFolderInBreadCrumbPath){
-                renameFolderInBreadCrumbPath.name = name;
-                set({ breadCrumbPath: get().breadCrumbPath });
+            if(newCache[id]){
+                newCache[id].name = name.name;
+                set({ folderCache: newCache });
             }
         } catch (error) {
             console.error("Error renaming folder:", error);

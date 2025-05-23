@@ -26,3 +26,7 @@ export interface PostFolder{
     name: string;
     parentFolderID: string | null;
 }
+
+export interface RenameFolder{
+    name: string;
+}
