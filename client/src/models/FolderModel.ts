@@ -30,3 +30,7 @@ export interface PostFolder{
 export interface RenameFolder{
     name: string;
 }
+
+export interface MoveFolder{
+    parentFolderID: string | null;
+}

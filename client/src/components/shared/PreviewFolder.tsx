@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFolderStore } from "@/stores/FolderStore";
-import { RenameFolder } from "@/models/FolderModel";
+import { RenameFolder, MoveFolder } from "@/models/FolderModel";
+import FolderTree from "./FolderTree";
 
 /**
  * Interfaz que define las propiedades del componente PreviewFolder
@@ -27,19 +28,20 @@ interface PreviewFolderProps {
  * Componente que muestra una vista previa de una carpeta con opciones para
  * eliminar, renombrar y mover la carpeta.
  */
-function PreviewFolder({ name = "Carpeta", onClick, id}: PreviewFolderProps) {
+function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
     const {
+        folderSelected,
         deleteFolder,
         renameFolder,
+        moveFolder
     } = useFolderStore();
 
     // Estados para los formularios y diálogos
-    const [showMenu, setShowMenu] = useState(false);                // Estado para mostrar/ocultar el menu
-    const [showRenameDialog, setShowRenameDialog] = useState(false); // Estado para diálogo de renombrar
-    const [showMoveDialog, setShowMoveDialog] = useState(false);     // Estado para diálogo de mover
-    const [showDeleteDialog, setShowDeleteDialog] = useState(false); // Estado para diálogo de eliminar
-    const [newFolderName, setNewFolderName] = useState("");       // Nombre para renombrar
-    const [targetFolderId, setTargetFolderId] = useState("");       // ID de carpeta destino
+    const [showMenu, setShowMenu] = useState(false);                    // Estado para mostrar/ocultar el menu
+    const [showRenameDialog, setShowRenameDialog] = useState(false);    // Estado para diálogo de renombrar
+    const [showMoveDialog, setShowMoveDialog] = useState(false);        // Estado para diálogo de mover
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);    // Estado para diálogo de eliminar
+    const [newFolderName, setNewFolderName] = useState("");             // Nombre para renombrar           // ID de carpeta destino
 
     // Referencias para el menú desplegable y el botón
     const menuRef = useRef<HTMLDivElement>(null);
@@ -101,6 +103,16 @@ function PreviewFolder({ name = "Carpeta", onClick, id}: PreviewFolderProps) {
         e.stopPropagation();
         setShowMenu(false);
         setShowMoveDialog(true);
+    };
+
+    const handleMoveFolder = () => {
+        // Logica para mover la carpeta
+        const folderId = folderSelected[0]?.id || null;
+        const moveFolderModel: MoveFolder = {
+            parentFolderID: folderId,
+        };
+        moveFolder(id, moveFolderModel);
+        setShowMoveDialog(false);
     };
 
     const openDeleteDialog = (e: React.MouseEvent) => {
@@ -211,33 +223,33 @@ function PreviewFolder({ name = "Carpeta", onClick, id}: PreviewFolderProps) {
                         </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleRenameFolder}>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                                Nombre
-                            </Label>
-                            <Input
-                                type="text"
-                                value={newFolderName}
-                                onChange={(e) => setNewFolderName(e.target.value)}
-                                className="col-span-3"
-                                autoFocus
-                                onClick={stopPropagation}
-                            />
+                        <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="name" className="text-right">
+                                    Nombre
+                                </Label>
+                                <Input
+                                    type="text"
+                                    value={newFolderName}
+                                    onChange={(e) => setNewFolderName(e.target.value)}
+                                    className="col-span-3"
+                                    autoFocus
+                                    onClick={stopPropagation}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button variant="outline" onClick={stopPropagation}>
-                                Cancelar
-                            </Button>
-                        </DialogClose>
-                        <DialogClose asChild>
-                            <Button type="submit">
-                                Guardar
-                            </Button>
-                        </DialogClose>
-                    </DialogFooter>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button variant="outline" onClick={stopPropagation}>
+                                    Cancelar
+                                </Button>
+                            </DialogClose>
+                            <DialogClose asChild>
+                                <Button type="submit">
+                                    Guardar
+                                </Button>
+                            </DialogClose>
+                        </DialogFooter>
                     </form>
                 </DialogContent>
             </Dialog>
@@ -251,22 +263,10 @@ function PreviewFolder({ name = "Carpeta", onClick, id}: PreviewFolderProps) {
                             Selecciona la carpeta de destino donde deseas mover "{name}".
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="destination" className="text-right">
-                                Destino
-                            </Label>
-                            <div className="col-span-3">
-                                <Input
-                                    id="destination"
-                                    placeholder="Selecciona una carpeta de destino"
-                                    value={targetFolderId}
-                                    onChange={(e) => setTargetFolderId(e.target.value)}
-                                    onClick={stopPropagation}
-                                />
-                            </div>
-                        </div>
+                    <div>
+                        La carpeta se guardara en: {folderSelected[0]?.name || 'Root'}
                     </div>
+                    <FolderTree />
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button variant="outline" onClick={stopPropagation}>
@@ -274,7 +274,7 @@ function PreviewFolder({ name = "Carpeta", onClick, id}: PreviewFolderProps) {
                             </Button>
                         </DialogClose>
                         <DialogClose asChild>
-                            <Button onClick={stopPropagation}>
+                            <Button onClick={handleMoveFolder}>
                                 Mover
                             </Button>
                         </DialogClose>

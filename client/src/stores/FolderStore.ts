@@ -1,10 +1,11 @@
 import { create } from "zustand";
-import { FolderModel, FolderSelected, PostFolder, RenameFolder} from "@/models/FolderModel";
+import { FolderModel, FolderSelected, PostFolder, RenameFolder, MoveFolder } from "@/models/FolderModel";
 import {
     GetFolderById,
     GetFoldersByParentFolderId,
     CreateFolder,
     UpdateFolder,
+    UpdateParentFolder,
     DeleteFolder,
 } from "../services/FolderServices";
 
@@ -31,7 +32,8 @@ interface FolderStore {
 
     // Crud de carpetas
     addFolder: (folder: PostFolder) => void;                                                // Agregar una carpeta
-    renameFolder: (id: string, name: RenameFolder) => void;                                       // Renombrar una carpeta
+    renameFolder: (id: string, name: RenameFolder) => void;                                 // Renombrar una carpeta
+    moveFolder: (id: string, newParentId: MoveFolder) => void;                              // Mover una carpeta (cambiar de carpeta padre)
     deleteFolder: (id: string) => void;                                                     // Eliminar una carpeta
     // Construccion de path para navegar
     buildBreadCrumbPath: (currentFolderId: string | null) => Promise<FolderModel[]>;        // Construccion del path de navegacion
@@ -161,6 +163,27 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
         } catch (error) {
             console.error("Error renaming folder:", error);
             set({ error: "Error renaming folder" });
+        }
+    },
+    moveFolder: async (id: string, newParentId: MoveFolder) => {
+        try{
+            // Actualizar el parentFolderId de una carpeta'
+            await UpdateParentFolder(id, newParentId);
+            // Actualizar el cache
+            const newCache = {...get().folderCache};
+            if(newCache[id]){
+                newCache[id].parentFolderID = newParentId.parentFolderID;
+                set({ folderCache: newCache });
+            }
+            // Obtener esa carpeta y evaluar si se esta viendo en currentFolders
+            const folderToMove = get().folderCache[id];
+            if(folderToMove){
+                const newCurrentFolders = get().currentFolders.filter(folder => folder.id!== id);
+                set({ currentFolders: newCurrentFolders });
+            }
+        } catch (error) {
+            console.error("Error moving folder:", error);
+            set({ error: "Error moving folder" });
         }
     },
     deleteFolder: async (id: string) => {
