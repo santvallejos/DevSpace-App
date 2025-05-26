@@ -1,18 +1,24 @@
 import { create } from "zustand";
-import { Resource } from "@/models/ResourceModel";
+import { Resource, CreateResourceModel } from "@/models/ResourceModel";
 import {
     GetRecentsResources,
     GetFavoriteResources,
     GetRecommendedResources,
-    GetResourceByFolderId
+    GetResourceByFolderId,
+    CreateResource,
 } from "@/services/ResourceServices";
+import { useFolderStore } from "./FolderStore";
 
 interface ResourceState {
-    // Estados
+    // Cargar la unidad
     currentResourceFolder: Resource[];
+
+    // Dashboard
     recentsResources: Resource[];
     favoritesResources: Resource[];
     recommendedResources: Resource[];
+
+    // Indicaciones de estados
     isLoading: boolean;
     error: string | null;
 
@@ -23,8 +29,12 @@ interface ResourceState {
     fetchResourcesRoot: () => Promise<Resource[]>;                               // Cargar los recursos del nivel raiz
     fetchResources: (folderId: string | null) => Promise<Resource[]>;            // Cargar los recursos de una carpeta especifica
 
+    // Crud de recursos
+    addResource: (resource: CreateResourceModel) => void;
+    // Actualizar estados
     setCurrentResourceFolder: (folder: Resource[]) => void;
 
+    // Utilidades
     setIsLoading: (isLoading: boolean) => void;
     setError: (error: string | null) => void;
 
@@ -85,7 +95,7 @@ export const useResourceStore = create<ResourceState>((set) => ({
     fetchResourcesRoot: async () => {
         try{
             set({ isLoading: true })
-            const resources = await GetResourceByFolderId("");
+            const resources = await GetResourceByFolderId(null);
             set({ currentResourceFolder: resources});
             return resources;
         } catch (error) {
@@ -108,6 +118,34 @@ export const useResourceStore = create<ResourceState>((set) => ({
             return [];
         } finally {
             set({ isLoading: false });
+        }
+    },
+    addResource: async (resource: CreateResourceModel) => {
+        try{
+            const newResource = await CreateResource(resource);
+            if(newResource){
+                // Obtener la carpeta actual del FolderStore
+                const currentFolder = useFolderStore.getState().currentFolder;
+                
+                // Verificar si estamos en la raíz (currentFolder es null) y el recurso se añadió a la raíz
+                const isRootResource = !newResource.folderId || newResource.folderId === '';
+                const isInRootView = currentFolder === null;
+                
+                // Verificar si estamos en una carpeta y el recurso se añadió a esa carpeta
+                const isInCurrentFolder = currentFolder && newResource.folderId === currentFolder.id;
+                
+                // Solo actualizar la vista si el recurso se añadió a la carpeta que se está visualizando
+                if ((isRootResource && isInRootView) || isInCurrentFolder) {
+                    const currentResources = [...useResourceStore.getState().currentResourceFolder];
+                    currentResources.push(newResource);
+                    useResourceStore.getState().setCurrentResourceFolder(currentResources);
+                }
+            }
+            return newResource;
+        } catch (error) {
+            console.error(error);
+            set({ error: 'Error al crear el recurso' });
+            return null;
         }
     },
 

@@ -1,8 +1,14 @@
 import api from '../contexts/Api';
-import { Resource } from '../models/ResourceModel';
+import { Resource, CreateResourceModel } from '../models/ResourceModel';
 
 // Obtener recurso por carpeta
 export const GetResourceByFolderId = async (folderId: string | null): Promise<Resource[]> => {
+    // Si folderId es null, usar un endpoint especial para recursos en la raíz
+    if (folderId === null) {
+        const response = await api.get('Resource/root');
+        return response.data;
+    }
+    
     const response = await api.get(`Resource/folder/${folderId}`);
     return response.data;
 };
@@ -39,8 +45,8 @@ export const GetResourceByName = async (name: string): Promise<Resource> => {
 }
 
 // Crear un recurso
-export const CreatResource = async (resource: Resource): Promise<Resource> => {
-    const response = await api.post('Resource', resource);
+export const CreateResource = async (resource: CreateResourceModel): Promise<Resource> => {
+    const response = await api.post<Resource>('Resource', resource);
     return response.data;
 };
 

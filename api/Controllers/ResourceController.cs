@@ -53,8 +53,8 @@ namespace api.Controllers
         {
             try
             {
-                await _resourceServices.AddResourceAsync(resourceDto);
-                return Ok();
+                Resource resource = await _resourceServices.AddResourceAsync(resourceDto);
+                return Ok( resource );
             }
             catch (Exception ex)
             {
@@ -150,6 +150,20 @@ namespace api.Controllers
             try
             {
                 return Ok(await _resourceCollection.GetResourcesByFolderId(folderId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("root")]
+        public async Task<IActionResult> GetRootResources()
+        {
+            try
+            {
+                // Buscar recursos donde FolderId sea null
+                return Ok(await _resourceCollection.GetRootResources());
             }
             catch (Exception ex)
             {

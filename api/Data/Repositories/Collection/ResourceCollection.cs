@@ -27,6 +27,13 @@ namespace api.Data.Repositories.Collection
         }
 
         //[Get]
+        public async Task<List<Resource>> GetRootResources()
+        {
+            var filter = Builders<Resource>.Filter.Eq(s => s.FolderId, null);
+            return await Collection.FindAsync(filter).Result.ToListAsync();
+        }
+
+        //[Get]
         public async Task<Resource> GetResourceById(string id)
         {
             var filter = Builders<Resource>.Filter.Eq("_id", new ObjectId(id));

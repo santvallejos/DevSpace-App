@@ -31,15 +31,17 @@ namespace api.Services
             return resources;
         }
 
-        public async Task AddResourceAsync(PostResourceDto resourceDto)
+        public async Task<Resource> AddResourceAsync(PostResourceDto resourceDto)
         {
+            Resource @resource;
+            
             if (resourceDto.FolderId != null)
             {
                 var folder = await _folderCollection.GetFolderById(resourceDto.FolderId);
                 
                 if (folder != null)
                 {
-                    Resource @resource = new Resource()
+                    @resource = new Resource()
                     {
                         Id = ObjectId.GenerateNewId().ToString(),
                         FolderId = resourceDto.FolderId,
@@ -54,24 +56,29 @@ namespace api.Services
                     };
                     await _resourceCollection.AddResource(@resource);
                 }
+                else
+                {
+                    throw new Exception("No existe una carpeta con ese Id");
+                }
             }
             else
             {
-                Resource @resource = new Resource()
-                    {
-                        Id = ObjectId.GenerateNewId().ToString(),
-                        FolderId = null,
-                        Name = resourceDto.Name,
-                        Description = resourceDto.Description,
-                        Type = resourceDto.Type,
-                        Url = resourceDto.Url,
-                        Code = resourceDto.Code,
-                        Text = resourceDto.Text,
-                        Favorite = false,
-                        CreatedOn = DateTime.UtcNow
-                    };
+                @resource = new Resource()
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    FolderId = null,
+                    Name = resourceDto.Name,
+                    Description = resourceDto.Description,
+                    Type = resourceDto.Type,
+                    Url = resourceDto.Url,
+                    Code = resourceDto.Code,
+                    Text = resourceDto.Text,
+                    Favorite = false,
+                    CreatedOn = DateTime.UtcNow
+                };
                 await _resourceCollection.AddResource(@resource);
             }
+            return @resource;
         }
 
         public async Task UpdateResourceAsync(string Id, PutResourceDto resourceDto)

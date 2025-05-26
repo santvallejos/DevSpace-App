@@ -9,6 +9,7 @@ namespace api.Data.Repositories.Interfaces
     public interface IResourceCollection
     {
         Task<List<Resource>> GetResources();
+        Task<List<Resource>> GetRootResources();
         Task<Resource> GetResourceById(string id);
         Task<List<Resource>> GetResourcesByName(string name);
         Task<List<Resource>> GetResourcesByFolderId(string folderId);

@@ -1,16 +1,3 @@
-export interface Resource {
-    id: string;
-    folderId: string;
-    name: string;
-    description: string;
-    type: number;
-    url: string;
-    code: string;
-    text: string;
-    favorite: boolean;
-    createdOn: Date;
-}
-
 /* ejemplo de modelo de la base de datos
 [
   {
@@ -27,3 +14,26 @@ export interface Resource {
   }
 ]
 */
+
+export interface Resource {
+    id: string;
+    folderId: string | null;
+    name: string;
+    description?: string;
+    type: number;
+    url?: string;
+    code?: string;
+    text?: string;
+    favorite: boolean;
+    createdOn: Date;
+}
+
+export interface CreateResourceModel {
+    folderId: string | null;
+    name: string;
+    description?: string;
+    type: number;
+    url?: string;
+    code?: string;
+    text?: string;
+}
