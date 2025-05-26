@@ -62,8 +62,8 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateResource(string id ,[FromBody] PutResourceDto resourceDto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateResource(string id, [FromBody] PutResourceDto resourceDto)
         {
             try
             {

@@ -37,3 +37,15 @@ export interface CreateResourceModel {
     code?: string;
     text?: string;
 }
+
+export interface UpdateResourceModel {
+    name: string;
+    description?: string;
+    url?: string;
+    code?: string;
+    text?: string;
+}
+
+export interface MoveResourceModel {
+    folderId: string | null;
+}

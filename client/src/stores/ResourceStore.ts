@@ -1,11 +1,15 @@
 import { create } from "zustand";
-import { Resource, CreateResourceModel } from "@/models/ResourceModel";
+import { Resource, CreateResourceModel, UpdateResourceModel, MoveResourceModel } from "@/models/ResourceModel";
 import {
+    GetResourceById,
     GetRecentsResources,
     GetFavoriteResources,
     GetRecommendedResources,
     GetResourceByFolderId,
     CreateResource,
+    UpdateResource,
+    UpdateResourceFavorite,
+    UpdateResourceFolder
 } from "@/services/ResourceServices";
 import { useFolderStore } from "./FolderStore";
 
@@ -30,7 +34,10 @@ interface ResourceState {
     fetchResources: (folderId: string | null) => Promise<Resource[]>;            // Cargar los recursos de una carpeta especifica
 
     // Crud de recursos
-    addResource: (resource: CreateResourceModel) => void;
+    addResource: (resource: CreateResourceModel) => void;                        // Crear un nuevo recurso
+    updateResource: (id: string, resource: UpdateResourceModel) => void;         // Actualizar un recurso
+    updateResourceFavorite: (id: string) => void;                                // Actualizar el estado de favorito de un recurso
+    moveResource: (id: string, folderId: MoveResourceModel ) => void;            // Mover un recurso a otra carpeta
     // Actualizar estados
     setCurrentResourceFolder: (folder: Resource[]) => void;
 
@@ -146,6 +153,73 @@ export const useResourceStore = create<ResourceState>((set) => ({
             console.error(error);
             set({ error: 'Error al crear el recurso' });
             return null;
+        }
+    },
+    updateResource: async (id: string, resourceUpdate: UpdateResourceModel) => {
+        try {
+            // Actualizar el recurso
+            await UpdateResource(id, resourceUpdate);
+
+            // Obtener el recurso 
+            const resource = await GetResourceById(id);
+            if (!resource) {
+                throw new Error('Recurso no encontrado');
+            }
+
+            // Evaluar si el recurso se esta mostrando actualmente
+            const currentFolder = useFolderStore.getState().currentFolder;
+            const isInCurrentFolder = currentFolder && currentFolder.id === resource.folderId;
+            const isInRootView = currentFolder === null;
+            const isRootResource = !resource.folderId || resource.folderId === '';
+
+            // Si el recurso se esta mostrando actualmente, actualizar la vista
+            if ((isRootResource && isInRootView) || isInCurrentFolder) {
+                const currentResources = [...useResourceStore.getState().currentResourceFolder];
+                const index = currentResources.findIndex(r => r.id === id);
+                if(index!== -1){
+                    currentResources[index] = {...currentResources[index], ...resourceUpdate};
+                    useResourceStore.getState().setCurrentResourceFolder(currentResources);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            set({ error: 'Error al actualizar el recurso' });
+        }
+    },
+    updateResourceFavorite: async (id: string) => {
+        try{
+            // Solo actualziar el estado de favorito
+            await UpdateResourceFavorite(id);
+        } catch (error) {
+            console.error(error);
+            set({ error: 'Error al actualizar el recurso' });
+        }
+    },
+    moveResource: async (id: string, resourceFolderId: MoveResourceModel) => {
+        try{
+            await UpdateResourceFolder(id, resourceFolderId);
+
+            // Obtener la carpeta actual del FolderStore
+            const currentFolder = useFolderStore.getState().currentFolder;
+
+            // Verificamos si el recurso se movió a otra carpeta que no es la que se está mostrando
+            // O si estamos en la raíz (currentFolder es null) y el recurso se movió a una carpeta (resourceFolderId.folderId no es null)
+            const isMovingFromCurrentFolder = 
+                (currentFolder && currentFolder.id !== resourceFolderId.folderId) || 
+                (currentFolder === null && resourceFolderId.folderId !== null);
+
+            // Si se movió a otra carpeta que no es la que se está mostrando, actualizamos la vista eliminando el recurso
+            if (isMovingFromCurrentFolder) {
+                const currentResources = [...useResourceStore.getState().currentResourceFolder];
+                const index = currentResources.findIndex(r => r.id === id);
+                if(index!== -1){
+                    currentResources.splice(index, 1);
+                    useResourceStore.getState().setCurrentResourceFolder(currentResources);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            set({ error: 'Error al mover el recurso' });
         }
     },
 

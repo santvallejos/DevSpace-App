@@ -1,5 +1,11 @@
 import api from '../contexts/Api';
-import { Resource, CreateResourceModel } from '../models/ResourceModel';
+import { Resource, CreateResourceModel, UpdateResourceModel, MoveResourceModel} from '../models/ResourceModel';
+
+// Obtener recurso por id
+export const GetResourceById = async (id: string): Promise<Resource> => {
+    const response = await api.get(`Resource/${id}`);
+    return response.data;
+};
 
 // Obtener recurso por carpeta
 export const GetResourceByFolderId = async (folderId: string | null): Promise<Resource[]> => {
@@ -51,13 +57,13 @@ export const CreateResource = async (resource: CreateResourceModel): Promise<Res
 };
 
 // Actualizar un recurso
-export const UpdateResource = async (resource: Resource): Promise<Resource> => {
-    const response = await api.put(`Resource/${resource.id}`, resource);
+export const UpdateResource = async (id: string, resource: UpdateResourceModel): Promise<Resource> => {
+    const response = await api.put(`Resource/${id}`, resource);
     return response.data;
 };
 
 // Mover un recurso a una carpeta
-export const UpdateResourceFolder = async (id: string, folderId: string | null): Promise<Resource> => {
+export const UpdateResourceFolder = async (id: string, folderId: MoveResourceModel): Promise<Resource> => {
     const response = await api.put(`Resource/folderid/${id}`, folderId);
     return response.data;
 };

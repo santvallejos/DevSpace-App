@@ -25,6 +25,10 @@ import {
     DialogClose
 } from "@/components/ui/dialog"
 import { DeleteResource } from '@/services/ResourceServices';
+import { useResourceStore } from '@/stores/resourceStore';
+import { MoveResourceModel, UpdateResourceModel } from '@/models/ResourceModel';
+import { useFolderStore } from '@/stores/FolderStore';
+import FolderTree from './FolderTree';
 
 interface ResourceProps {
     id: string
@@ -39,6 +43,16 @@ interface ResourceProps {
 }
 
 function CardResource(props: ResourceProps) {
+    const {
+        updateResource,
+        updateResourceFavorite,
+        moveResource
+    } = useResourceStore();
+
+    const {
+        folderSelected
+    } = useFolderStore();
+
     //Propiedades que se tienen que pasar al recurso
     const { id, name, description, type, url, code, text, favorite } = props;
     const [isFavorite, setIsFavorite] = useState(favorite); // Estado para controlar si el recurso está marcado como favorito
@@ -49,11 +63,6 @@ function CardResource(props: ResourceProps) {
     const [editUrl, setEditUrl] = useState(url);
     const [editCode, setEditCode] = useState(code || "");
     const [editText, setEditText] = useState(text || "");
-
-    // Función para manejar el cambio de estado de favorito
-    const handleFavoriteToggle = () => {
-        setIsFavorite(!isFavorite);
-    };
 
     // Evaluar que tipo de recurso es
     const renderResourcePreview = () => {
@@ -113,7 +122,7 @@ function CardResource(props: ResourceProps) {
     };
 
     const handleDeleteResource = async () => {
-        try{
+        try {
             await DeleteResource(id);
             if (props.onDelete) {
                 props.onDelete(id);
@@ -122,6 +131,51 @@ function CardResource(props: ResourceProps) {
             console.error("Error al eliminar el recurso:", error);
         }
     };
+
+    const handleUpdateResource = async () => {
+        try {
+            const editResource: UpdateResourceModel = {
+                name: editName,
+                description: editDescription,
+                url: editUrl,
+                code: editCode,
+                text: editText
+            }
+
+            await updateResource(id, editResource);
+            console.log("Recurso actualizado con éxito");
+
+            setEditName(name);
+            setEditDescription(description || "");
+            setEditUrl(url);
+            setEditCode(code || "");
+            setEditText(text || "");
+        } catch (error) {
+            console.error("Error al actualizar el recurso:", error);
+        }
+    };
+
+    const handleResourceFavorite = async () => {
+        try {
+            await updateResourceFavorite(id);
+            setIsFavorite(!isFavorite);
+        } catch (error) {
+            console.error("Error al marcar/desmarcar como favorito:", error);
+        }
+    }
+
+    const handleMoveResource = async () => {
+        try {
+            const folderId: MoveResourceModel = {
+                folderId: folderSelected[0]?.id || null
+            }
+            await moveResource(id, folderId);
+            console.log("Recurso movido con éxito");
+        } catch (error) {
+            console.error("Error al mover el recurso:", error);
+        }
+    }
+
 
     return (
         <>
@@ -134,7 +188,7 @@ function CardResource(props: ResourceProps) {
                             type="checkbox"
                             className="absolute opacity-0 cursor-pointer peer"
                             checked={isFavorite}
-                            onChange={handleFavoriteToggle}
+                            onClick={handleResourceFavorite}
                         />
                         <svg
                             className="relative w-[30px] h-[30px] transition-all duration-300 fill-[#666] dark:fill-[#999] hover:scale-110 peer-checked:fill-[#ffeb49] dark:peer-checked:fill-[#ffeb49]"
@@ -181,9 +235,9 @@ function CardResource(props: ResourceProps) {
                                                     readOnly
                                                 />
                                             </div>
-                                            <Button 
-                                                type="button" 
-                                                size="sm" 
+                                            <Button
+                                                type="button"
+                                                size="sm"
                                                 className="px-3 hover:bg-blue-500"
                                                 onClick={() => navigator.clipboard.writeText(url)}
                                             >
@@ -263,26 +317,40 @@ function CardResource(props: ResourceProps) {
                     <div className="flex space-x-2">
                         {/* Edit */}
                         <AlertDialog>
+                            <AlertDialogTrigger>
+                                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-arrows-move"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 9l3 3l-3 3" /><path d="M15 12h6" /><path d="M6 9l-3 3l3 3" /><path d="M3 12h6" /><path d="M9 18l3 3l3 -3" /><path d="M12 15v6" /><path d="M15 6l-3 -3l-3 3" /><path d="M12 3v6" /></svg>
+                            </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Move Resource</AlertDialogTitle>
+                                        <AlertDialogDescription>Move this resource to a different folder.</AlertDialogDescription>
+                                        <div>
+                                            La carpeta se guardara en: {folderSelected[0]?.name || 'Root'}
+                                        </div>
+                                        <FolderTree />
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={handleMoveResource}>Move</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                        </AlertDialog>
+
+                        <AlertDialog>
                             <AlertDialogTrigger className='text-base hover:text-yellow-500 dark:text-gray-300 dark:hover:text-yellow-400'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-edit"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Edit Resource</AlertDialogTitle>
-                                    <form className="space-y-4">
+                                <form action={handleUpdateResource}>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Edit Resource</AlertDialogTitle>
                                         {/* Name */}
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                Name
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={editName}
-                                                onChange={(e) => setEditName(e.target.value)}
-                                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                                required
-                                            />
-                                        </div>
+                                        <Input
+                                            type='text'
+                                            placeholder='Name'
+                                            value={editName}
+                                            onChange={(e) => setEditName(e.target.value)}
+                                        />
 
                                         {/* Description */}
                                         <div>
@@ -299,18 +367,7 @@ function CardResource(props: ResourceProps) {
 
                                         {/* Resource Content based on type */}
                                         {type === 0 && (
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                                    URL
-                                                </label>
-                                                <input
-                                                    type="url"
-                                                    value={editUrl}
-                                                    onChange={(e) => setEditUrl(e.target.value)}
-                                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white resize-none"
-                                                    required
-                                                />
-                                            </div>
+                                            <Input type='text' value={editUrl}onChange={(e) => setEditUrl(e.target.value)}/>
                                         )}
 
                                         {type === 1 && (
@@ -340,12 +397,12 @@ function CardResource(props: ResourceProps) {
                                                 />
                                             </div>
                                         )}
-                                    </form>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel className="btn btn-outline">Cancel</AlertDialogCancel>
-                                    <AlertDialogAction className='hover:bg-blue-600 transition-colors'>Save</AlertDialogAction>
-                                </AlertDialogFooter>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel className="btn btn-outline">Cancel</AlertDialogCancel>
+                                        <Button type="submit" />
+                                    </AlertDialogFooter>
+                                </form>
                             </AlertDialogContent>
                         </AlertDialog>
                         {/* Delete */}
