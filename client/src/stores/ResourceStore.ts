@@ -9,7 +9,8 @@ import {
     CreateResource,
     UpdateResource,
     UpdateResourceFavorite,
-    UpdateResourceFolder
+    UpdateResourceFolder,
+    DeleteResource
 } from "@/services/ResourceServices";
 import { useFolderStore } from "./FolderStore";
 
@@ -38,6 +39,7 @@ interface ResourceState {
     updateResource: (id: string, resource: UpdateResourceModel) => void;         // Actualizar un recurso
     updateResourceFavorite: (id: string) => void;                                // Actualizar el estado de favorito de un recurso
     moveResource: (id: string, folderId: MoveResourceModel ) => void;            // Mover un recurso a otra carpeta
+    deleteResource: (id: string) => void;                                        // Eliminar un recurso
     // Actualizar estados
     setCurrentResourceFolder: (folder: Resource[]) => void;
 
@@ -220,6 +222,37 @@ export const useResourceStore = create<ResourceState>((set) => ({
         } catch (error) {
             console.error(error);
             set({ error: 'Error al mover el recurso' });
+        }
+    },
+    deleteResource: async (id: string) => {
+        try{
+            // Obtener el recurso antes de eliminarlo
+            const resource = await GetResourceById(id);
+            if (!resource) {
+                throw new Error('Recurso no encontrado');
+            }
+            
+            // Eliminar el recurso
+            await DeleteResource(id);
+
+            // Evaluar si el recurso se esta mostrando actualmente
+            const currentFolder = useFolderStore.getState().currentFolder;
+            const isInCurrentFolder = currentFolder && currentFolder.id === resource.folderId;
+            const isInRootView = currentFolder === null;
+            const isRootResource = !resource.folderId || resource.folderId === '';
+
+            // Si el recurso se esta mostrando actualmente, actualizar la vista
+            if ((isRootResource && isInRootView) || isInCurrentFolder) {
+                const currentResources = [...useResourceStore.getState().currentResourceFolder];
+                const index = currentResources.findIndex(r => r.id === id);
+                if(index !== -1){
+                    currentResources.splice(index, 1);
+                    useResourceStore.getState().setCurrentResourceFolder(currentResources);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            set({ error: 'Error al eliminar el recurso' });
         }
     },
 

@@ -24,7 +24,6 @@ import {
     DialogFooter,
     DialogClose
 } from "@/components/ui/dialog"
-import { DeleteResource } from '@/services/ResourceServices';
 import { useResourceStore } from '@/stores/resourceStore';
 import { MoveResourceModel, UpdateResourceModel } from '@/models/ResourceModel';
 import { useFolderStore } from '@/stores/FolderStore';
@@ -46,7 +45,8 @@ function CardResource(props: ResourceProps) {
     const {
         updateResource,
         updateResourceFavorite,
-        moveResource
+        moveResource,
+        deleteResource
     } = useResourceStore();
 
     const {
@@ -123,10 +123,8 @@ function CardResource(props: ResourceProps) {
 
     const handleDeleteResource = async () => {
         try {
-            await DeleteResource(id);
-            if (props.onDelete) {
-                props.onDelete(id);
-            }
+            await deleteResource(id);
+            console.log("Recurso eliminado con éxito");
         } catch (error) {
             console.error("Error al eliminar el recurso:", error);
         }
