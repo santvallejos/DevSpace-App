@@ -1,31 +1,54 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
-const { spawn } = require('child_process');
+const fs = require('fs');
+
+const isDev = process.argv.includes('--dev');
 
 function createWindow() {
-    // Iniciar el backend .NET como proceso hijo
-    const apiProject = path.join(__dirname, '../api/api.csproj');
-    const api = spawn('dotnet', ['run', '--project', apiProject], { cwd: path.dirname(apiProject) });
-    api.stdout.on('data', data => console.log(`[API] ${data}`));
-    api.stderr.on('data', data => console.error(`[API Error] ${data}`));
-
-    // Crear la ventana del frontend
     const win = new BrowserWindow({
-        width: 800, height: 600,
+        width: 1200,
+        height: 800,
         webPreferences: {
-            nodeIntegration: false,  // renderer sin Node.js directo (opcional preload)
-            contextIsolation: true
-        }
+            contextIsolation: true,
+            nodeIntegration: false,
+            devTools: true
+        },
     });
 
-    // Cargar la UI de React (modo desarrollo o producción)
-    if (process.env.NODE_ENV === 'development') {
-        // Desarrollo: recarga en caliente desde Vite
+    if (isDev) {
+        // Modo desarrollo - cargar desde servidor Vite
+        console.log('Ejecutando en modo desarrollo, cargando desde http://localhost:5173');
         win.loadURL('http://localhost:5173');
     } else {
-        // Producción: archivos estáticos compilados
-        win.loadFile(path.join(__dirname, '../client/dist/index.html'));
+        // Modo producción - cargar desde archivos compilados
+        const indexPath = path.join(__dirname, '../client/dist/index.html');
+        
+        // Verificar si el archivo existe
+        if (fs.existsSync(indexPath)) {
+            console.log(`Cargando archivo: ${indexPath}`);
+            win.loadFile(indexPath);
+        } else {
+            console.error(`Error: El archivo ${indexPath} no existe`);
+            // Mostrar un mensaje de error en la ventana
+            win.loadURL(`data:text/html,<html><body><h1>Error</h1><p>No se pudo cargar la aplicación. El archivo ${indexPath} no existe.</p><p>Asegúrate de ejecutar 'npm run build' en la carpeta client primero.</p></body></html>`);
+        }
     }
+    
+    // Abrir DevTools para depuración
+    win.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);
+
+// Manejar cierre de la aplicación
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
+});
+
+app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow();
+    }
+});

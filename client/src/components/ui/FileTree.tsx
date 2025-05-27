@@ -127,14 +127,14 @@ const Tree = forwardRef<HTMLDivElement, TreeViewProps>(
           findParent(element);
         });
       },
-      [],
+      [setExpandedItems]
     );
 
     useEffect(() => {
       if (initialSelectedId) {
         expandSpecificTargetedElements(elements, initialSelectedId);
       }
-    }, [initialSelectedId, elements]);
+    }, [initialSelectedId, elements, expandSpecificTargetedElements]);
 
     const direction = dir === "rtl" ? "rtl" : "ltr";
 
@@ -165,7 +165,7 @@ const Tree = forwardRef<HTMLDivElement, TreeViewProps>(
               value={expandedItems}
               className="flex flex-col gap-1"
               onValueChange={(value) =>
-                setExpandedItems((prev) => [...(prev ?? []), value[0]])
+                setExpandedItems((prev) => value.length > 0 ? [...(prev ?? []), value[0]] : prev)
               }
               dir={dir as Direction}
             >
@@ -225,7 +225,8 @@ const Folder = forwardRef<
       children,
       ...props
     },
-    ref,
+    // Eliminar ref si no se está utilizando
+    // ref,
   ) => {
     const {
       direction,
@@ -357,14 +358,14 @@ const CollapseButton = forwardRef<
 
   const closeAll = useCallback(() => {
     setExpandedItems?.([]);
-  }, []);
+  }, [setExpandedItems]);
 
   useEffect(() => {
     console.log(expandAll);
     if (expandAll) {
       expendAllTree(elements);
     }
-  }, [expandAll]);
+  }, [expandAll, elements, expendAllTree]);
 
   return (
     <Button
