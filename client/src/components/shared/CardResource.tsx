@@ -81,7 +81,7 @@ function CardResource(props: ResourceProps) {
                                     readOnly
                                 />
                             </div>
-                            <Button type="submit" size="sm" className="px-3 hover:bg-blue-500">
+                            <Button type="submit" size="sm" className="px-3 hover:bg-blue-500 cursor-pointer">
                                 <span className="sr-only">Copy</span>
                                 <Copy />
                             </Button>
@@ -213,7 +213,7 @@ function CardResource(props: ResourceProps) {
                 <div className="flex justify-between">
                     {/* Open */}
                     <Dialog>
-                        <DialogTrigger>
+                        <DialogTrigger className='cursor-pointer'>
                             Open
                         </DialogTrigger>
                         <DialogContent>
@@ -315,7 +315,7 @@ function CardResource(props: ResourceProps) {
                     <div className="flex space-x-2">
                         {/* Edit */}
                         <AlertDialog>
-                            <AlertDialogTrigger>
+                            <AlertDialogTrigger className='cursor-pointer'>
                                 <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-arrows-move"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 9l3 3l-3 3" /><path d="M15 12h6" /><path d="M6 9l-3 3l3 3" /><path d="M3 12h6" /><path d="M9 18l3 3l3 -3" /><path d="M12 15v6" /><path d="M15 6l-3 -3l-3 3" /><path d="M12 3v6" /></svg>
                             </AlertDialogTrigger>
                                 <AlertDialogContent>
@@ -335,7 +335,7 @@ function CardResource(props: ResourceProps) {
                         </AlertDialog>
 
                         <AlertDialog>
-                            <AlertDialogTrigger className='text-base hover:text-yellow-500 dark:text-gray-300 dark:hover:text-yellow-400'>
+                            <AlertDialogTrigger className='text-base hover:text-yellow-500 dark:text-gray-300 dark:hover:text-yellow-400 cursor-pointer'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-edit"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -405,7 +405,7 @@ function CardResource(props: ResourceProps) {
                         </AlertDialog>
                         {/* Delete */}
                         <AlertDialog>
-                            <AlertDialogTrigger className="text-base hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400">
+                            <AlertDialogTrigger className="text-base hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400 cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
                             </AlertDialogTrigger>
                             <AlertDialogContent>

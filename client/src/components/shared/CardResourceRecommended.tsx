@@ -99,7 +99,7 @@ function CardResourceRecommended(props: ResourceProps) {
                 <div className="flex justify-between">
                     {/* Open */}
                     <Dialog>
-                        <DialogTrigger>
+                        <DialogTrigger className="cursor-pointer">
                             Open
                         </DialogTrigger>
                         <DialogContent>

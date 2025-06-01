@@ -77,7 +77,7 @@ function AppDashboard() {
             <button
               key={button.id}
               ref={button.ref}
-              className={`px-4 py-2 text-sm ${activeSection === button.activeSection ? "font-medium" : "text-gray-500"} whitespace-nowrap`}
+              className={`px-4 py-2 text-sm ${activeSection === button.activeSection ? "font-medium" : "text-gray-500"} whitespace-nowrap cursor-pointer`}
               onClick={() => setActiveSection(button.activeSection as "recent" | "recommended" | "favorites")}
             >
               {button.name}
