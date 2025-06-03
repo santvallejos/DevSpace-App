@@ -22,7 +22,31 @@ namespace api.Controllers
         }
 
         /// <summary> Obtiene todas las carpetas disponibles. </summary>
-        /// <remarks>Retorna una lista de carpetas utilizadas en el sistema.</remarks>
+        /// <remarks>
+        /// Retorna una lista de carpetas utilizadas en el sistema.
+        /// ### Ejemplo de uso:
+        ///     GET /api/Folders
+        ///     
+        /// #### Respuesta exitosa (200 OK):
+        /// ```json
+        /// [
+        ///    {
+        ///         "id": "681d0aa3f03a81ee9f9e53b6",
+        ///         "name": "carpeta 1",
+        ///         "parentFolderID": null,
+        ///         "subFolders": [
+        ///             "681d0abbf03a81ee9f9e53b7"
+        ///         ]
+        ///    },
+        ///    {
+        ///         "id": "681d0abbf03a81ee9f9e53b7",
+        ///         "name": "carpeta 1-1 ",
+        ///         "parentFolderID": "681d0aa3f03a81ee9f9e53b6",
+        ///         "subFolders": []
+        ///    }
+        /// ]
+        /// ```
+        /// </remarks>
         /// <returns>Una lista de carpetas</returns>
         /// <response code="200">Lista de carpetas obtenida correctamente</response>
         /// <response code="400">Ocurrió un error al obtener las carpetas</response>
@@ -42,7 +66,25 @@ namespace api.Controllers
         }
 
         /// <summary> Obtiene una carpeta por su ID. </summary>
-        /// <remarks> Retorna una carpeta por su ID. </remarks>
+        /// <remarks> 
+        /// Retorna una carpeta por su ID.
+        /// ### Ejemplo de uso:
+        ///     GET /api/Folders/681d0aa3f03a81ee9f9e53b6
+        ///     
+        /// #### Respuesta exitosa (200 OK):
+        /// ```json
+        /// [
+        ///    {
+        ///         "id": "681d0aa3f03a81ee9f9e53b6",
+        ///         "name": "carpeta 1",
+        ///         "parentFolderID": null,
+        ///         "subFolders": [
+        ///             "681d0abbf03a81ee9f9e53b7"
+        ///         ]
+        ///    }
+        /// ]
+        /// ```
+        /// </remarks>
         /// <param name="id"></param>
         /// <returns> Una carpeta especifia </returns>
         /// <response code="200">Carpeta obtenida correctamente</response>
@@ -64,7 +106,23 @@ namespace api.Controllers
         }
 
         /// <summary> Obtener carpetas por el ID padre. </summary>
-        /// <remarks> Retorna una lista de carpetas por el ID padre. </remarks>
+        /// <remarks> 
+        /// Retorna una lista de carpetas por el ID padre.
+        /// ### Ejemplo de uso:
+        ///     GET /api/Folders/parent/681d0aa3f03a81ee9f9e53b6
+        ///     
+        /// #### Respuesta exitosa (200 OK):
+        /// ```json
+        /// [
+        ///    {
+        ///         "id": "681d0abbf03a81ee9f9e53b7",
+        ///         "name": "carpeta 1-1 ",
+        ///         "parentFolderID": "681d0aa3f03a81ee9f9e53b6",
+        ///         "subFolders": []
+        ///    }
+        /// ]
+        /// ```
+        /// </remarks>
         /// <param name="parentFolderID"></param> // ID de la carpeta padre, puede ser nulo
         /// <returns> Una lista de carpetas especificas </returns>
         /// <response code="200">Carpetas obtenidas correctamente</response>
@@ -87,7 +145,29 @@ namespace api.Controllers
         }
 
         /// <summary> Crea uan carpeta. </summary>
-        /// <remarks> Crea una carpeta en base al modelo dto de folder </remarks>
+        /// <remarks> 
+        /// Crea una carpeta en base al modelo dto de folder
+        /// 
+        /// ### Ejemplo de uso:
+        ///     POST /api/Folders
+        ///```json
+        ///     {
+        ///         "name": "carpeta 2",
+        ///         "parentFolderID": null
+        ///     }
+        ///```
+        ///
+        /// #### Respuesta exitosa (200 OK):
+        /// ```json
+        /// [
+        ///    {
+        ///         "id": "683f55580b7680d1cb0afc61",
+        ///         "name": "carpeta 2",
+        ///         "parentFolderID": null,
+        ///         "subFolders": []
+        ///    }
+        /// ]
+        /// </remarks>
         /// <param name="folderDto"></param>
         /// <returns> Una carpeta creada </returns>
         /// <response code="200">Carpeta creada correctamente</response>
@@ -110,7 +190,17 @@ namespace api.Controllers
         }
 
         /// <summary> Actualiza el nombre de una carpeta. </summary>
-        /// <remarks> Actualiza el nombre de una carpeta en base al modelo dto de folder. </remarks>
+        /// <remarks> 
+        /// Actualiza el nombre de una carpeta en base al modelo dto de folder.
+        /// 
+        /// ### Ejemplo de uso:
+        ///     PUT /api/Folders/681d0aa3f03a81ee9f9e53b6
+        ///```json
+        ///     {
+        ///         "name": "Renombar carpeta 1"
+        ///     }
+        ///```
+        /// </remarks>
         /// <param name="id"></param>
         /// <param name="folderDto"></param>
         /// <returns> Una carpeta actualizada </returns>
@@ -141,7 +231,17 @@ namespace api.Controllers
         }
 
         /// <summary> Actualiza la referencia del ParentFolderId de una carpeta. </summary>
-        /// <remarks> Actualiza la referencia del ParentFolderId de una carpeta en base al modelo dto de folder. </remarks>
+        /// <remarks> 
+        /// Actualiza la referencia del ParentFolderId de una carpeta en base al modelo dto de folder.
+        /// 
+        /// ### Ejemplo de uso:
+        ///     PUT /api/Folders/parent/681d0abbf03a81ee9f9e53b7
+        ///```json
+        ///     {
+        ///         "parentFolderID": null
+        ///     }
+        ///```
+        /// </remarks>
         /// <param name="id"></param>
         /// <param name="folderDto"></param>
         /// <returns> Una carpeta actualizada </returns>
@@ -172,7 +272,15 @@ namespace api.Controllers
         }
 
         /// <summary> Elimina una carpeta. </summary>
-        /// <remarks> Elimina una carpeta en base al ID. </remarks>
+        /// <remarks> 
+        /// Elimina una carpeta en base al ID. 
+        /// 
+        /// ### Ejemplo de uso:
+        ///     DELETE /api/Folders/681d0aa3f03a81ee9f9e53b6
+        /// Nota:
+        /// - Si la carpeta tiene subcarpetas, estas se eliminarán también.
+        ///
+        /// </remarks>
         /// <param name="id"></param>
         /// <returns> Carpeta eliminada </returns>
         /// <response code="200">Carpeta eliminada correctamente</response>
@@ -196,7 +304,24 @@ namespace api.Controllers
         }
 
         /// <summary> Obtiene el id de las subcarpetas de una carpeta especifica </summary>
-        /// <remarks> Retorna una lista de subcarpetas por el ID padre. </remarks>
+        /// <remarks> 
+        /// Retorna una lista de subcarpetas por el ID padre.
+        /// 
+        /// ### Ejemplo de uso:
+        ///     GET /api/Folders/subfolders/681d0aa3f03a81ee9f9e53b6
+        ///     
+        /// #### Respuesta exitosa (200 OK):
+        /// ```json
+        /// [
+        ///    {
+        ///         "id": "681d0abbf03a81ee9f9e53b7",
+        ///         "name": "carpeta 1-1 ",
+        ///         "parentFolderID": "681d0aa3f03a81ee9f9e53b6",
+        ///         "subFolders": []
+        ///    }
+        /// ]
+        /// ```
+        /// </remarks>
         /// <param name="id"></param>
         /// <returns> Una lista de subcarpetas especificas </returns>
         /// <response code="200">Subcarpetas obtenidas correctamente</response>
@@ -219,7 +344,26 @@ namespace api.Controllers
         }
 
         /// <summary> Obtiene las carpetas por nombre. </summary>
-        /// <remarks> Retorna una lista de carpetas por nombre. </remarks>
+        /// <remarks> 
+        /// Retorna una lista de carpetas por nombre.
+        /// 
+        /// ### Ejemplo de uso:
+        ///     GET /api/Folders/name/Renombr
+        ///     
+        /// #### Respuesta exitosa (200 OK):
+        /// ```json
+        /// [
+        ///    {
+        ///         "id": "681d0aa3f03a81ee9f9e53b6",
+        ///         "name": "Renombar carpeta 1",
+        ///         "parentFolderID": null,
+        ///         "subFolders": [
+        ///             "681d0abbf03a81ee9f9e53b7"
+        ///         ]
+        ///    }
+        /// ]
+        /// ```
+        /// </remarks>
         /// <param name="name"></param>
         /// <returns> Una lista de carpetas especificas </returns>
         /// <response code="200">Carpetas obtenidas correctamente</response>
