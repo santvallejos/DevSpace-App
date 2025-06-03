@@ -5,6 +5,7 @@ using api.Data.Repositories.Interfaces;
 using api.Services;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,12 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddCors(); // permitimos configurar CORS
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath); // Habilita la lectura de los comentarios XML
+});
 
 // Services
 builder.Services.AddScoped<FolderServices>();

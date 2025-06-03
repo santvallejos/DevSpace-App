@@ -21,7 +21,14 @@ namespace api.Controllers
             _folderServices = folderServices;
         }
 
-        [HttpGet] // Traer todas las carpetas
+        /// <summary> Obtiene todas las carpetas disponibles. </summary>
+        /// <remarks>Retorna una lista de carpetas utilizadas en el sistema.</remarks>
+        /// <returns>Una lista de carpetas</returns>
+        /// <response code="200">Lista de carpetas obtenida correctamente</response>
+        /// <response code="400">Ocurrió un error al obtener las carpetas</response>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetFolders()
         {
             try
@@ -34,7 +41,16 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("{id}")] // Traer una carpeta por id
+        /// <summary> Obtiene una carpeta por su ID. </summary>
+        /// <remarks> Retorna una carpeta por su ID. </remarks>
+        /// <param name="id"></param>
+        /// <returns> Una carpeta especifia </returns>
+        /// <response code="200">Carpeta obtenida correctamente</response>
+        /// <response code="400">Ocurrió un error al obtener la carpeta</response>
+        /// <response code="404">La carpeta no fue encontrada</response>
+        [HttpGet("{id}")] 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetFolderById(string id)
         {
             try
@@ -47,7 +63,16 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("parent/{parentFolderID?}")] // Traer todas las carpetas por id de la carpeta padre
+        /// <summary> Obtener carpetas por el ID padre. </summary>
+        /// <remarks> Retorna una lista de carpetas por el ID padre. </remarks>
+        /// <param name="parentFolderID"></param> // ID de la carpeta padre, puede ser nulo
+        /// <returns> Una lista de carpetas especificas </returns>
+        /// <response code="200">Carpetas obtenidas correctamente</response>
+        /// <response code="400">Ocurrió un error al obtener las carpetas</response>
+        /// <response code="404">La carpeta no fue encontrada</response>
+        [HttpGet("parent/{parentFolderID?}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetFoldersByParentFolderID(string? parentFolderID = null)
         {
             try
@@ -61,7 +86,16 @@ namespace api.Controllers
             }
         }
 
-        [HttpPost] // Crear una carpeta
+        /// <summary> Crea uan carpeta. </summary>
+        /// <remarks> Crea una carpeta en base al modelo dto de folder </remarks>
+        /// <param name="folderDto"></param>
+        /// <returns> Una carpeta creada </returns>
+        /// <response code="200">Carpeta creada correctamente</response>
+        /// <response code="400">Ocurrió un error al crear la carpeta</response>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AddFolder([FromBody] FolderDto folderDto)
         {
             try
@@ -75,7 +109,18 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut("{id}")] // Actualizar una carpeta
+        /// <summary> Actualiza el nombre de una carpeta. </summary>
+        /// <remarks> Actualiza el nombre de una carpeta en base al modelo dto de folder. </remarks>
+        /// <param name="id"></param>
+        /// <param name="folderDto"></param>
+        /// <returns> Una carpeta actualizada </returns>
+        /// <response code="200">Carpeta actualizada correctamente</response>
+        /// <response code="400">Ocurrió un error al actualizar la carpeta</response>
+        /// <response code="404">La carpeta no fue encontrada para actualizar</response>
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateFolder(string id, [FromBody] NameFolderDto folderDto)
         {
             // Validacion del id
@@ -95,7 +140,18 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut("parent/{id}")] // Actualizar la referencia de una carpeta
+        /// <summary> Actualiza la referencia del ParentFolderId de una carpeta. </summary>
+        /// <remarks> Actualiza la referencia del ParentFolderId de una carpeta en base al modelo dto de folder. </remarks>
+        /// <param name="id"></param>
+        /// <param name="folderDto"></param>
+        /// <returns> Una carpeta actualizada </returns>
+        /// <response code="200">Carpeta actualizada correctamente</response>
+        /// <response code="400">Ocurrió un error al actualizar la carpeta</response>
+        /// <response code="404">La carpeta no fue encontrada para actualizar</response>
+        [HttpPut("parent/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateReferenceFolder(string id, ParentFolderDto folderDto)
         {
             // Validacion del id
@@ -115,7 +171,17 @@ namespace api.Controllers
             }
         }
 
-        [HttpDelete("{id}")] // Eliminar una carpeta (si tiene hijos, se eliminan)
+        /// <summary> Elimina una carpeta. </summary>
+        /// <remarks> Elimina una carpeta en base al ID. </remarks>
+        /// <param name="id"></param>
+        /// <returns> Carpeta eliminada </returns>
+        /// <response code="200">Carpeta eliminada correctamente</response>
+        /// <response code="400">Ocurrió un error al eliminar la carpeta</response>
+        /// <response code="404">La carpeta no fue encontrada para eliminar</response>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteFolder(string id)
         {
             try
@@ -129,7 +195,17 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("subfolders/{id}")] // Traer las subcarpetas de una carpeta padre
+        /// <summary> Obtiene el id de las subcarpetas de una carpeta especifica </summary>
+        /// <remarks> Retorna una lista de subcarpetas por el ID padre. </remarks>
+        /// <param name="id"></param>
+        /// <returns> Una lista de subcarpetas especificas </returns>
+        /// <response code="200">Subcarpetas obtenidas correctamente</response>
+        /// <response code="400">Ocurrió un error al obtener las subcarpetas</response>
+        /// <response code="404">La carpeta no fue encontrada</response>
+        [HttpGet("subfolders/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSubFolders(string id)
         {
             try
@@ -142,7 +218,17 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("name/{name}")] // Traer carpetas por nombre
+        /// <summary> Obtiene las carpetas por nombre. </summary>
+        /// <remarks> Retorna una lista de carpetas por nombre. </remarks>
+        /// <param name="name"></param>
+        /// <returns> Una lista de carpetas especificas </returns>
+        /// <response code="200">Carpetas obtenidas correctamente</response>
+        /// <response code="400">Ocurrió un error al obtener las carpetas</response>
+        /// <response code="404">La carpeta no fue encontrada</response>
+        [HttpGet("name/{name}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetFoldersByName(string name)
         {
             try
