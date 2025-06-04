@@ -22,6 +22,7 @@ namespace api.Services
 
         public async Task<Folder> AddFolderAsync(FolderDto folderDto)
         {
+            // Crear una carpeta con los datos del DTO
             Folder @folder = new Folder
             {
                 Id = ObjectId.GenerateNewId().ToString(),
@@ -38,8 +39,7 @@ namespace api.Services
             }
             else
             {
-                // El padre es nulo, la carpeta esta en la raiz de la unidad
-                await _folderCollection.AddFolder(@folder);
+                await _folderCollection.AddFolder(@folder); // El padre es nulo, la carpeta se coloca en la raiz de la unidad
             }
             
             return @folder;
