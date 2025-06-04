@@ -23,7 +23,7 @@ namespace api.Controllers
 
         /// <summary> Obtiene todas las carpetas disponibles. </summary>
         /// <remarks>
-        /// Retorna una lista de carpetas utilizadas en el sistema.
+        /// Retorna una lista de carpetas almacenadas en la base de datos.
         /// ### Ejemplo de uso:
         ///     GET /api/Folders
         ///     
