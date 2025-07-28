@@ -1,6 +1,8 @@
 import api from '../contexts/Api';
 import { Resource, CreateResourceModel, UpdateResourceModel, MoveResourceModel} from '../models/ResourceModel';
 
+const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
+
 // Obtener recurso por id
 export const GetResourceById = async (id: string): Promise<Resource> => {
     const response = await api.get(`Resource/${id}`);
@@ -33,8 +35,14 @@ export const GetFavoriteResources = async (): Promise<Resource[]> => {
 
 // Obtener los recursos recomendados
 export const GetRecommendedResources = async (): Promise<Resource[]> => {
-    // Al solicitar a un json que esta en github, se debe usar fetch para obtener los datos
-    const response = await fetch("https://santvallejos.github.io/DevSpace-Resources-Recommended/prueba.json");
+    const url = "https://api.github.com/repos/santvallejos/Base-de-datos-JSONs/contents/DevSpace/RecommendedResources.json?ref=main";
+
+    const response = await fetch(url, {
+        headers: {
+            Authorization: `Bearer ${GITHUB_TOKEN}`,
+            Accept: "application/vnd.github.v3.raw"
+        }
+    });
 
     if (!response.ok) {
         throw new Error("Error al obtener los recursos recomendados");
