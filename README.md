@@ -28,7 +28,7 @@ The architecture of this project is a monorepo with a separation by functionalit
     Devspace/
         ├── API
         ├── Client
-            └── Electron
+        └── Electron
 
 * API: Backend con .Net y MongoDB como base de datos.
 * Client: Frontend del proyecto con React que ocupa las librerías Shadcn y 
