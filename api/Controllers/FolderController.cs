@@ -25,7 +25,7 @@ namespace api.Controllers
         /// <remarks>
         /// Retorna una lista de carpetas almacenadas en la base de datos.
         /// ### Ejemplo de uso:
-        ///     GET /api/Folders
+        ///     GET /api/folder
         ///     
         /// #### Respuesta exitosa (200 OK):
         /// ```json
@@ -69,7 +69,7 @@ namespace api.Controllers
         /// <remarks> 
         /// Retorna una carpeta por su ID.
         /// ### Ejemplo de uso:
-        ///     GET /api/Folders/681d0aa3f03a81ee9f9e53b6
+        ///     GET /api/folder/681d0aa3f03a81ee9f9e53b6
         ///     
         /// #### Respuesta exitosa (200 OK):
         /// ```json
@@ -109,7 +109,7 @@ namespace api.Controllers
         /// <remarks> 
         /// Retorna una lista de carpetas por el ID padre.
         /// ### Ejemplo de uso:
-        ///     GET /api/Folders/parent/681d0aa3f03a81ee9f9e53b6
+        ///     GET /api/folder/parent/681d0aa3f03a81ee9f9e53b6
         ///     
         /// #### Respuesta exitosa (200 OK):
         /// ```json
@@ -149,7 +149,7 @@ namespace api.Controllers
         /// Crea una carpeta en base al modelo dto de folder
         /// 
         /// ### Ejemplo de uso:
-        ///     POST /api/Folders
+        ///     POST /api/folder
         ///```json
         ///     {
         ///         "name": "carpeta 2",
@@ -194,7 +194,7 @@ namespace api.Controllers
         /// Actualiza el nombre de una carpeta en base al modelo dto de folder.
         /// 
         /// ### Ejemplo de uso:
-        ///     PUT /api/Folders/681d0aa3f03a81ee9f9e53b6
+        ///     PUT /api/folder/681d0aa3f03a81ee9f9e53b6
         ///```json
         ///     {
         ///         "name": "Renombar carpeta 1"
@@ -235,7 +235,7 @@ namespace api.Controllers
         /// Actualiza la referencia del ParentFolderId de una carpeta en base al modelo dto de folder.
         /// 
         /// ### Ejemplo de uso:
-        ///     PUT /api/Folders/parent/681d0abbf03a81ee9f9e53b7
+        ///     PUT /api/folder/parent/681d0abbf03a81ee9f9e53b7
         ///```json
         ///     {
         ///         "parentFolderID": null
@@ -276,7 +276,7 @@ namespace api.Controllers
         /// Elimina una carpeta en base al ID. 
         /// 
         /// ### Ejemplo de uso:
-        ///     DELETE /api/Folders/681d0aa3f03a81ee9f9e53b6
+        ///     DELETE /api/folder/681d0aa3f03a81ee9f9e53b6
         /// Nota:
         /// - Si la carpeta tiene subcarpetas, estas se eliminarán también.
         ///
@@ -308,17 +308,12 @@ namespace api.Controllers
         /// Retorna una lista de subcarpetas por el ID padre.
         /// 
         /// ### Ejemplo de uso:
-        ///     GET /api/Folders/subfolders/681d0aa3f03a81ee9f9e53b6
+        ///     GET /api/folder/subfolders/681d0aa3f03a81ee9f9e53b6
         ///     
         /// #### Respuesta exitosa (200 OK):
         /// ```json
         /// [
-        ///    {
-        ///         "id": "681d0abbf03a81ee9f9e53b7",
-        ///         "name": "carpeta 1-1 ",
-        ///         "parentFolderID": "681d0aa3f03a81ee9f9e53b6",
-        ///         "subFolders": []
-        ///    }
+        ///    "681d0abbf03a81ee9f9e53b7"
         /// ]
         /// ```
         /// </remarks>
@@ -348,7 +343,7 @@ namespace api.Controllers
         /// Retorna una lista de carpetas por nombre.
         /// 
         /// ### Ejemplo de uso:
-        ///     GET /api/Folders/name/Renombr
+        ///     GET /api/folder/name/Carpeta 1
         ///     
         /// #### Respuesta exitosa (200 OK):
         /// ```json
