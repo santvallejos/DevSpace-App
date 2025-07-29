@@ -30,3 +30,15 @@ dist-ssr
 api/bin
 api/obj
 .fake
+
+# MongoDB Atlas configuration (security)
+api/setup-env.sh
+api/appsettings.Production.json
+api/appsettings.Staging.json
+**/appsettings.*.local.json
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.staging

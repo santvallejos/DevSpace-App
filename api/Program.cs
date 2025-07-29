@@ -2,6 +2,7 @@ using System.ComponentModel.Design;
 using api.Data.Models;
 using api.Data.Repositories.Collection;
 using api.Data.Repositories.Interfaces;
+using api.Data.Configuration;
 using api.Services;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -22,14 +23,39 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath); // Habilita la lectura de los comentarios XML
 }); //Configuracion de Swagger
 
+// Configure MongoDB Atlas with environment variables support
+builder.Services.Configure<MongoDbSettings>(options =>
+{
+    // Priority: Environment variables > appsettings.json
+    var connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING") 
+                            ?? builder.Configuration.GetSection("MongoDB:ConnectionString").Value;
+    var databaseName = Environment.GetEnvironmentVariable("MONGODB_DATABASE_NAME") 
+                        ?? builder.Configuration.GetSection("MongoDB:DatabaseName").Value 
+                        ?? "Unity";
+
+    options.ConnectionString = connectionString ?? throw new InvalidOperationException(
+        "MongoDB connection string not found. Set MONGODB_CONNECTION_STRING environment variable or configure MongoDB:ConnectionString in appsettings.json");
+    options.DatabaseName = databaseName;
+});
+
+// Register MongoDB services
+builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
+{
+    var settings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+    return new MongoClient(settings.ConnectionString);
+});
+
+builder.Services.AddSingleton<IMongoDatabase>(serviceProvider =>
+{
+    var client = serviceProvider.GetRequiredService<IMongoClient>();
+    var settings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+    return client.GetDatabase(settings.DatabaseName);
+});
+
 // Services
 builder.Services.AddScoped<FolderServices>();
 builder.Services.AddScoped<ResourceServices>();
 builder.Services.AddHostedService<MongoDbInitializer>();
-
-//Configuracion de MongoDB
-builder.Services.AddSingleton<IMongoClient>(new MongoClient("mongodb://localhost:27017/DevSpace"));
-builder.Services.AddSingleton<IMongoDatabase>(sp => sp.GetService<IMongoClient>()!.GetDatabase("Unity"));
 
 //Repositorios
 builder.Services.AddScoped<IFolderCollection, FolderCollection>();

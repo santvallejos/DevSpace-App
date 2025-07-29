@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,12 +12,11 @@ namespace api.Data.Repositories.Collection
 {
     public class ResourceCollection : IResourceCollection
     {
-        internal MongoDBRepository _repository = new();
         private readonly IMongoCollection<Resource> Collection;
 
-        public ResourceCollection()
+        public ResourceCollection(IMongoDatabase database)
         {
-            Collection = _repository.database.GetCollection<Resource>("Resources");
+            Collection = database.GetCollection<Resource>("Resources");
         }
 
         //[Get]
