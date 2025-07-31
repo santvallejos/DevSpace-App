@@ -27,7 +27,7 @@ namespace api.Controllers
         /// Retornar una lista de recursos almacenadas en la base de datos.
         /// 
         /// ### Ejemplo de uso:
-        ///     GET /api/Resource
+        ///     GET /api/resource
         ///
         /// ### Respuesta exitosa (200 OK):
         /// ```json
@@ -70,7 +70,7 @@ namespace api.Controllers
         /// Retornar un recurso especifico por su id.
         ///
         /// ### Ejemplo de uso:
-        ///     GET /api/Resource/68249ee31a7e2be077274172
+        ///     GET /api/resource/68249ee31a7e2be077274172
         ///
         /// ### Respuesta exitosa (200 OK):
         /// ```json
@@ -116,13 +116,12 @@ namespace api.Controllers
         /// Crear un recurso.
         ///
         /// ### Ejemplo de uso:
-        ///     POST /api/Resource
+        ///     POST /api/resource
         ///```json
         ///{
         ///     "FolderId": null,
         ///     "Name": "Recurso 2",
         ///     "Description": "Recurso 2",
-        ///     "Type": 0,
         ///     "Url": "https://google.com",
         ///     "Code": "",
         ///     "Text": ""
@@ -172,13 +171,12 @@ namespace api.Controllers
         /// Actualizar un recurso.
         ///
         /// ### Ejemplo de uso:
-        ///     PUT /api/Resource/68249ee31a7e2be077274172
+        ///     PUT /api/resource/68249ee31a7e2be077274172
         ///```json
         ///{
         ///     "FolderId": null,
         ///     "Name": "Recurso 1",
         ///     "Description": "---",
-        ///     "type": 0,
         ///     "url": "https://excalidraw.com/",
         ///     "code": "",
         ///     "text": "",
@@ -213,7 +211,7 @@ namespace api.Controllers
         /// Actualizar el folderId de un recurso.
         ///
         /// ### Ejemplo de uso:
-        ///     PUT /api/Resource/folderid/68249ee31a7e2be077274172
+        ///     PUT /api/resource/folderid/68249ee31a7e2be077274172
         ///```json
         ///{
         ///     "FolderId": "681d0aa3f03a81ee9f9e53b6"
@@ -248,7 +246,7 @@ namespace api.Controllers
         /// Eliminar un recurso.
         ///
         /// ### Ejemplo de uso:
-        ///     DELETE /api/Resource/68249ee31a7e2be077274172
+        ///     DELETE /api/resource/68249ee31a7e2be077274172
         ///     
         /// </remarks>
         /// <param name="id"></param>
@@ -278,7 +276,7 @@ namespace api.Controllers
         /// Obtener recursos por sus nombres.
         ///
         /// ### Ejemplo de uso:
-        ///     GET /api/Resource/name/Recurso
+        ///     GET /api/resource/name/Recurso
         ///
         /// ### Respuesta exitosa (200 OK):
         /// ```json
@@ -322,7 +320,7 @@ namespace api.Controllers
         /// Obtener recursos favoritos.
         /// 
         /// ### Ejemplo de uso:
-        ///     GET /api/Resource/favorites
+        ///     GET /api/resource/favorites
         ///
         /// ### Respuesta exitosa (200 OK):
         /// ```json
@@ -365,7 +363,7 @@ namespace api.Controllers
         /// Actualizar el favorite de un recurso.
         ///
         /// ### Ejemplo de uso:
-        ///     PUT /api/Resource/favorite/68249ee31a7e2be077274172
+        ///     PUT /api/resource/favorite/68249ee31a7e2be077274172
         ///
         /// </remarks>
         /// <param name="id"></param>
@@ -395,7 +393,7 @@ namespace api.Controllers
         /// Obtener recursos por su folderId.
         ///
         /// ### Ejemplo de uso:
-        ///     GET /api/Resource/folder/681d0aa3f03a81ee9f9e53b6
+        ///     GET /api/resource/folder/681d0aa3f03a81ee9f9e53b6
         ///
         /// ### Respuesta exitosa (200 OK):
         ///```json
@@ -441,7 +439,7 @@ namespace api.Controllers
         /// Obtener recursos raices.
         ///
         /// ### Ejemplo de uso:
-        ///     GET /api/Resource/root
+        ///     GET /api/resource/root
         ///
         /// ### Respuesta exitosa (200 OK):
         /// ```json
@@ -485,7 +483,7 @@ namespace api.Controllers
         /// Obtener recursos recientes.
         ///
         /// ### Ejemplo de uso:
-        ///     GET /api/Resource/recents
+        ///     GET /api/resource/recents
         ///
         /// ### Respuesta exitosa (200 OK):
         /// ```json
@@ -528,7 +526,7 @@ namespace api.Controllers
         /// Eliminar todos los recursos de un folder.
         ///
         /// ### Ejemplo de uso:
-        ///     DELETE /api/Resource/folder/681d0aa3f03a81ee9f9e53b6
+        ///     DELETE /api/resource/folder/681d0aa3f03a81ee9f9e53b6
         ///
         /// </remarks>
         /// <param name="folderId"></param>
