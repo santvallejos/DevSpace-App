@@ -20,7 +20,7 @@ namespace api.Data.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public required string Id { get; set; }
         public string? FolderId { get; set; }
         public required string Name { get; set; }
         public string? Description { get; set; }

@@ -1,9 +1,12 @@
 using System.ComponentModel.Design;
+using System.Text;
+using System.Text.Json;
 using api.Data.Models;
 using api.Data.Repositories.Collection;
 using api.Data.Repositories.Interfaces;
 using api.Data.Configuration;
 using api.Services;
+using api.Middleware;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Reflection;
@@ -12,7 +15,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddControllers();
+
+// Configuración para manejo correcto de caracteres especiales y encoding UTF-8
+builder.Services.AddControllers()
+.AddJsonOptions(options =>
+{
+    // Configuración de JSON para preservar caracteres especiales
+    // UnsafeRelaxedJsonEscaping permite que caracteres como (), "", ``, *, etc. se mantengan sin escapar
+    options.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.JsonSerializerOptions.WriteIndented = true;
+    // Asegurar que los strings se procesen correctamente
+    options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never;
+});
+
 builder.Services.AddOpenApi();
 builder.Services.AddCors(); // permitimos configurar CORS
 builder.Services.AddEndpointsApiExplorer();
@@ -78,6 +94,8 @@ app.UseCors(policy =>
             .AllowAnyMethod()
 );
 
+// Usar middleware personalizado para manejo de UTF-8 y caracteres especiales
+app.UseMiddleware<Utf8EncodingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

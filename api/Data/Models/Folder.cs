@@ -11,7 +11,7 @@ namespace api.Data.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public required string Id { get; set; }
         public required string Name { get; set; }
         public string? ParentFolderID { get; set; }
         public List<string> SubFolders { get; set; } = new List<string>();

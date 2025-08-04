@@ -1,25 +1,40 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
+
 using api.Data.Models;
+using api.Infrastructure.Validation;
 
 namespace api.Infrastructure.Dto
 {
     public class PostResourceDto
     {
         public string? FolderId { get; set; }
+        
         public required string Name { get; set; }
         public string? Description { get; set; }
+        
         public ResourceType Type { get; set; }
         public string? Url { get; set; }
+        
+        // Permitir cualquier carácter en Code y Text, incluyendo caracteres especiales
+        [AllowSpecialCharacters]
         public string? Code { get; set; }
+
+        [AllowSpecialCharacters]
         public string? Text { get; set; }
     }
 
         public class PutResourceDto
     {
         public required string Name { get; set; }
+
         public string? Description { get; set; }
         public string? Url { get; set; }
+
+        // Permitir cualquier carácter en Code y Text, incluyendo caracteres especiales
+        [AllowSpecialCharacters]
         public string? Code { get; set; }
+
+        [AllowSpecialCharacters]
         public string? Text { get; set; }
     }
 
