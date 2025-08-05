@@ -142,6 +142,16 @@ export const useFolderStore = create<FolderStore>((set, get) => ({
                 // Actualizar el cache
                 const newCache = {...get().folderCache, [newFolder.id]: newFolder};
                 set({ folderCache: newCache });
+                
+                // Si la carpeta se está creando en la carpeta actual o en la raíz, actualizar currentFolders
+                const currentFolder = get().currentFolder;
+                const currentFolderId = currentFolder?.id || null;
+                
+                // Si la nueva carpeta pertenece a la carpeta actual que se está viendo
+                if (newFolder.parentFolderID === currentFolderId) {
+                    const newCurrentFolders = [...get().currentFolders, newFolder];
+                    set({ currentFolders: newCurrentFolders });
+                }
             }
             return newFolder;
         } catch (error) {

@@ -12,6 +12,8 @@ function CreateElment() {
     const [descriptionNewResource, setDescriptionNewResource] = useState("");
     const [urlNewResource, setUrlNewResource] = useState("");
     const [nameNewFolder, setNameNewFolder] = useState("");
+    const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
+    const [isResourceDialogOpen, setIsResourceDialogOpen] = useState(false);
     const {
         folderSelected,
         addFolder,
@@ -21,7 +23,9 @@ function CreateElment() {
         addResource,
     } = useResourceStore();
 
-    const handleCreateFolder = async () => {
+    const handleCreateFolder = async (e: React.FormEvent) => {
+        e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+        
         const folderId = folderSelected[0]?.id || null;
 
         try {
@@ -31,14 +35,18 @@ function CreateElment() {
             };
 
             await addFolder(newFolder);
-
+            
+            // Si llegamos aquí, la carpeta se creó exitosamente
             setNameNewFolder("");
+            setIsFolderDialogOpen(false);
         } catch (error) {
-            console.log("No se a creado la carpeta", error);
+            console.log("No se ha creado la carpeta", error);
         }
     }
 
-    const handleCreateResource = async () => {
+    const handleCreateResource = async (e: React.FormEvent) => {
+        e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+        
         try {
             const newResource: CreateResourceModel = {
                 folderId: folderSelected[0]?.id || null,
@@ -55,14 +63,15 @@ function CreateElment() {
             setNameNewResource("");
             setDescriptionNewResource("");
             setUrlNewResource("");
+            setIsResourceDialogOpen(false);
         } catch (error) {
-            console.log("No se a creado el recurso", error);
+            console.log("No se ha creado el recurso", error);
         }
     }
 
     return (
         <>
-            <Dialog>
+            <Dialog open={isFolderDialogOpen} onOpenChange={setIsFolderDialogOpen}>
                 <DialogTrigger>
                     + Folder
                 </DialogTrigger>
@@ -88,12 +97,12 @@ function CreateElment() {
                 </DialogContent>
             </Dialog>
 
-            <Dialog>
+            <Dialog open={isResourceDialogOpen} onOpenChange={setIsResourceDialogOpen}>
                 <DialogTrigger>
                     + Recurso
                 </DialogTrigger>
                 <DialogContent>
-                    <form action={handleCreateResource}>
+                    <form onSubmit={handleCreateResource}>
                         <DialogHeader>
                             <DialogTitle>Agregar un recurso</DialogTitle>
                             <DialogDescription>
