@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using api.Data.Models;
 using api.Data.Repositories.Interfaces;
 using api.Infrastructure.Dto;
@@ -25,6 +25,10 @@ namespace api.Controllers
         /// <summary>Obtener todos los recursos disponibles.</summary>
         /// <remarks>
         /// Retornar una lista de recursos almacenadas en la base de datos.
+        /// El campo 'value' contiene el contenido del recurso y el campo 'type' determina cómo interpretarlo:
+        /// - Type 0 (Url): value contiene una URL
+        /// - Type 1 (Code): value contiene código
+        /// - Type 2 (Text): value contiene texto
         /// 
         /// ### Ejemplo de uso:
         ///     GET /api/resource
@@ -38,9 +42,7 @@ namespace api.Controllers
         ///         "name": "Recurso 1",
         ///         "description": "Recurso 1",
         ///         "type": 0,
-        ///         "url": "https://excalidraw.com/",
-        ///         "code": "",
-        ///         "text": "",
+        ///         "value": "https://excalidraw.com/",
         ///         "favorite": true,
         ///         "createdOn": "2025-05-14T13:47:15.483Z"
         ///     }
@@ -68,6 +70,7 @@ namespace api.Controllers
         /// <summary>Obtener un recursos especifico por su id</summary>
         /// <remarks>
         /// Retornar un recurso especifico por su id.
+        /// El campo 'value' contiene el contenido del recurso según su tipo.
         ///
         /// ### Ejemplo de uso:
         ///     GET /api/resource/68249ee31a7e2be077274172
@@ -81,9 +84,7 @@ namespace api.Controllers
         ///         "name": "Recurso 1",
         ///         "description": "Recurso 1",
         ///         "type": 0,
-        ///         "url": "https://excalidraw.com/",
-        ///         "code": "",
-        ///         "text": "",
+        ///         "value": "https://excalidraw.com/",
         ///         "favorite": true,
         ///         "createdOn": "2025-05-14T13:47:15.483Z"
         ///     }
@@ -114,6 +115,8 @@ namespace api.Controllers
         /// <summary>Crear un recurso</summary>
         /// <remarks>
         /// Crear un recurso.
+        /// Especifica el tipo de recurso (Type) y su contenido en el campo Value.
+        /// Tipos disponibles: 0 = Url, 1 = Code, 2 = Text
         ///
         /// ### Ejemplo de uso:
         ///     POST /api/resource
@@ -122,9 +125,8 @@ namespace api.Controllers
         ///     "FolderId": null,
         ///     "Name": "Recurso 2",
         ///     "Description": "Recurso 2",
-        ///     "Url": "https://google.com",
-        ///     "Code": "",
-        ///     "Text": ""
+        ///     "Type": 0,
+        ///     "Value": "https://google.com"
         /// }
         ///```
         ///
@@ -137,9 +139,7 @@ namespace api.Controllers
         ///         "name": "Recurso 2",
         ///         "description": "Recurso 2",
         ///         "type": 0,
-        ///         "Url": "https://google.com",
-        ///         "code": "",
-        ///         "text": "",
+        ///         "value": "https://google.com",
         ///         "favorite": false,
         ///         "createdOn": "2025-05-14T13:47:15.483Z"
         ///     }
@@ -169,17 +169,15 @@ namespace api.Controllers
         /// <summary>Actualizar un recurso</summary>
         /// <remarks>
         /// Actualizar un recurso.
+        /// Actualiza el contenido del recurso en el campo Value.
         ///
         /// ### Ejemplo de uso:
         ///     PUT /api/resource/68249ee31a7e2be077274172
         ///```json
         ///{
-        ///     "FolderId": null,
         ///     "Name": "Recurso 1",
         ///     "Description": "---",
-        ///     "url": "https://excalidraw.com/",
-        ///     "code": "",
-        ///     "text": "",
+        ///     "Value": "https://excalidraw.com/"
         ///}
         ///```
         ///</remarks>
@@ -287,9 +285,7 @@ namespace api.Controllers
         ///         "name": "Recurso 1",
         ///         "description": "Recurso 1",
         ///         "type": 0,
-        ///         "url": "https://excalidraw.com/",
-        ///         "code": "",
-        ///         "text": "",
+        ///         "value": "https://excalidraw.com/",
         ///         "favorite": true,
         ///         "createdOn": "2025-05-14T13:47:15.483Z"
         ///     }
@@ -331,9 +327,7 @@ namespace api.Controllers
         ///         "name": "Recurso 1",
         ///         "description": "Recurso 1",
         ///         "type": 0,
-        ///         "url": "https://excalidraw.com/",
-        ///         "code": "",
-        ///         "text": "",
+        ///         "value": "https://excalidraw.com/",
         ///         "favorite": true,
         ///         "createdOn": "2025-05-14T13:47:15.483Z"
         ///     }
@@ -404,9 +398,7 @@ namespace api.Controllers
         ///         "name": "Recurso 1",
         ///         "description": "Recurso 1",
         ///         "type": 0,
-        ///         "url": "https://excalidraw.com/",
-        ///         "code": "",
-        ///         "text": "",
+        ///         "value": "https://excalidraw.com/",
         ///         "favorite": true,
         ///         "createdOn": "2025-05-14T13:47:15.483Z"
         ///     }
@@ -450,9 +442,7 @@ namespace api.Controllers
         ///         "name": "Recurso 1",
         ///         "description": "Recurso 1",
         ///         "type": 0,
-        ///         "url": "https://excalidraw.com/",
-        ///         "code": "",
-        ///         "text": "",
+        ///         "value": "https://excalidraw.com/",
         ///         "favorite": true,
         ///         "createdOn": "2025-05-14T13:47:15.483Z"
         ///     }
@@ -494,9 +484,7 @@ namespace api.Controllers
         ///         "name": "Recurso 1",
         ///         "description": "Recurso 1",
         ///         "type": 0,
-        ///         "url": "https://excalidraw.com/",
-        ///         "code": "",
-        ///         "text": "",
+        ///         "value": "https://excalidraw.com/",
         ///         "favorite": true,
         ///         "createdOn": "2025-05-14T13:47:15.483Z"
         ///     }

@@ -48,9 +48,7 @@ namespace api.Services
                         Name = resourceDto.Name,
                         Description = resourceDto.Description,
                         Type = resourceDto.Type,
-                        Url = resourceDto.Url,
-                        Code = resourceDto.Code,
-                        Text = resourceDto.Text,
+                        Value = resourceDto.Value,
                         Favorite = false,
                         CreatedOn = DateTime.UtcNow
                     };
@@ -70,9 +68,7 @@ namespace api.Services
                     Name = resourceDto.Name,
                     Description = resourceDto.Description,
                     Type = resourceDto.Type,
-                    Url = resourceDto.Url,
-                    Code = resourceDto.Code,
-                    Text = resourceDto.Text,
+                    Value = resourceDto.Value,
                     Favorite = false,
                     CreatedOn = DateTime.UtcNow
                 };
@@ -89,9 +85,7 @@ namespace api.Services
             {
                 resource.Name = resourceDto.Name;
                 resource.Description = resourceDto.Description;
-                resource.Url = resourceDto.Url;
-                resource.Code = resourceDto.Code;
-                resource.Text = resourceDto.Text;
+                resource.Value = resourceDto.Value;
                 await _resourceCollection.UpdateResource(resource);
             }
             else
