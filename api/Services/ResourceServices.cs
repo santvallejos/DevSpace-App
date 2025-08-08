@@ -48,6 +48,7 @@ namespace api.Services
                         Name = resourceDto.Name,
                         Description = resourceDto.Description,
                         Type = resourceDto.Type,
+                        CodeType = resourceDto.CodeType,
                         Value = resourceDto.Value,
                         Favorite = false,
                         CreatedOn = DateTime.UtcNow
@@ -68,6 +69,7 @@ namespace api.Services
                     Name = resourceDto.Name,
                     Description = resourceDto.Description,
                     Type = resourceDto.Type,
+                    CodeType = resourceDto.CodeType,
                     Value = resourceDto.Value,
                     Favorite = false,
                     CreatedOn = DateTime.UtcNow

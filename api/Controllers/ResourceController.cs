@@ -116,17 +116,22 @@ namespace api.Controllers
         /// <remarks>
         /// Crear un recurso.
         /// Especifica el tipo de recurso (Type) y su contenido en el campo Value.
-        /// Tipos disponibles: 0 = Url, 1 = Code, 2 = Text
-        ///
-        /// ### Ejemplo de uso:
+        /// Tipos disponibles:
+        /// - 0 = Url
+        /// - 1 = Code (requiere CodeLanguage)
+        /// - 2 = Text
+        /// 
+        /// 
+        /// ### Ejemplo de uso para código:
         ///     POST /api/resource
         ///```json
         ///{
         ///     "FolderId": null,
-        ///     "Name": "Recurso 2",
-        ///     "Description": "Recurso 2",
-        ///     "Type": 0,
-        ///     "Value": "https://google.com"
+        ///     "Name": "Ejemplo Código",
+        ///     "Description": "Función en JavaScript",
+        ///     "Type": 1,
+        ///     "CodeType": "Javascript",
+        ///     "Value": "function hello() { console.log('Hola mundo!'); }"
         /// }
         ///```
         ///
@@ -136,10 +141,11 @@ namespace api.Controllers
         ///     {
         ///         "id": "68405309d7b1ae7fee012d92",
         ///         "folderId": null,
-        ///         "name": "Recurso 2",
-        ///         "description": "Recurso 2",
-        ///         "type": 0,
-        ///         "value": "https://google.com",
+        ///         "name": "Ejemplo Código",
+        ///         "description": "Función en JavaScript",
+        ///         "type": 1,
+        ///         "codeType": "Javascript",
+        ///         "value": "function hello() { console.log('Hola mundo!'); }",
         ///         "favorite": false,
         ///         "createdOn": "2025-05-14T13:47:15.483Z"
         ///     }

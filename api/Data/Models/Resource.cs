@@ -15,6 +15,29 @@ namespace api.Data.Models
         Text
     }
 
+    public enum CodeType
+    {
+        // Necesito que puedas poner algunos de los lenjuages mas populares para realizar pruebas ademas de html y css
+        Html,
+        Css,
+        Javascript,
+        Typescript,
+        React,
+        Vue,
+        Angular,
+        Svelte,
+        PHP,
+        Python,
+        Java,
+        CSharp,
+        Ruby,
+        Go,
+        Rust,
+        Sql,
+        Markdown,
+        Json
+    }
+
 
     public class Resource
     {
@@ -25,6 +48,7 @@ namespace api.Data.Models
         public required string Name { get; set; }
         public string? Description { get; set; }
         public ResourceType Type { get; set; }
+        public CodeType? CodeType { get; set; }
         public string? Value { get; set; }
         public bool Favorite { get; set; } = false;
         [BsonDateTimeOptions(Kind = DateTimeKind.Utc)] // Asegura que se almacene en UTC

@@ -13,6 +13,7 @@ namespace api.Infrastructure.Dto
         public string? Description { get; set; }
 
         public ResourceType Type { get; set; }
+        public CodeType? CodeType { get; set; }
 
         [AllowSpecialCharacters]
         public string? Value { get; set; }
