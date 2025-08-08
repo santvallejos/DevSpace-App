@@ -101,9 +101,7 @@ function AppDashboard() {
                   name={resource.name || ''}
                   description={resource.description || ''}
                   type={resource.type}
-                  url={resource.url || ''}
-                  code={resource.code || ''}
-                  text={resource.text || ''}
+                  value={resource.value || ''}
                   favorite={resource.favorite}
                 />
               ))
@@ -124,9 +122,7 @@ function AppDashboard() {
                   name={resource.name || ''}
                   description={resource.description || ''}
                   type={resource.type}
-                  url={resource.url || ''}
-                  code={resource.code || ''}
-                  text={resource.text || ''}
+                  value={resource.value || ''}
                 />
               ))
             ) : (
@@ -147,9 +143,7 @@ function AppDashboard() {
                   name={resource.name || ''}
                   description={resource.description || ''}
                   type={resource.type}
-                  url={resource.url || ''}
-                  code={resource.code || ''}
-                  text={resource.text || ''}
+                  value={resource.value || ''}
                   favorite={resource.favorite}
                 />
               ))

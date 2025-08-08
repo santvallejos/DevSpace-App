@@ -6,9 +6,7 @@
     "name": "Prueba type de recursos",
     "description": "string",
     "type": 0,
-    "url": "https://www.youtube.com",
-    "code": null,
-    "text": null,
+    "value": "https://www.youtube.com",
     "favorite": false,
     "createdOn": "2025-04-08T21:29:16.015Z"
   }
@@ -21,9 +19,7 @@ export interface Resource {
     name: string;
     description?: string;
     type: number;
-    url?: string;
-    code?: string;
-    text?: string;
+    value?: string;
     favorite: boolean;
     createdOn: Date;
 }
@@ -33,17 +29,13 @@ export interface CreateResourceModel {
     name: string;
     description?: string;
     type: number;
-    url?: string;
-    code?: string;
-    text?: string;
+    value?: string;
 }
 
 export interface UpdateResourceModel {
     name: string;
     description?: string;
-    url?: string;
-    code?: string;
-    text?: string;
+    value?: string;
 }
 
 export interface MoveResourceModel {

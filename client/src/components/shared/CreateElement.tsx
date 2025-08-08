@@ -53,9 +53,7 @@ function CreateElment() {
                 name: nameNewResource,
                 description: descriptionNewResource,
                 type: 0,
-                url: urlNewResource,
-                code: "",
-                text: "",
+                value: urlNewResource,
             };
 
             await addResource(newResource);

@@ -17,14 +17,12 @@ interface ResourceProps {
     name: string;
     description?: string;
     type: number;
-    url: string;
-    code?: string;
-    text?: string;
+    value: string
 }
 
 function CardResourceRecommended(props: ResourceProps) {
     //Propiedades que se tienen que pasar al recurso
-    const { name, description, type, url, code, text} = props;
+    const { name, description, type, value} = props;
     // Evaluar que tipo de recurso es
     const renderResourcePreview = () => {
         switch (type) {
@@ -38,7 +36,7 @@ function CardResourceRecommended(props: ResourceProps) {
                                 </Label>
                                 <Input
                                     id="link"
-                                    defaultValue={url}
+                                    defaultValue={value}
                                     readOnly
                                 />
                             </div>
@@ -53,8 +51,8 @@ function CardResourceRecommended(props: ResourceProps) {
                 return (
                     <div className="border border-gray-200 dark:border-gray-700 rounded w-full bg-gray-50 dark:bg-gray-900 overflow-hidden">
                         <div className="p-3 text-sm font-mono text-gray-800 dark:text-gray-300 overflow-x-auto overflow-y-auto max-h-[100px] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                            {code ? (
-                                <pre className="whitespace-pre-wrap break-all">{code.length > 300 ? code.substring(0, 300) + "..." : code}</pre>
+                            {value ? (
+                                <pre className="whitespace-pre-wrap break-all">{value.length > 300 ? value.substring(0, 300) + "..." : value}</pre>
                             ) : (
                                 "// Code snippet not available"
                             )}
@@ -65,8 +63,8 @@ function CardResourceRecommended(props: ResourceProps) {
                 return (
                     <div className="border border-gray-200 dark:border-gray-700 rounded w-full bg-gray-50 dark:bg-gray-900 overflow-hidden">
                         <div className="p-3 text-sm text-gray-800 dark:text-gray-300 overflow-x-auto overflow-y-auto max-h-[100px] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
-                            {text ? (
-                                <p className="whitespace-pre-wrap break-all">{text.length > 300 ? text.substring(0, 300) + "..." : text}</p>
+                            {value ? (
+                                <p className="whitespace-pre-wrap break-all">{value.length > 300 ? value.substring(0, 300) + "..." : value}</p>
                             ) : (
                                 "Text content not available"
                             )}
@@ -115,7 +113,7 @@ function CardResourceRecommended(props: ResourceProps) {
                                                 </Label>
                                                 <Input
                                                     id="link"
-                                                    defaultValue={url}
+                                                    defaultValue={value}
                                                     readOnly
                                                 />
                                             </div>
@@ -123,7 +121,7 @@ function CardResourceRecommended(props: ResourceProps) {
                                                 type="button" 
                                                 size="sm" 
                                                 className="px-3 hover:bg-blue-500"
-                                                onClick={() => navigator.clipboard.writeText(url)}
+                                                onClick={() => navigator.clipboard.writeText(value)}
                                             >
                                                 <span className="sr-only">Copy</span>
                                                 <Copy />
@@ -132,7 +130,7 @@ function CardResourceRecommended(props: ResourceProps) {
                                                 type="button"
                                                 size="sm"
                                                 className="px-3 hover:bg-green-500"
-                                                onClick={() => window.open(url, '_blank')}
+                                                onClick={() => window.open(value, '_blank')}
                                             >
                                                 <span className="sr-only">Visit</span>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -149,13 +147,13 @@ function CardResourceRecommended(props: ResourceProps) {
                                             <div className="font-medium mb-2 text-gray-700 dark:text-gray-300">Code Snippet</div>
                                             <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-sm overflow-x-auto overflow-y-auto max-h-[400px] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                                                 <pre className="whitespace-pre-wrap break-all">
-                                                    {code || "// Code snippet not available"}
+                                                    {value || "// Code snippet not available"}
                                                 </pre>
                                             </div>
-                                            {code && (
+                                            {value && (
                                                 <button
                                                     className="mt-2 px-3 py-1 text-sm text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-1"
-                                                    onClick={() => navigator.clipboard.writeText(code)}
+                                                    onClick={() => navigator.clipboard.writeText(value)}
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -171,13 +169,13 @@ function CardResourceRecommended(props: ResourceProps) {
                                             <div className="font-medium mb-2 text-gray-700 dark:text-gray-300">Text Content</div>
                                             <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm text-gray-800 dark:text-gray-300 overflow-x-auto overflow-y-auto max-h-[400px] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
                                                 <p className="whitespace-pre-wrap break-all">
-                                                    {text || "Text content not available"}
+                                                    {value || "Text content not available"}
                                                 </p>
                                             </div>
-                                            {text && (
+                                            {value && (
                                                 <button
                                                     className="mt-2 px-3 py-1 text-sm text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-1"
-                                                    onClick={() => navigator.clipboard.writeText(text)}
+                                                    onClick={() => navigator.clipboard.writeText(value)}
                                                 >
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
