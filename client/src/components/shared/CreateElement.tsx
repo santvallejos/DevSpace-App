@@ -2,26 +2,23 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import FolderTree from "@/components/shared/FolderTree";
+import ResourceTypeSelector, { ResourceType, CodeType } from "@/components/shared/ResourceTypeSelector";
+import ResourceForm from "@/components/shared/ResourceForm";
 import { useFolderStore } from "@/stores/FolderStore";
-import { useResourceStore } from "@/stores/resourceStore";
 import { useState } from "react";
-import { CreateResourceModel } from "@/models/ResourceModel";
 
 function CreateElment() {
-    const [nameNewResource, setNameNewResource] = useState("");
-    const [descriptionNewResource, setDescriptionNewResource] = useState("");
-    const [urlNewResource, setUrlNewResource] = useState("");
     const [nameNewFolder, setNameNewFolder] = useState("");
     const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
-    const [isResourceDialogOpen, setIsResourceDialogOpen] = useState(false);
+    const [isResourceTypeSelectorOpen, setIsResourceTypeSelectorOpen] = useState(false);
+    const [isResourceFormOpen, setIsResourceFormOpen] = useState(false);
+    const [selectedResourceType, setSelectedResourceType] = useState<ResourceType>(ResourceType.Url);
+    const [selectedCodeType, setSelectedCodeType] = useState<CodeType | undefined>(undefined);
+    
     const {
         folderSelected,
         addFolder,
     } = useFolderStore();
-
-    const {
-        addResource,
-    } = useResourceStore();
 
     const handleCreateFolder = async (e: React.FormEvent) => {
         e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
@@ -44,34 +41,27 @@ function CreateElment() {
         }
     }
 
-    const handleCreateResource = async (e: React.FormEvent) => {
-        e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
-        
-        try {
-            const newResource: CreateResourceModel = {
-                folderId: folderSelected[0]?.id || null,
-                name: nameNewResource,
-                description: descriptionNewResource,
-                type: 0,
-                value: urlNewResource,
-            };
+    // Función para manejar la selección del tipo de recurso
+    const handleResourceTypeSelect = (type: ResourceType, codeType?: CodeType) => {
+        setSelectedResourceType(type);
+        setSelectedCodeType(codeType);
+        setIsResourceTypeSelectorOpen(false);
+        setIsResourceFormOpen(true);
+    };
 
-            await addResource(newResource);
-
-            setNameNewResource("");
-            setDescriptionNewResource("");
-            setUrlNewResource("");
-            setIsResourceDialogOpen(false);
-        } catch (error) {
-            console.log("No se ha creado el recurso", error);
-        }
-    }
+    // Función para cerrar el formulario de recursos
+    const handleResourceFormClose = () => {
+        setIsResourceFormOpen(false);
+        setSelectedCodeType(undefined);
+    };
 
     return (
         <>
             <Dialog open={isFolderDialogOpen} onOpenChange={setIsFolderDialogOpen}>
                 <DialogTrigger>
-                    + Folder
+                    <Button variant="outline">
+                        + Folder
+                    </Button>
                 </DialogTrigger>
                 <DialogContent>
                     <form onSubmit={handleCreateFolder}>
@@ -95,33 +85,28 @@ function CreateElment() {
                 </DialogContent>
             </Dialog>
 
-            <Dialog open={isResourceDialogOpen} onOpenChange={setIsResourceDialogOpen}>
-                <DialogTrigger>
-                    + Recurso
-                </DialogTrigger>
-                <DialogContent>
-                    <form onSubmit={handleCreateResource}>
-                        <DialogHeader>
-                            <DialogTitle>Agregar un recurso</DialogTitle>
-                            <DialogDescription>
-                                Agrega un nuevo recurso a tu unidad.
-                            </DialogDescription>
-                            <Input type="text" placeholder="Name Resource" value={nameNewResource} onChange={(e) => setNameNewResource(e.target.value)} required />
-                            <Input type="text" placeholder="Decription Resource" value={descriptionNewResource} onChange={(e) => setDescriptionNewResource(e.target.value)} />
-                            <Input type="text" placeholder="Url Resource" value={urlNewResource} onChange={(e) => setUrlNewResource(e.target.value)} />
-                            <br />
-                            <div>
-                                La carpeta se guardara en: {folderSelected[0]?.name || 'Root'}
-                            </div>
-                            <span>Selecciona donde guardar la carpeta</span>
-                            <FolderTree />
-                        </DialogHeader>
-                        <DialogFooter>
-                            <Button type="submit">Add</Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-            </Dialog>
+            {/* Botón para abrir selector de tipo de recurso */}
+            <Button 
+                variant="outline" 
+                onClick={() => setIsResourceTypeSelectorOpen(true)}
+            >
+                + Recurso
+            </Button>
+
+            {/* Selector de tipo de recurso */}
+            <ResourceTypeSelector
+                isOpen={isResourceTypeSelectorOpen}
+                onClose={() => setIsResourceTypeSelectorOpen(false)}
+                onSelectType={handleResourceTypeSelect}
+            />
+
+            {/* Formulario de creación de recurso */}
+            <ResourceForm
+                isOpen={isResourceFormOpen}
+                onClose={handleResourceFormClose}
+                resourceType={selectedResourceType}
+                codeType={selectedCodeType}
+            />
         </>
     );
 };
