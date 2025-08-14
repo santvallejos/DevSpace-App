@@ -197,7 +197,7 @@ namespace api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateResource(string id, [FromBody] PutResourceDto resourceDto)
+        public async Task<IActionResult> UpdateResource(string id, [FromBody] UpdateResourceDto resourceDto)
         {
             try
             {
@@ -210,7 +210,40 @@ namespace api.Controllers
             }
         }
 
-        /// <summary>Actualizar el folderId de un recurso</summary>
+        /// <summary>Actualizar parcialmente un recurso</summary>
+        /// <remarks>
+        /// Actualizar un recurso parcialemente.
+        /// Actualiza parcialmente el contenido de un recurso dependiendo de los cambios que realizamos.
+        ///
+        /// ### Ejemplo de uso:
+        ///     PUT /api/resource/68249ee31a7e2be077274172
+        ///```json
+        ///{
+        ///     "Name": "Recurso 1",
+        ///}
+        ///```
+        ///</remarks>
+        /// <param name="id"></param>
+        /// <param name="resourceDto"></param>
+        /// <returns></returns>
+        [HttpPatch("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateResourcePartial(string id, [FromBody] UpdateResourceDto resourceDto)
+        {
+            try
+            {
+                await _resourceServices.UpdateResourcePartialAsync(id, resourceDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+                /// <summary>Actualizar el folderId de un recurso</summary>
         /// <remarks>
         /// Actualizar el folderId de un recurso.
         ///
@@ -232,7 +265,7 @@ namespace api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateResourceFolderId(string id, [FromBody] FolderIDResourceDto resourceDto)
+        public async Task<IActionResult> UpdateResourceFolderId(string id, [FromBody] UpdateFolderId resourceDto)
         {
             try
             {

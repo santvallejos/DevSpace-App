@@ -38,7 +38,6 @@ namespace api.Data.Models
         Json
     }
 
-
     public class Resource
     {
         [BsonId]

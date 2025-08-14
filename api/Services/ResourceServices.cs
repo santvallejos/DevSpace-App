@@ -79,7 +79,7 @@ namespace api.Services
             return @resource;
         }
 
-        public async Task UpdateResourceAsync(string Id, PutResourceDto resourceDto)
+        public async Task UpdateResourceAsync(string Id, UpdateResourceDto resourceDto)
         {
             var resource = await _resourceCollection.GetResourceById(Id);
             //Verificamos que exista el recurso
@@ -96,7 +96,33 @@ namespace api.Services
             }
         }
 
-        public async Task UpdateResourceFolderIdAsync(string Id, FolderIDResourceDto resourceDto)
+        public async Task UpdateResourcePartialAsync(string id, UpdateResourceDto resourceDto)
+        {
+            var resource = await _resourceCollection.GetResourceById(id);
+            // Verificamos que existe el recurso
+            if (resource != null)
+            {
+                if (resourceDto.Name != null)
+                {
+                    resource.Name = resourceDto.Name;
+                }
+                if (resourceDto.Description != null)
+                {
+                    resource.Description = resourceDto.Description;
+                }
+                if (resourceDto.Value != null)
+                {
+                    resource.Value = resourceDto.Value;
+                }
+                await _resourceCollection.UpdateResource(resource);
+            }
+            else
+            {
+                throw new Exception("No se encontro el recurso");
+            }
+        }
+
+        public async Task UpdateResourceFolderIdAsync(string Id, UpdateFolderId resourceDto)
         {
             var resource = await _resourceCollection.GetResourceById(Id);
             // Verificamos que exista el recurso

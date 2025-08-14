@@ -19,7 +19,7 @@ namespace api.Infrastructure.Dto
         public string? Value { get; set; }
     }
 
-    public class PutResourceDto
+    public class UpdateResourceDto
     {
         public required string Name { get; set; }
 
@@ -29,7 +29,7 @@ namespace api.Infrastructure.Dto
         public string? Value { get; set; }
     }
 
-    public class FolderIDResourceDto
+    public class UpdateFolderId
     {
         public string? FolderId { get; set; }
     }
