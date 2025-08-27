@@ -27,7 +27,7 @@ import {
 import { useResourceStore } from '@/stores/resourceStore';
 import { MoveResourceModel, UpdateResourceModel } from '@/models/ResourceModel';
 import { useFolderStore } from '@/stores/FolderStore';
-import FolderTree from './FolderTree';
+import FolderTree from '../FolderTree';
 
 interface ResourceProps {
     id: string

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFolderStore } from "@/stores/FolderStore";
 import { RenameFolder, MoveFolder } from "@/models/FolderModel";
-import FolderTree from "./FolderTree";
+import FolderTree from "../FolderTree";
 
 /**
  * Interfaz que define las propiedades del componente PreviewFolder
