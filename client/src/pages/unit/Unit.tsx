@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FolderModel } from "@/models/FolderModel";
 import { useFolderStore } from "@/stores/FolderStore";
-import { useResourceStore } from "@/stores/resourceStore";
+import { useResourceStore } from "@/stores/ResourceStore";
 import PreviewFolder from "@/components/shared/cards/Folder";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import Loading from '../../components/shared/loadings/Loading';
@@ -32,7 +32,6 @@ function MyUnit() {
 
   const {
     currentResourceFolder,
-    setCurrentResourceFolder,
     fetchResourcesRoot,
     fetchResources,
   } = useResourceStore();
@@ -62,8 +61,7 @@ function MyUnit() {
             setCurrentFolders(subFolders);
 
             // Cargar los recursos
-            const resources = await fetchResources(folderId);
-            setCurrentResourceFolder(resources);
+            await fetchResources(folderId);
 
             // Construir el path
             const path = await buildBreadCrumbPath(folderId);
@@ -81,8 +79,7 @@ function MyUnit() {
           setCurrentFolders(rootFolders);
 
           // Cargar los recursos de nivel raiz
-          const rootResources = await fetchResourcesRoot();
-          setCurrentResourceFolder(rootResources);
+          await fetchResourcesRoot();
 
           setBreadCrumbPath([]);
         }

@@ -29,10 +29,10 @@ import {
     DialogFooter,
     DialogClose
 } from "@/components/ui/dialog"
-import { useResourceStore } from '@/stores/resourceStore';
 import { MoveResourceModel, UpdateResourceModel } from '@/models/ResourceModel';
 import { useFolderStore } from '@/stores/FolderStore';
 import FolderTree from '../FolderTree';
+import { UpdateResource, UpdateResourceFavorite, UpdateResourceFolder, DeleteResource } from '@/services/ResourceServices';
 
 interface ResourceProps {
     id: string
@@ -41,20 +41,10 @@ interface ResourceProps {
     type: number;
     value: string;
     favorite: boolean;
-    onDelete?: (resourceId: string) => void;
 }
 
 function CardResource(props: ResourceProps) {
-    const {
-        updateResource,
-        updateResourceFavorite,
-        moveResource,
-        deleteResource
-    } = useResourceStore();
-
-    const {
-        folderSelected
-    } = useFolderStore();
+    const { folderSelected } = useFolderStore();
 
     const { id, name, description, type, value, favorite } = props;
     const [isFavorite, setIsFavorite] = useState(favorite);
@@ -102,9 +92,10 @@ function CardResource(props: ResourceProps) {
 
     const handleDeleteResource = async () => {
         try {
-            await deleteResource(id);
+            await DeleteResource(id);
             setShowDeleteDialog(false);
-            console.log("Recurso eliminado con éxito");
+            // Recargar la página para reflejar el cambio
+            window.location.reload();
         } catch (error) {
             console.error("Error al eliminar el recurso:", error);
         }
@@ -119,9 +110,10 @@ function CardResource(props: ResourceProps) {
                 value: editValue,
             }
 
-            await updateResource(id, editResource);
+            await UpdateResource(id, editResource);
             setShowEditDialog(false);
-            console.log("Recurso actualizado con éxito");
+            // Recargar la página para reflejar el cambio
+            window.location.reload();
         } catch (error) {
             console.error("Error al actualizar el recurso:", error);
         }
@@ -129,7 +121,7 @@ function CardResource(props: ResourceProps) {
 
     const handleResourceFavorite = async () => {
         try {
-            await updateResourceFavorite(id);
+            await UpdateResourceFavorite(id);
             setIsFavorite(!isFavorite);
         } catch (error) {
             console.error("Error al marcar/desmarcar como favorito:", error);
@@ -141,9 +133,10 @@ function CardResource(props: ResourceProps) {
             const folderId: MoveResourceModel = {
                 folderId: folderSelected[0]?.id || null
             }
-            await moveResource(id, folderId);
+            await UpdateResourceFolder(id, folderId);
             setShowMoveDialog(false);
-            console.log("Recurso movido con éxito");
+            // Recargar la página para reflejar el cambio
+            window.location.reload();
         } catch (error) {
             console.error("Error al mover el recurso:", error);
         }

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import FolderTree from "@/components/shared/FolderTree";
 import { useFolderStore } from "@/stores/FolderStore";
-import { useResourceStore } from "@/stores/resourceStore";
+import { useResourceStore } from "@/stores/ResourceStore";
 import { useState } from "react";
 import { CreateResourceModel } from "@/models/ResourceModel";
 import { ResourceType, CodeType } from "./ResourceTypeSelector";

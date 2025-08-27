@@ -1,7 +1,7 @@
 import CardResource from "@/components/shared/cards/Resource";
 import CardResourceRecommended from "@/components/shared/cards/ResourceRecommended";
 import { useState, useRef, useEffect } from "react";
-import { useResourceStore } from "../../stores/resourceStore";
+import { useResourceStore } from "../../stores/ResourceStore";
 import Loading from "../../components/shared/loadings/Loading";
 
 function AppDashboard() {

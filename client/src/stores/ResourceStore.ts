@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { Resource, CreateResourceModel, UpdateResourceModel, MoveResourceModel } from "@/models/ResourceModel";
 import {
-    GetResourceById,
     GetRecentsResources,
     GetFavoriteResources,
     GetRecommendedResources,
@@ -35,11 +34,11 @@ interface ResourceState {
     fetchResources: (folderId: string | null) => Promise<Resource[]>;            // Cargar los recursos de una carpeta especifica
 
     // Crud de recursos
-    addResource: (resource: CreateResourceModel) => void;                        // Crear un nuevo recurso
-    updateResource: (id: string, resource: UpdateResourceModel) => void;         // Actualizar un recurso
-    updateResourceFavorite: (id: string) => void;                                // Actualizar el estado de favorito de un recurso
-    moveResource: (id: string, folderId: MoveResourceModel ) => void;            // Mover un recurso a otra carpeta
-    deleteResource: (id: string) => void;                                        // Eliminar un recurso
+    addResource: (resource: CreateResourceModel) => Promise<Resource | null>;    // Crear un nuevo recurso
+    updateResource: (id: string, resource: UpdateResourceModel) => Promise<void>; // Actualizar un recurso
+    updateResourceFavorite: (id: string) => Promise<void>;                      // Actualizar el estado de favorito de un recurso
+    moveResource: (id: string, folderId: MoveResourceModel ) => Promise<void>;   // Mover un recurso a otra carpeta
+    deleteResource: (id: string) => Promise<void>;                              // Eliminar un recurso
     // Actualizar estados
     setCurrentResourceFolder: (folder: Resource[]) => void;
 
@@ -103,30 +102,26 @@ export const useResourceStore = create<ResourceState>((set) => ({
     },
     fetchResourcesRoot: async () => {
         try{
-            set({ isLoading: true })
+            set({ isLoading: true, error: null })
             const resources = await GetResourceByFolderId(null);
-            set({ currentResourceFolder: resources});
+            set({ currentResourceFolder: resources, isLoading: false });
             return resources;
         } catch (error) {
             console.error(error);
             set({ error: 'Error al cargar los recursos de la raiz', isLoading: false });
             return [];
-        } finally {
-            set({ isLoading: false });
         }
     },
     fetchResources: async (folderId: string | null) => {
         try{
-            set({ isLoading: true })
+            set({ isLoading: true, error: null })
             const resources = await GetResourceByFolderId(folderId);
-            set({ currentResourceFolder: resources });
+            set({ currentResourceFolder: resources, isLoading: false });
             return resources;
         } catch (error) {
             console.error(error);
-            set({ error: 'Error al cargar los recursos de la raiz', isLoading: false });
+            set({ error: 'Error al cargar los recursos', isLoading: false });
             return [];
-        } finally {
-            set({ isLoading: false });
         }
     },
     addResource: async (resource: CreateResourceModel) => {
@@ -145,9 +140,9 @@ export const useResourceStore = create<ResourceState>((set) => ({
                 
                 // Solo actualizar la vista si el recurso se añadió a la carpeta que se está visualizando
                 if ((isRootResource && isInRootView) || isInCurrentFolder) {
-                    const currentResources = [...useResourceStore.getState().currentResourceFolder];
-                    currentResources.push(newResource);
-                    useResourceStore.getState().setCurrentResourceFolder(currentResources);
+                    set((state) => ({
+                        currentResourceFolder: [...state.currentResourceFolder, newResource]
+                    }));
                 }
             }
             return newResource;
@@ -158,34 +153,24 @@ export const useResourceStore = create<ResourceState>((set) => ({
         }
     },
     updateResource: async (id: string, resourceUpdate: UpdateResourceModel) => {
+        set({ isLoading: true, error: null });
         try {
-            // Actualizar el recurso
             await UpdateResource(id, resourceUpdate);
-
-            // Obtener el recurso 
-            const resource = await GetResourceById(id);
-            if (!resource) {
-                throw new Error('Recurso no encontrado');
-            }
-
-            // Evaluar si el recurso se esta mostrando actualmente
+            
+            // Recargar los recursos de la carpeta actual
             const currentFolder = useFolderStore.getState().currentFolder;
-            const isInCurrentFolder = currentFolder && currentFolder.id === resource.folderId;
-            const isInRootView = currentFolder === null;
-            const isRootResource = !resource.folderId || resource.folderId === '';
-
-            // Si el recurso se esta mostrando actualmente, actualizar la vista
-            if ((isRootResource && isInRootView) || isInCurrentFolder) {
-                const currentResources = [...useResourceStore.getState().currentResourceFolder];
-                const index = currentResources.findIndex(r => r.id === id);
-                if(index!== -1){
-                    currentResources[index] = {...currentResources[index], ...resourceUpdate};
-                    useResourceStore.getState().setCurrentResourceFolder(currentResources);
-                }
+            if (currentFolder) {
+                const resources = await GetResourceByFolderId(currentFolder.id);
+                set({ currentResourceFolder: resources });
+            } else {
+                const resources = await GetResourceByFolderId(null);
+                set({ currentResourceFolder: resources });
             }
         } catch (error) {
-            console.error(error);
+            console.error('Error al actualizar el recurso:', error);
             set({ error: 'Error al actualizar el recurso' });
+        } finally {
+            set({ isLoading: false });
         }
     },
     updateResourceFavorite: async (id: string) => {
@@ -212,12 +197,9 @@ export const useResourceStore = create<ResourceState>((set) => ({
 
             // Si se movió a otra carpeta que no es la que se está mostrando, actualizamos la vista eliminando el recurso
             if (isMovingFromCurrentFolder) {
-                const currentResources = [...useResourceStore.getState().currentResourceFolder];
-                const index = currentResources.findIndex(r => r.id === id);
-                if(index!== -1){
-                    currentResources.splice(index, 1);
-                    useResourceStore.getState().setCurrentResourceFolder(currentResources);
-                }
+                set((state) => ({
+                    currentResourceFolder: state.currentResourceFolder.filter(r => r.id !== id)
+                }));
             }
         } catch (error) {
             console.error(error);
@@ -225,34 +207,24 @@ export const useResourceStore = create<ResourceState>((set) => ({
         }
     },
     deleteResource: async (id: string) => {
+        set({ isLoading: true, error: null });
         try{
-            // Obtener el recurso antes de eliminarlo
-            const resource = await GetResourceById(id);
-            if (!resource) {
-                throw new Error('Recurso no encontrado');
-            }
-            
-            // Eliminar el recurso
             await DeleteResource(id);
-
-            // Evaluar si el recurso se esta mostrando actualmente
+            
+            // Recargar los recursos de la carpeta actual
             const currentFolder = useFolderStore.getState().currentFolder;
-            const isInCurrentFolder = currentFolder && currentFolder.id === resource.folderId;
-            const isInRootView = currentFolder === null;
-            const isRootResource = !resource.folderId || resource.folderId === '';
-
-            // Si el recurso se esta mostrando actualmente, actualizar la vista
-            if ((isRootResource && isInRootView) || isInCurrentFolder) {
-                const currentResources = [...useResourceStore.getState().currentResourceFolder];
-                const index = currentResources.findIndex(r => r.id === id);
-                if(index !== -1){
-                    currentResources.splice(index, 1);
-                    useResourceStore.getState().setCurrentResourceFolder(currentResources);
-                }
+            if (currentFolder) {
+                const resources = await GetResourceByFolderId(currentFolder.id);
+                set({ currentResourceFolder: resources });
+            } else {
+                const resources = await GetResourceByFolderId(null);
+                set({ currentResourceFolder: resources });
             }
         } catch (error) {
-            console.error(error);
+            console.error('Error al eliminar el recurso:', error);
             set({ error: 'Error al eliminar el recurso' });
+        } finally {
+            set({ isLoading: false });
         }
     },
 
