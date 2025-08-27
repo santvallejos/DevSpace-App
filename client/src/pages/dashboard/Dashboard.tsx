@@ -17,12 +17,6 @@ function AppDashboard() {
       name: "Favorites",
       activeSection: "favorites",
       ref: useRef<HTMLButtonElement | null>(null)
-    },
-    {
-      id: 3,
-      name: "Recommended",
-      activeSection: "recommended",
-      ref: useRef<HTMLButtonElement | null>(null)
     }
   ];
 

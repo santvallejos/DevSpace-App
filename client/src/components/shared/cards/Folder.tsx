@@ -127,47 +127,57 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
     }
 
     return (
-        <div className="p-4 border rounded-md hover:bg-accent cursor-pointer">
+        <div className="group relative p-4 border rounded-lg hover:bg-accent/50 hover:border-primary/20 cursor-pointer transition-all duration-200 h-fit min-h-[4rem] flex flex-col justify-center">
             {/* Contenedor principal de la carpeta */}
-            <div className="flex items-center justify-between" onClick={onClick}>
+            <div className="flex items-center justify-between gap-3" onClick={onClick}>
                 {/* Icono y nombre de la carpeta */}
-                <div className="flex items-center gap-2">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="icon icon-tabler icons-tabler-outline icon-tabler-folder"
-                    >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" />
-                    </svg>
-                    <span>{name}</span>
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <div className="flex-shrink-0">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="28"
+                            height="28"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="icon icon-tabler icons-tabler-outline icon-tabler-folder text-primary"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" />
+                        </svg>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                        <span 
+                            className="block text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors duration-200"
+                            title={name}
+                        >
+                            {name}
+                        </span>
+                    </div>
                 </div>
 
                 {/* Botón de opciones y menú desplegable */}
-                <div className="relative">
+                <div className="relative flex-shrink-0">
                     <button
                         ref={buttonRef}
-                        className="p-1 rounded-full hover:bg-gray-200 focus:outline-none"
+                        className="p-2 rounded-full hover:bg-gray-200/80 dark:hover:bg-gray-700/80 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors duration-200 opacity-0 group-hover:opacity-100"
                         aria-label="Opciones de carpeta"
                         onClick={toggleMenu}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="20"
-                            height="20"
+                            width="18"
+                            height="18"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
+                            className="text-muted-foreground hover:text-foreground transition-colors duration-200"
                         >
                             <circle cx="12" cy="12" r="1" />
                             <circle cx="12" cy="5" r="1" />
@@ -179,31 +189,47 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
                     {showMenu && (
                         <div
                             ref={menuRef}
-                            className="absolute right-0 mt-1 w-40 bg-white border rounded-md shadow-lg z-10"
+                            className="absolute right-0 top-full mt-2 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-20 backdrop-blur-sm"
                             onClick={stopPropagation}
                         >
-                            <ul className="py-1">
+                            <ul className="py-2">
                                 <li>
                                     <button
-                                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 flex items-center gap-2"
                                         onClick={openRenameDialog}
                                     >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                                        </svg>
                                         Renombrar
                                     </button>
                                 </li>
                                 <li>
                                     <button
-                                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        className="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 flex items-center gap-2"
                                         onClick={openMoveDialog}
                                     >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <polyline points="5,9 2,12 5,15"/>
+                                            <polyline points="9,5 12,2 15,5"/>
+                                            <polyline points="15,19 12,22 9,19"/>
+                                            <polyline points="19,9 22,12 19,15"/>
+                                            <line x1="2" x2="22" y1="12" y2="12"/>
+                                            <line x1="12" x2="12" y1="2" y2="22"/>
+                                        </svg>
                                         Mover
                                     </button>
                                 </li>
                                 <li>
+                                    <hr className="my-1 border-gray-200 dark:border-gray-600" />
                                     <button
-                                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                                        className="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-150 flex items-center gap-2"
                                         onClick={openDeleteDialog}
                                     >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <polyline points="3,6 5,6 21,6"/>
+                                            <path d="m19,6v14a2,2 0,0 1,-2,2H7a2,2 0,0 1,-2,-2V6m3,0V4a2,2 0,0 1,2,-2h4a2,2 0,0 1,2,2v2"/>
+                                        </svg>
                                         Eliminar
                                     </button>
                                 </li>
@@ -215,38 +241,45 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
 
             {/* Diálogo de Renombrar */}
             <Dialog open={showRenameDialog} onOpenChange={setShowRenameDialog}>
-                <DialogContent onClick={stopPropagation}>
+                <DialogContent onClick={stopPropagation} className="sm:max-w-md">
                     <DialogHeader>
-                        <DialogTitle>Renombrar carpeta</DialogTitle>
+                        <DialogTitle className="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                            </svg>
+                            Renombrar carpeta
+                        </DialogTitle>
                         <DialogDescription>
-                            Introduce un nuevo nombre para la carpeta.
+                            Introduce un nuevo nombre para la carpeta "{name}".
                         </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleRenameFolder}>
                         <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="name" className="text-right">
-                                    Nombre
+                            <div className="space-y-2">
+                                <Label htmlFor="name" className="text-sm font-medium">
+                                    Nuevo nombre
                                 </Label>
                                 <Input
+                                    id="name"
                                     type="text"
                                     value={newFolderName}
                                     onChange={(e) => setNewFolderName(e.target.value)}
-                                    className="col-span-3"
+                                    placeholder="Introduce el nuevo nombre..."
+                                    className="w-full"
                                     autoFocus
                                     onClick={stopPropagation}
                                 />
                             </div>
                         </div>
-                        <DialogFooter>
+                        <DialogFooter className="gap-2">
                             <DialogClose asChild>
                                 <Button variant="outline" onClick={stopPropagation}>
                                     Cancelar
                                 </Button>
                             </DialogClose>
                             <DialogClose asChild>
-                                <Button type="submit">
-                                    Guardar
+                                <Button type="submit" disabled={!newFolderName.trim()}>
+                                    Guardar cambios
                                 </Button>
                             </DialogClose>
                         </DialogFooter>
@@ -256,18 +289,33 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
 
             {/* Diálogo de Mover */}
             <Dialog open={showMoveDialog} onOpenChange={setShowMoveDialog}>
-                <DialogContent onClick={stopPropagation}>
+                <DialogContent onClick={stopPropagation} className="sm:max-w-lg">
                     <DialogHeader>
-                        <DialogTitle>Mover carpeta</DialogTitle>
+                        <DialogTitle className="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="5,9 2,12 5,15"/>
+                                <polyline points="9,5 12,2 15,5"/>
+                                <polyline points="15,19 12,22 9,19"/>
+                                <polyline points="19,9 22,12 19,15"/>
+                                <line x1="2" x2="22" y1="12" y2="12"/>
+                                <line x1="12" x2="12" y1="2" y2="22"/>
+                            </svg>
+                            Mover carpeta
+                        </DialogTitle>
                         <DialogDescription>
-                            Selecciona la carpeta de destino donde deseas mover "{name}".
+                            Selecciona la carpeta de destino donde deseas mover "<span className="font-medium">{name}</span>".
                         </DialogDescription>
                     </DialogHeader>
-                    <div>
-                        La carpeta se guardara en: {folderSelected[0]?.name || 'Root'}
+                    <div className="py-4">
+                        <div className="mb-4 p-3 bg-muted/50 rounded-lg border">
+                            <p className="text-sm text-muted-foreground">Destino seleccionado:</p>
+                            <p className="font-medium">{folderSelected[0]?.name || 'Carpeta raíz'}</p>
+                        </div>
+                        <div className="max-h-60 overflow-y-auto border rounded-lg">
+                            <FolderTree />
+                        </div>
                     </div>
-                    <FolderTree />
-                    <DialogFooter>
+                    <DialogFooter className="gap-2">
                         <DialogClose asChild>
                             <Button variant="outline" onClick={stopPropagation}>
                                 Cancelar
@@ -275,7 +323,7 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
                         </DialogClose>
                         <DialogClose asChild>
                             <Button onClick={handleMoveFolder}>
-                                Mover
+                                Mover carpeta
                             </Button>
                         </DialogClose>
                     </DialogFooter>
@@ -284,14 +332,29 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
 
             {/* Diálogo de Eliminar */}
             <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-                <AlertDialogContent onClick={stopPropagation}>
+                <AlertDialogContent onClick={stopPropagation} className="sm:max-w-md">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Do you want to delete this folder?</AlertDialogTitle>
-                        <AlertDialogDescription>If you want to delete the<span className='font-bold text-black dark:text-white'> {name} </span>folder, its folders and resources will also be deleted.</AlertDialogDescription>
+                        <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                                <path d="M12 9v4"/>
+                                <path d="M12 17h.01"/>
+                            </svg>
+                            ¿Eliminar esta carpeta?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="space-y-2">
+                            <p>Si eliminas la carpeta <span className='font-semibold text-foreground'>"{name}"</span>, también se eliminarán todas sus subcarpetas y recursos.</p>
+                            <p className="text-sm text-muted-foreground">Esta acción no se puede deshacer.</p>
+                        </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel >Cancel</AlertDialogCancel>
-                        <AlertDialogAction className="btn btn-error hover:text-white hover:bg-red-500" onClick={handleDeleteFolder}>Delete</AlertDialogAction>
+                    <AlertDialogFooter className="gap-2">
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction 
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90" 
+                            onClick={handleDeleteFolder}
+                        >
+                            Eliminar carpeta
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
