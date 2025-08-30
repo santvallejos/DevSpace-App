@@ -92,6 +92,7 @@ function CardResource(props: ResourceProps) {
 
     const handleDeleteResource = async () => {
         try {
+
             await DeleteResource(id);
             setShowDeleteDialog(false);
             // Recargar la página para reflejar el cambio
@@ -261,32 +262,50 @@ function CardResource(props: ResourceProps) {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={handleOpenResource}>
+                            <DropdownMenuItem onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenResource();
+                            }}>
                                 <ExternalLink className="mr-2 h-4 w-4" />
                                 Ver detalles
                             </DropdownMenuItem>
                             {type === 0 && (
-                                <DropdownMenuItem onClick={handleOpenUrlDirectly}>
+                                <DropdownMenuItem onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleOpenUrlDirectly();
+                                }}>
                                     <ExternalLink className="mr-2 h-4 w-4" />
                                     Abrir en nueva pestaña
                                 </DropdownMenuItem>
                             )}
-                            <DropdownMenuItem onClick={handleResourceFavorite}>
+                            <DropdownMenuItem onClick={(e) => {
+                                e.stopPropagation();
+                                handleResourceFavorite();
+                            }}>
                                 <Star className="mr-2 h-4 w-4" />
                                 {isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => setShowEditDialog(true)}>
+                            <DropdownMenuItem onClick={(e) => {
+                                e.stopPropagation();
+                                setShowEditDialog(true);
+                            }}>
                                 <Edit className="mr-2 h-4 w-4" />
                                 Editar
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setShowMoveDialog(true)}>
+                            <DropdownMenuItem onClick={(e) => {
+                                e.stopPropagation();
+                                setShowMoveDialog(true);
+                            }}>
                                 <Move className="mr-2 h-4 w-4" />
                                 Mover
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem 
-                                onClick={() => setShowDeleteDialog(true)}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowDeleteDialog(true);
+                                }}
                                 className="text-red-600 focus:text-red-600"
                             >
                                 <Trash2 className="mr-2 h-4 w-4" />
