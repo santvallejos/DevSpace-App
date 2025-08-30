@@ -147,12 +147,6 @@ function CardResource(props: ResourceProps) {
         setShowViewDialog(true);
     };
 
-    const handleOpenUrlDirectly = () => {
-        if (type === 0) {
-            window.open(value, '_blank');
-        }
-    };
-
     const renderResourcePreview = () => {
         switch (type) {
             case 0: // URL type
@@ -262,22 +256,6 @@ function CardResource(props: ResourceProps) {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={(e) => {
-                                e.stopPropagation();
-                                handleOpenResource();
-                            }}>
-                                <ExternalLink className="mr-2 h-4 w-4" />
-                                Ver detalles
-                            </DropdownMenuItem>
-                            {type === 0 && (
-                                <DropdownMenuItem onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleOpenUrlDirectly();
-                                }}>
-                                    <ExternalLink className="mr-2 h-4 w-4" />
-                                    Abrir en nueva pestaña
-                                </DropdownMenuItem>
-                            )}
                             <DropdownMenuItem onClick={(e) => {
                                 e.stopPropagation();
                                 handleResourceFavorite();

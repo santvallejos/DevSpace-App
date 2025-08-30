@@ -26,8 +26,8 @@ namespace api.Services
             var resources = await _resourceCollection.GetResources();
             //Ordeno por fecha de creacion
             resources = resources.OrderByDescending(x => x.CreatedOn).ToList();
-            //Obtengo los 6 ultimos recursos
-            resources = resources.Take(6).ToList();
+            //Obtengo los 12 ultimos recursos
+            resources = resources.Take(12).ToList();
             return resources;
         }
 
