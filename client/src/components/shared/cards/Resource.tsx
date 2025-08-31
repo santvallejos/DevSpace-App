@@ -31,8 +31,10 @@ import {
 } from "@/components/ui/dialog"
 import { MoveResourceModel, UpdateResourceModel } from '@/models/ResourceModel';
 import { useFolderStore } from '@/stores/FolderStore';
+import { useResourceStore } from '@/stores/ResourceStore';
 import FolderTree from '../FolderTree';
-import { UpdateResource, UpdateResourceFavorite, UpdateResourceFolder, DeleteResource } from '@/services/ResourceServices';
+import { UpdateResourceFavorite, UpdateResourceFolder } from '@/services/ResourceServices';
+import { debugDeleteResource, testTimeout } from '@/services/DebugServices';
 
 interface ResourceProps {
     id: string
@@ -45,6 +47,7 @@ interface ResourceProps {
 
 function CardResource(props: ResourceProps) {
     const { folderSelected } = useFolderStore();
+    const { deleteResource, updateResource } = useResourceStore();
 
     const { id, name, description, type, value, favorite } = props;
     const [isFavorite, setIsFavorite] = useState(favorite);
@@ -92,13 +95,18 @@ function CardResource(props: ResourceProps) {
 
     const handleDeleteResource = async () => {
         try {
-
-            await DeleteResource(id);
+            console.log('🚀 Iniciando eliminación...');
+            
+            // Cerrar inmediatamente el diálogo para evitar problemas de estado
             setShowDeleteDialog(false);
-            // Recargar la página para reflejar el cambio
-            window.location.reload();
+            
+            // Usar directamente el método del store que maneja todo
+            await deleteResource(id);
+            
+            console.log('✅ Eliminación completada');
+            
         } catch (error) {
-            console.error("Error al eliminar el recurso:", error);
+            console.error("❌ Error al eliminar el recurso:", error);
         }
     };
 
@@ -111,10 +119,9 @@ function CardResource(props: ResourceProps) {
                 value: editValue,
             }
 
-            await UpdateResource(id, editResource);
+            await updateResource(id, editResource);
             setShowEditDialog(false);
-            // Recargar la página para reflejar el cambio
-            window.location.reload();
+
         } catch (error) {
             console.error("Error al actualizar el recurso:", error);
         }

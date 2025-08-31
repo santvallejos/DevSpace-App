@@ -155,20 +155,32 @@ export const useResourceStore = create<ResourceState>((set) => ({
     updateResource: async (id: string, resourceUpdate: UpdateResourceModel) => {
         set({ isLoading: true, error: null });
         try {
+            // Actualizar en el servidor
             await UpdateResource(id, resourceUpdate);
             
-            // Recargar los recursos de la carpeta actual
-            const currentFolder = useFolderStore.getState().currentFolder;
-            if (currentFolder) {
-                const resources = await GetResourceByFolderId(currentFolder.id);
-                set({ currentResourceFolder: resources });
-            } else {
-                const resources = await GetResourceByFolderId(null);
-                set({ currentResourceFolder: resources });
-            }
+            // Actualización optimística en el estado local
+            set((state) => ({
+                currentResourceFolder: state.currentResourceFolder.map(resource => 
+                    resource.id === id 
+                        ? { ...resource, ...resourceUpdate }
+                        : resource
+                )
+            }));
+            
         } catch (error) {
             console.error('Error al actualizar el recurso:', error);
             set({ error: 'Error al actualizar el recurso' });
+            
+            // Si hay error, recargar la lista para restaurar el estado correcto
+            try {
+                const currentFolder = useFolderStore.getState().currentFolder;
+                const resources = currentFolder 
+                    ? await GetResourceByFolderId(currentFolder.id)
+                    : await GetResourceByFolderId(null);
+                set({ currentResourceFolder: resources });
+            } catch (reloadError) {
+                console.error('Error al recargar recursos después del fallo:', reloadError);
+            }
         } finally {
             set({ isLoading: false });
         }
@@ -207,24 +219,19 @@ export const useResourceStore = create<ResourceState>((set) => ({
         }
     },
     deleteResource: async (id: string) => {
-        set({ isLoading: true, error: null });
-        try{
+        try {
+            console.log('Eliminando recurso:', id);
             await DeleteResource(id);
             
-            // Recargar los recursos de la carpeta actual
-            const currentFolder = useFolderStore.getState().currentFolder;
-            if (currentFolder) {
-                const resources = await GetResourceByFolderId(currentFolder.id);
-                set({ currentResourceFolder: resources });
-            } else {
-                const resources = await GetResourceByFolderId(null);
-                set({ currentResourceFolder: resources });
-            }
+            // Actualizar estado local después de eliminar en servidor
+            set((state) => ({
+                currentResourceFolder: state.currentResourceFolder.filter(r => r.id !== id)
+            }));
+            
+            console.log('Recurso eliminado exitosamente');
         } catch (error) {
             console.error('Error al eliminar el recurso:', error);
             set({ error: 'Error al eliminar el recurso' });
-        } finally {
-            set({ isLoading: false });
         }
     },
 

@@ -1,22 +1,22 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FolderModel } from "@/models/FolderModel";
 import { useFolderStore } from "@/stores/FolderStore";
 import { useResourceStore } from "@/stores/ResourceStore";
-import { useSimpleResourceStore } from "@/stores/SimpleResourceStore";
 import PreviewFolder from "@/components/shared/cards/Folder";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import Loading from '../../components/shared/loadings/Loading';
 import CardResource from '@/components/shared/cards/Resource';
-import SimpleCard from '@/components/shared/cards/SimpleCard';
-import MinimalCardResource from '@/components/shared/cards/MinimalResource';
 import Search from "@/components/shared/Search";
 import CreateElment from "@/components/shared/CreateElement";
 
 function MyUnit() {
-  const { folderId } = useParams<{ folderId: string }>();
-  const navigate = useNavigate();
+  const renderTime = Date.now();
+  console.log('🔄 UNIT: Renderizando en timestamp:', renderTime);
+  
+  const { folderId } = useParams<{ folderId: string }>(); //Obtener parametos de la URL
+  const navigate = useNavigate(); //Navegacion entre paginas
 
   const {
     isLoading,
@@ -39,8 +39,27 @@ function MyUnit() {
     fetchResources,
   } = useResourceStore();
 
-  const navigateToFolder = (folder: FolderModel) => { navigate(`/unity/${folder.id}`); };
-  const navigateToRoot = () => { navigate('/unity'); };
+  // Memoizar las funciones del store para evitar que cambien en cada renderizado
+  const stableFetchResources = useCallback(fetchResources, []);
+  const stableFetchResourcesRoot = useCallback(fetchResourcesRoot, []);
+  const stableFetchFolder = useCallback(fetchFolder, []);
+  const stableFetchSubFolders = useCallback(fetchSubFolders, []);
+  const stableFetchRootSubFolders = useCallback(fetchRootSubFolders, []);
+  const stableBuildBreadCrumbPath = useCallback(buildBreadCrumbPath, []);
+  const stableSetCurrentFolder = useCallback(setCurrentFolder, []);
+  const stableSetCurrentFolders = useCallback(setCurrentFolders, []);
+  const stableSetBreadCrumbPath = useCallback(setBreadCrumbPath, []);
+  const stableSetIsLoading = useCallback(setIsLoading, []);
+
+  // Memoizar la lista de recursos para evitar re-renderizados innecesarios
+  const memoizedResources = React.useMemo(() => {
+    console.log('🧠 MEMO: Recalculando recursos memoizados, cantidad:', currentResourceFolder.length);
+    return currentResourceFolder;
+  }, [currentResourceFolder]);
+
+  const navigateToFolder = (folder: FolderModel) => { navigate(`/unity/${folder.id}`); }; //
+
+  const navigateToRoot = () => { navigate('/unity'); }; // Función para volver a la raíz
 
   useEffect(() => {
     let isMounted = true;
@@ -95,8 +114,6 @@ function MyUnit() {
     return () => {
       isMounted = false;
     };
-    // Solo dependemos del folderId - las demás funciones son estables desde zustand
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [folderId]);
 
   return (
@@ -104,9 +121,14 @@ function MyUnit() {
       {/* Header */}
       <div className="flex flex-col mb-6 pb-3 border-b">
         <div className="flex place-content-between">
+          {/* Titulo */}
           <h1 className="text-2xl font-bold mb-3">Mi unidad</h1>
+
           <div className="flex items-center gap-2">
+            {/* Buscar carpetas o recursos */}
             <Search />
+
+            {/* Crear carpeta o recurso */}
             <CreateElment />
           </div>
         </div>
@@ -149,6 +171,7 @@ function MyUnit() {
         <div className="flex flex-col gap-6">
           {/* Folders Section */}
           <div>
+            {/* Titulo de las carpetas */}
             <h2 className="text-xl font-semibold mb-3">Carpetas</h2>
             {currentFolders.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -169,11 +192,14 @@ function MyUnit() {
 
           {/* Resources Section */}
           <div>
+            {/* Titulo de los recursos */}
             <h2 className="text-xl font-semibold mb-3">Recursos</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-              {currentResourceFolder.length > 0 ? (
+              {isLoading ? (
+                <Loading />
+              ) : currentResourceFolder.length > 0 ? (
                 currentResourceFolder.map((resource, index) => (
-                  <MinimalCardResource
+                  <CardResource
                     key={resource.id || index}
                     id={resource.id || ''}
                     name={resource.name || ''}
