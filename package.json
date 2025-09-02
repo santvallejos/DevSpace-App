@@ -1,16 +1,12 @@
 {
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "electron": "^36.3.1",
-    "wait-on": "^7.2.0"
+    "concurrently": "^8.2.2"
   },
   "scripts": {
+    "install:all": "npm install && cd client && npm install",
     "dev": "concurrently \"npm:dev:*\"",
     "dev:client": "cd client && npm run dev",
     "dev:api": "cd api && dotnet run",
-    "dev:electron": "cd electron && electron .",
-    "build:client": "cd client && npm run build",
-    "start": "npm run build:client && cd electron && electron .",
-    "start:dev": "concurrently \"cd client && npm run dev\" \"wait-on http://localhost:5173 && cd electron && electron . --dev\""
+    "build:client": "cd client && npm run build"
   }
 }
