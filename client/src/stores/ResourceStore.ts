@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Resource, CreateResourceModel, UpdateResourceModel, MoveResourceModel } from "@/models/ResourceModel";
+import { Resource, CreateResourceModel, UpdateResourceModel, MoveResourceModel } from "@/models/resourceModel";
 import {
     GetRecentsResources,
     GetFavoriteResources,

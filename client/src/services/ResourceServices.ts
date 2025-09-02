@@ -1,5 +1,5 @@
 import api from '../contexts/Api';
-import { Resource, CreateResourceModel, UpdateResourceModel, MoveResourceModel} from '../models/ResourceModel';
+import { Resource, CreateResourceModel, UpdateResourceModel, MoveResourceModel} from '../models/resourceModel';
 
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
 

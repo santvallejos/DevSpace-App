@@ -1,6 +1,6 @@
 // Store simple para hacer pruebas de eliminación
 import { create } from "zustand";
-import { Resource } from "@/models/ResourceModel";
+import { Resource } from "@/models/resourceModel";
 import { DeleteResource } from "@/services/ResourceServices";
 
 interface SimpleResourceState {

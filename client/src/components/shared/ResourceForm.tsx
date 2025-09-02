@@ -6,7 +6,7 @@ import FolderTree from "@/components/shared/FolderTree";
 import { useFolderStore } from "@/stores/FolderStore";
 import { useResourceStore } from "@/stores/ResourceStore";
 import { useState } from "react";
-import { CreateResourceModel } from "@/models/ResourceModel";
+import { CreateResourceModel } from "@/models/resourceModel";
 import { ResourceType, CodeType } from "./ResourceTypeSelector";
 
 interface ResourceFormProps {
