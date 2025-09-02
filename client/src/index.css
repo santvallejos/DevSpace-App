@@ -28,3 +28,52 @@
 .no-scroll::-webkit-scrollbar {
     display: none;
 }
+
+/* Clases para truncar texto en múltiples líneas */
+.line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+}
+
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+.line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+}
+
+/* Animaciones para dialogs */
+@keyframes zoom-in-95 {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-in {
+    animation-fill-mode: both;
+}
+
+.zoom-in-95 {
+    animation-name: zoom-in-95;
+}
+
+.duration-200 {
+    animation-duration: 200ms;
+}

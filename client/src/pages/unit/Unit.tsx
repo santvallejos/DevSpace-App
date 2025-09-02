@@ -4,13 +4,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FolderModel } from "@/models/FolderModel";
 import { useFolderStore } from "@/stores/FolderStore";
 import { useResourceStore } from "@/stores/ResourceStore";
-import { useSimpleResourceStore } from "@/stores/SimpleResourceStore";
 import PreviewFolder from "@/components/shared/cards/Folder";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import Loading from '../../components/shared/loadings/Loading';
-import CardResource from '@/components/shared/cards/Resource';
-import SimpleCard from '@/components/shared/cards/SimpleCard';
-import MinimalCardResource from '@/components/shared/cards/MinimalResource';
+import MinimalCardResource from '@/components/shared/cards/MinimalResource'; // Prueba de card
 import Search from "@/components/shared/Search";
 import CreateElment from "@/components/shared/CreateElement";
 
