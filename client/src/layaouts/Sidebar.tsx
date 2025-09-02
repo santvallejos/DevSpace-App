@@ -83,39 +83,71 @@ function AppSidebar() {
                     </div>
                 </nav>
 
-                <footer className="mt-auto p-2 border-t border-gray-200 dark:border-neutral-700">
-                    <div>
-                        <ul className="flex justify-center mt-5 space-x-5">
+                <footer className="mt-auto p-4 border-t border-gray-200 dark:border-neutral-700">
+                    <div className="space-y-3">
+                        {/* Developer info */}
+                        <div className="text-center">
+                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Desarrollado por</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">Santiago Vallejos</p>
+                        </div>
+                        
+                        {/* Social links */}
+                        <div className="flex justify-center space-x-4">
                             {/* Github */}
-                            <li>
-                                <a
-                                    className="text-gray-500 hover:text-gray-900 dark:hover:text-white dark:text-gray-400 cursor-pointer"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-brand-github"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg>
-                                </a>
-                            </li>
+                            <a
+                                href="https://github.com/santvallejos"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-900 hover:text-white dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105"
+                                title="GitHub"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:scale-110 transition-transform duration-200">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+                                </svg>
+                            </a>
+                            
                             {/* LinkedIn */}
-                            <li>
-                                <a
-                                    className="text-gray-500 hover:text-blue-400 dark:hover:text-white dark:text-gray-400 cursor-pointer"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-brand-linkedin"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 11v5" /><path d="M8 8v.01" /><path d="M12 16v-5" /><path d="M16 16v-3a2 2 0 1 0 -4 0" /><path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4z" /></svg>
-                                </a>
-                            </li>
-                            {/* Web site */}
-                            <li>
-                                <a
-                                    className="text-gray-500 hover:text-yellow-300 dark:hover:text-white dark:text-gray-400 cursor-pointer"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-world"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M3.6 9h16.8" /><path d="M3.6 15h16.8" /><path d="M11.5 3a17 17 0 0 0 0 18" /><path d="M12.5 3a17 17 0 0 1 0 18" /></svg>
-                                </a>
-                            </li>
-                        </ul>
+                            <a
+                                href="https://www.linkedin.com/in/santiago-vallejos-97a933236/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 transition-all duration-200 hover:scale-105"
+                                title="LinkedIn"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:scale-110 transition-transform duration-200">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M8 11v5" />
+                                    <path d="M8 8v.01" />
+                                    <path d="M12 16v-5" />
+                                    <path d="M16 16v-3a2 2 0 1 0 -4 0" />
+                                    <path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4z" />
+                                </svg>
+                            </a>
+                            
+                            {/* Portfolio Website */}
+                            <a
+                                href="https://santiagodev.netlify.app/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-yellow-500 hover:text-white dark:hover:bg-yellow-500 transition-all duration-200 hover:scale-105"
+                                title="Portfolio"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:scale-110 transition-transform duration-200">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                                    <path d="M3.6 9h16.8" />
+                                    <path d="M3.6 15h16.8" />
+                                    <path d="M11.5 3a17 17 0 0 0 0 18" />
+                                    <path d="M12.5 3a17 17 0 0 1 0 18" />
+                                </svg>
+                            </a>
+                        </div>
                     </div>
                     {/* Contribuciones */}
-                    <div className="flex justify-center mt-5 space-x-5">
+{/*                     <div className="flex justify-center mt-5 space-x-5">
                         <a href='https://cafecito.app/santvallejos' rel='noopener' target='_blank'><img srcSet='https://cdn.cafecito.app/imgs/buttons/button_5.png 1x, https://cdn.cafecito.app/imgs/buttons/button_5_2x.png 2x, https://cdn.cafecito.app/imgs/buttons/button_5_3.75x.png 3.75x' src='https://cdn.cafecito.app/imgs/buttons/button_5.png' alt='Invitame un café en cafecito.app' /></a>
-                    </div>
+                    </div> */}
                 </footer>
             </div>
 

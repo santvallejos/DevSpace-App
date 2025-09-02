@@ -8,7 +8,7 @@ import PreviewFolder from "@/components/shared/cards/Folder";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import Loading from '../../components/shared/loadings/Loading';
 import MinimalCardResource from '@/components/shared/cards/MinimalResource'; // Prueba de card
-import Search from "@/components/shared/Search";
+//import Search from "@/components/shared/Search";
 import CreateElment from "@/components/shared/CreateElement";
 
 function MyUnit() {
@@ -103,7 +103,7 @@ function MyUnit() {
         <div className="flex place-content-between">
           <h1 className="text-2xl font-bold mb-3">Mi unidad</h1>
           <div className="flex items-center gap-2">
-            <Search />
+            {/* <Search /> */}
             <CreateElment />
           </div>
         </div>

@@ -189,7 +189,7 @@ function MinimalCardResource(props: ResourceProps) {
                         {/* Resource Info */}
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center space-x-2">
-                                <h3 className="text-lg font-semibold truncate dark:text-white" title={name}>
+                                <h3 className="text-lg font-semibold truncate text-black dark:text-white" title={name}>
                                     {name}
                                 </h3>
                                 {isFavorite && (
