@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import ConfirmDialog from "@/components/shared/dialog/ConfirmDialog";
 import ResourceDetailDialog from "@/components/shared/dialog/ResourceDetailDialog";
 import EditResourceModal from "@/components/shared/modals/EditResourceModal";
-import { Resource, UpdateResourceModel } from "@/models/resourceModel";
+import MoveResourceModal from "@/components/shared/modals/MoveResourceModal";
+import { Resource, UpdateResourceModel, MoveResourceModel } from "@/models/resourceModel";
 interface ResourceProps {
     id: string
     name: string;
@@ -24,11 +25,12 @@ interface ResourceProps {
 }
 
 function MinimalCardResource(props: ResourceProps) {
-    const { deleteResource, updateResourceFavorite, updateResource } = useResourceStore();
+    const { deleteResource, updateResourceFavorite, updateResource, moveResource } = useResourceStore();
     const { id, name, description, type, codeType, value, favorite } = props;
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showDetailDialog, setShowDetailDialog] = useState(false);
     const [showEditDialog, setShowEditDialog] = useState(false);
+    const [showMoveDialog, setShowMoveDialog] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
     // Crear objeto Resource para el dialog de detalles
@@ -150,8 +152,17 @@ function MinimalCardResource(props: ResourceProps) {
     };
 
     const handleMove = () => {
-        // TODO: Implementar función de mover
-        console.log('Mover recurso:', id);
+        setShowDetailDialog(false); // Cerrar dialog de detalles si está abierto
+        setShowMoveDialog(true);     // Abrir modal de mover
+    };
+
+    const handleSaveMove = async (resourceId: string, moveData: MoveResourceModel) => {
+        try {
+            await moveResource(resourceId, moveData);
+        } catch (error) {
+            console.error("❌ Error al mover el recurso:", error);
+            throw error; // Re-lanzar para que el modal pueda manejarlo
+        }
     };
 
     return (
@@ -300,6 +311,14 @@ function MinimalCardResource(props: ResourceProps) {
                 onClose={() => setShowEditDialog(false)}
                 resource={resourceForDialog}
                 onSave={handleSaveEdit}
+            />
+
+            {/* Modal de mover del recurso */}
+            <MoveResourceModal
+                isOpen={showMoveDialog}
+                onClose={() => setShowMoveDialog(false)}
+                resource={resourceForDialog}
+                onMove={handleSaveMove}
             />
         </div>
     );
