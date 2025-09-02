@@ -1,5 +1,5 @@
 import { Globe, Code2, FileText, MoreVertical, ExternalLink, Edit3, Move, Trash2, Star, Copy } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useResourceStore } from '@/stores/ResourceStore';
 import { 
     DropdownMenu,
@@ -32,6 +32,12 @@ function MinimalCardResource(props: ResourceProps) {
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [showMoveDialog, setShowMoveDialog] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(favorite);
+
+    // Sincronizar estado local con prop cuando cambie
+    useEffect(() => {
+        setIsFavorite(favorite);
+    }, [favorite]);
 
     // Crear objeto Resource para el dialog de detalles
     const resourceForDialog: Resource = {
@@ -41,7 +47,7 @@ function MinimalCardResource(props: ResourceProps) {
         type,
         codeType,
         value,
-        favorite,
+        favorite: isFavorite,
         folderId: null, // Asumimos null por defecto
         createdOn: new Date() // Fecha actual por defecto, podrías pasarla como prop si la tienes
     };
@@ -49,10 +55,10 @@ function MinimalCardResource(props: ResourceProps) {
     // Función para obtener el icono según el tipo de recurso
     const getResourceIcon = () => {
         switch (type) {
-            case 0: return <Globe className="w-5 h-5 text-blue-500" />;
-            case 1: return <Code2 className="w-5 h-5 text-green-500" />;
-            case 2: return <FileText className="w-5 h-5 text-purple-500" />;
-            default: return <FileText className="w-5 h-5 text-gray-500" />;
+            case 0: return <Globe className="w-6 h-6 text-blue-500" />;
+            case 1: return <Code2 className="w-6 h-6 text-green-500" />;
+            case 2: return <FileText className="w-6 h-6 text-purple-500" />;
+            default: return <FileText className="w-6 h-6 text-gray-500" />;
         }
     };
 
@@ -111,6 +117,7 @@ function MinimalCardResource(props: ResourceProps) {
     const handleToggleFavorite = async () => {
         try {
             await updateResourceFavorite(id);
+            setIsFavorite(!isFavorite);
         } catch (error) {
             console.error("❌ Error al actualizar favorito:", error);
         }
@@ -166,112 +173,115 @@ function MinimalCardResource(props: ResourceProps) {
     };
 
     return (
-        <div 
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-4 hover:shadow-lg transition-all duration-300 group"
-        >
-            {/* Header con icono, título y menú de opciones */}
-            <div className="flex items-start justify-between mb-3">
-                <div 
-                    className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer"
-                    onClick={handleCardClick}
-                >
-                    <div className="flex-shrink-0">
-                        {getResourceIcon()}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                            <h3 className="font-semibold text-base text-gray-900 dark:text-gray-100 truncate">
-                                {name}
-                            </h3>
-                            {favorite && (
-                                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 flex-shrink-0" />
+        <>
+            <div 
+                className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
+                onClick={handleCardClick}
+            >
+                {/* Header Card: Icon, Name, Type and Options */}
+                <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center space-x-3 flex-1 min-w-0">
+                        {/* Resource Icon */}
+                        <div className="flex-shrink-0">
+                            {getResourceIcon()}
+                        </div>
+                        
+                        {/* Resource Info */}
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center space-x-2">
+                                <h3 className="text-lg font-semibold truncate dark:text-white" title={name}>
+                                    {name}
+                                </h3>
+                                {isFavorite && (
+                                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 flex-shrink-0" />
+                                )}
+                            </div>
+                            {type === 1 && getCodeLanguage() && (
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                    {getCodeLanguage()}
+                                </span>
                             )}
                         </div>
-                        {type === 1 && getCodeLanguage() && (
-                            <span className="inline-block text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-full mt-1">
-                                {getCodeLanguage()}
-                            </span>
-                        )}
-                        {description && (
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
-                                {description}
-                            </p>
-                        )}
                     </div>
+
+                    {/* Options Menu */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-8 w-8 p-0"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <MoreVertical className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={(e) => {
+                                e.stopPropagation();
+                                handleToggleFavorite();
+                            }}>
+                                <Star className="mr-2 h-4 w-4" />
+                                {isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={(e) => {
+                                e.stopPropagation();
+                                handleEdit();
+                            }}>
+                                <Edit3 className="mr-2 h-4 w-4" />
+                                Editar
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => {
+                                e.stopPropagation();
+                                handleMove();
+                            }}>
+                                <Move className="mr-2 h-4 w-4" />
+                                Mover
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem 
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteClick();
+                                }}
+                                className="text-red-600 focus:text-red-600"
+                            >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Eliminar
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
-                
-                {/* Menú de opciones */}
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button 
-                            variant="ghost" 
+
+                {/* Quick Actions for URL */}
+                {type === 0 && (
+                    <div className="flex items-center space-x-2 mt-2">
+                        <Button
+                            variant="outline"
                             size="sm"
-                            className="h-8 w-8 p-0"
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleCopy();
+                            }}
+                            className="flex-1"
                         >
-                            <MoreVertical className="h-4 w-4" />
+                            <Copy className="mr-2 h-4 w-4" />
+                            Copiar URL
                         </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                        <DropdownMenuItem onClick={handleEdit}>
-                            <Edit3 className="mr-2 h-4 w-4" />
-                            Editar
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleMove}>
-                            <Move className="mr-2 h-4 w-4" />
-                            Mover
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleToggleFavorite}>
-                            <Star className={`mr-2 h-4 w-4 ${favorite ? 'fill-current text-yellow-400' : ''}`} />
-                            {favorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                            onClick={handleDeleteClick}
-                            className="text-red-600 dark:text-red-400"
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenLink();
+                            }}
+                            className="flex-1"
                         >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-            
-            {/* Contenido del valor con botón de enlace si es URL */}
-            <div className="flex items-center justify-between">
-                <div 
-                    className="text-sm text-gray-500 dark:text-gray-400 truncate flex-1 mr-2 cursor-pointer"
-                    onClick={handleCardClick}
-                >
-                    {value}
-                </div>
-                {type === 0 && value && (
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleOpenLink();
-                        }}
-                        className="h-8 w-8 p-0 flex-shrink-0"
-                        title="Abrir enlace"
-                    >
-                        <ExternalLink className="h-4 w-4" />
-                    </Button>
-                )}
-                {type === 1 || type === 0 && value && (
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleCopy();
-                        }}
-                        className="h-8 w-8 p-0 flex-shrink-0"
-                        title="Copiar"
-                    >
-                        <Copy className="h-4 w-4" />
-                    </Button>
+                            <ExternalLink className="mr-2 h-4 w-4" />
+                            Abrir
+                        </Button>
+                    </div>
                 )}
             </div>
 
@@ -320,7 +330,7 @@ function MinimalCardResource(props: ResourceProps) {
                 resource={resourceForDialog}
                 onMove={handleSaveMove}
             />
-        </div>
+        </>
     );
 }
 

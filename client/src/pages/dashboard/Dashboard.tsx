@@ -1,4 +1,4 @@
-import CardResource from "@/components/shared/cards/Resource";
+import MinimalResource from "@/components/shared/cards/MinimalResource";
 import CardResourceRecommended from "@/components/shared/cards/ResourceRecommended";
 import { useState, useRef, useEffect } from "react";
 import { useResourceStore } from "../../stores/ResourceStore";
@@ -89,7 +89,7 @@ function AppDashboard() {
               <Loading/>
             ) : recentsResources.length > 0 ? (
               recentsResources.map((resource, index) => (
-                <CardResource
+                <MinimalResource
                   key={resource.id || index}
                   id={resource.id || ''}
                   name={resource.name || ''}
@@ -131,7 +131,7 @@ function AppDashboard() {
               <Loading/>
             ) : favoritesResources.length > 0 ? (
               favoritesResources.map((resource, index) => (
-                <CardResource
+                <MinimalResource
                   key={resource.id || index}
                   id={resource.id || ''}
                   name={resource.name || ''}
