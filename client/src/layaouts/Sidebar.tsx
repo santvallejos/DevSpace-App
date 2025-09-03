@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { ThemeToggle } from "../components/ui/theme-toggle";
+import { MongoDBConnectionStatus } from "../components/shared/MongoDBConnectionStatus";
 
 function AppSidebar() {
     const location = useLocation();
@@ -85,6 +86,11 @@ function AppSidebar() {
 
                 <footer className="mt-auto p-4 border-t border-gray-200 dark:border-neutral-700">
                     <div className="space-y-3">
+                        {/* MongoDB Connection Status */}
+                        <div className="flex justify-center">
+                            <MongoDBConnectionStatus />
+                        </div>
+                        
                         {/* Developer info */}
                         <div className="text-center">
                             <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Desarrollado por</p>

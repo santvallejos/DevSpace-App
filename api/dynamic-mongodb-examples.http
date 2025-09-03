@@ -1,0 +1,144 @@
+### DevSpace API - Dynamic MongoDB Connection Examples
+### Asegúrate de reemplazar las connection strings con las tuyas reales
+
+@baseUrl = http://localhost:5000
+@mongoConnection = mongodb+srv://tu_usuario:tu_password@tu_cluster.mongodb.net/
+@databaseName = tu_base_de_datos
+
+### === FOLDERS ===
+
+### Obtener todas las carpetas con conexión dinámica
+GET {{baseUrl}}/api/folder
+X-MongoDB-Connection: {{mongoConnection}}
+X-MongoDB-Database: {{databaseName}}
+Content-Type: application/json
+
+###
+
+### Crear una nueva carpeta
+POST {{baseUrl}}/api/folder
+X-MongoDB-Connection: {{mongoConnection}}
+X-MongoDB-Database: {{databaseName}}
+Content-Type: application/json
+
+{
+  "name": "Mi Carpeta de Prueba",
+  "parentFolderID": null
+}
+
+###
+
+### Obtener carpeta por ID
+GET {{baseUrl}}/api/folder/507f1f77bcf86cd799439011
+X-MongoDB-Connection: {{mongoConnection}}
+X-MongoDB-Database: {{databaseName}}
+Content-Type: application/json
+
+###
+
+### Buscar carpetas por nombre
+GET {{baseUrl}}/api/folder/search?name=prueba
+X-MongoDB-Connection: {{mongoConnection}}
+X-MongoDB-Database: {{databaseName}}
+Content-Type: application/json
+
+###
+
+### === RESOURCES ===
+
+### Obtener todos los recursos
+GET {{baseUrl}}/api/resource
+X-MongoDB-Connection: {{mongoConnection}}
+X-MongoDB-Database: {{databaseName}}
+Content-Type: application/json
+
+###
+
+### Crear un nuevo recurso
+POST {{baseUrl}}/api/resource
+X-MongoDB-Connection: {{mongoConnection}}
+X-MongoDB-Database: {{databaseName}}
+Content-Type: application/json
+
+{
+  "name": "Mi Recurso de Prueba",
+  "url": "https://github.com/",
+  "description": "Un recurso de ejemplo para testing",
+  "type": "URL",
+  "folderId": null,
+  "favorite": false
+}
+
+###
+
+### Obtener recurso por ID
+GET {{baseUrl}}/api/resource/507f1f77bcf86cd799439012
+X-MongoDB-Connection: {{mongoConnection}}
+X-MongoDB-Database: {{databaseName}}
+Content-Type: application/json
+
+###
+
+### Obtener recursos favoritos
+GET {{baseUrl}}/api/resource/favorites
+X-MongoDB-Connection: {{mongoConnection}}
+X-MongoDB-Database: {{databaseName}}
+Content-Type: application/json
+
+###
+
+### === TESTING CON CONEXIÓN POR DEFECTO ===
+
+### Obtener carpetas sin headers dinámicos (usa conexión por defecto)
+GET {{baseUrl}}/api/folder
+Content-Type: application/json
+
+###
+
+### Obtener recursos sin headers dinámicos (usa conexión por defecto)
+GET {{baseUrl}}/api/resource
+Content-Type: application/json
+
+###
+
+### === TESTING DE ERRORES ===
+
+### Intentar con connection string inválida
+GET {{baseUrl}}/api/folder
+X-MongoDB-Connection: invalid-connection-string
+X-MongoDB-Database: test
+Content-Type: application/json
+
+###
+
+### Intentar con connection string vacía
+GET {{baseUrl}}/api/folder
+X-MongoDB-Connection: 
+X-MongoDB-Database: test
+Content-Type: application/json
+
+###
+
+### === EJEMPLOS PARA DIFERENTES TIPOS DE MONGODB ===
+
+### MongoDB Atlas
+GET {{baseUrl}}/api/folder
+X-MongoDB-Connection: mongodb+srv://usuario:password@cluster.mongodb.net/
+X-MongoDB-Database: production_db
+Content-Type: application/json
+
+###
+
+### MongoDB Local
+GET {{baseUrl}}/api/folder
+X-MongoDB-Connection: mongodb://localhost:27017/
+X-MongoDB-Database: local_development
+Content-Type: application/json
+
+###
+
+### MongoDB con autenticación
+GET {{baseUrl}}/api/folder
+X-MongoDB-Connection: mongodb://admin:password@192.168.1.100:27017/
+X-MongoDB-Database: secure_db
+Content-Type: application/json

@@ -22,27 +22,39 @@ namespace api.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            // Listar bases de datos
-            var dbNames = await _client.ListDatabaseNamesAsync(cancellationToken: cancellationToken).Result.ToListAsync(cancellationToken);
-            
-            if (!dbNames.Contains(DbName))
-                _logger.LogWarning("Base de datos '{db}' no encontrada. Se crearán las colecciones necesarias.", DbName);
-
-            // Listar colecciones actuales
-            var collections = await _database.ListCollectionNamesAsync(cancellationToken: cancellationToken)
-                                             .Result
-                                             .ToListAsync(cancellationToken);
-
-            // Crear si faltan
-            if (!collections.Contains("Folders"))
+            try
             {
-                await _database.CreateCollectionAsync("Folders", cancellationToken: cancellationToken);  // :contentReference[oaicite:4]{index=4}
-                _logger.LogInformation("Colección 'Folders' creada.");
+                _logger.LogInformation("Intentando inicializar base de datos por defecto...");
+                
+                // Listar bases de datos
+                var dbNames = await _client.ListDatabaseNamesAsync(cancellationToken: cancellationToken).Result.ToListAsync(cancellationToken);
+                
+                if (!dbNames.Contains(DbName))
+                    _logger.LogWarning("Base de datos '{db}' no encontrada. Se crearán las colecciones necesarias.", DbName);
+
+                // Listar colecciones actuales
+                var collections = await _database.ListCollectionNamesAsync(cancellationToken: cancellationToken)
+                                                 .Result
+                                                 .ToListAsync(cancellationToken);
+
+                // Crear si faltan
+                if (!collections.Contains("Folders"))
+                {
+                    await _database.CreateCollectionAsync("Folders", cancellationToken: cancellationToken);
+                    _logger.LogInformation("Colección 'Folders' creada.");
+                }
+                if (!collections.Contains("Resources"))
+                {
+                    await _database.CreateCollectionAsync("Resources", cancellationToken: cancellationToken);
+                    _logger.LogInformation("Colección 'Resources' creada.");
+                }
+                
+                _logger.LogInformation("Base de datos por defecto inicializada correctamente.");
             }
-            if (!collections.Contains("Resources"))
+            catch (Exception ex)
             {
-                await _database.CreateCollectionAsync("Resources", cancellationToken: cancellationToken); // :contentReference[oaicite:5]{index=5}
-                _logger.LogInformation("Colección 'Resources' creada.");
+                _logger.LogWarning(ex, "No se pudo inicializar la base de datos por defecto. Esto es normal si no hay configuración por defecto válida. Los usuarios podrán usar sus propias bases de datos.");
+                // No propagamos la excepción para que la aplicación pueda iniciar
             }
         }
 
