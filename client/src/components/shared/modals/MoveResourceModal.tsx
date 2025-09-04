@@ -50,7 +50,7 @@ function MoveResourceModal({
             onClose();
         } catch (error) {
             console.error("Error al mover el recurso:", error);
-            setError("Error al mover el recurso. Inténtalo de nuevo.");
+            setError("Error moving resource. Please try again.");
         } finally {
             setIsMoving(false);
         }
@@ -107,10 +107,10 @@ function MoveResourceModal({
                             <Move className="w-6 h-6 text-blue-500" />
                             <div>
                                 <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                                    Mover Recurso
+                                    Move Resource
                                 </h2>
                                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                    Selecciona la carpeta de destino para "{resource.name}"
+                                    Select destination folder for "{resource.name}"
                                 </p>
                             </div>
                         </div>
@@ -118,7 +118,7 @@ function MoveResourceModal({
                             onClick={handleClose}
                             disabled={isMoving}
                             className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            aria-label="Cerrar"
+                            aria-label="Close"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -139,7 +139,7 @@ function MoveResourceModal({
                             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
                                 <div className="flex items-center gap-2 text-sm text-blue-800 dark:text-blue-200 mb-2">
                                     <Move className="w-4 h-4" />
-                                    <span className="font-medium">Destino seleccionado:</span>
+                                    <span className="font-medium">Selected destination:</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-blue-900 dark:text-blue-100">
                                     {getDestinationIcon()}
@@ -150,13 +150,13 @@ function MoveResourceModal({
                             {/* Folder Tree */}
                             <div className="space-y-2">
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Selecciona una carpeta:
+                                    Select a folder:
                                 </label>
                                 <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-3 bg-gray-50 dark:bg-gray-700/50 max-h-64 overflow-y-auto">
                                     <FolderTree />
                                 </div>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    💡 Haz clic en una carpeta para seleccionarla como destino. Si no seleccionas ninguna, el recurso se moverá a la raíz.
+                                    💡 Click on a folder to select it as destination. If you don't select any, the resource will be moved to root.
                                 </p>
                             </div>
                         </div>
@@ -170,7 +170,7 @@ function MoveResourceModal({
                             className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             <X className="w-4 h-4" />
-                            Cancelar
+                            Cancel
                         </button>
                         <button
                             onClick={handleMove}
@@ -178,7 +178,7 @@ function MoveResourceModal({
                             className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             <Move className="w-4 h-4" />
-                            {isMoving ? 'Moviendo...' : 'Mover Recurso'}
+                            {isMoving ? 'Moving...' : 'Move Resource'}
                         </button>
                     </div>
                 </div>

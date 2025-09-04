@@ -78,28 +78,28 @@ function EditResourceModal({
         if (!resource) return "Contenido...";
         
         switch (resource.type) {
-            case 0: return "https://ejemplo.com";
-            case 1: return "// Tu código aquí...";
-            case 2: return "Escribe tus notas aquí...";
-            default: return "Contenido...";
+            case 0: return "https://example.com";
+            case 1: return "// Your code here...";
+            case 2: return "Write your notes here...";
+            default: return "Content...";
         }
     };
 
     // Función para obtener la etiqueta del campo de contenido
     const getValueLabel = () => {
-        if (!resource) return "Contenido";
+        if (!resource) return "Content";
         
         switch (resource.type) {
             case 0: return "URL";
-            case 1: return "Código";
-            case 2: return "Texto";
-            default: return "Contenido";
+            case 1: return "Code";
+            case 2: return "Text";
+            default: return "Content";
         }
     };
 
     const handleSave = async () => {
         if (!resource || !name.trim()) {
-            setError("El nombre es obligatorio");
+            setError("Name is required");
             return;
         }
 
@@ -117,7 +117,7 @@ function EditResourceModal({
             onClose();
         } catch (error) {
             console.error("Error al actualizar el recurso:", error);
-            setError("Error al guardar los cambios. Inténtalo de nuevo.");
+            setError("Error saving changes. Please try again.");
         } finally {
             setIsSaving(false);
         }
@@ -164,10 +164,10 @@ function EditResourceModal({
                             {getResourceIcon()}
                             <div>
                                 <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                                    Editar {getResourceTypeName()}
+                                    Edit {getResourceTypeName()}
                                 </h2>
                                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                    Modifica la información de tu recurso
+                                    Modify your resource information
                                 </p>
                             </div>
                         </div>
@@ -175,7 +175,7 @@ function EditResourceModal({
                             onClick={handleClose}
                             disabled={isSaving}
                             className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            aria-label="Cerrar"
+                            aria-label="Close"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -198,14 +198,14 @@ function EditResourceModal({
                                     htmlFor="edit-name" 
                                     className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                                 >
-                                    Nombre *
+                                    Name *
                                 </label>
                                 <input
                                     id="edit-name"
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    placeholder="Nombre del recurso"
+                                    placeholder="Resource name"
                                     disabled={isSaving}
                                     className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
                                 />
@@ -217,14 +217,14 @@ function EditResourceModal({
                                     htmlFor="edit-description" 
                                     className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                                 >
-                                    Descripción
+                                    Description
                                 </label>
                                 <input
                                     id="edit-description"
                                     type="text"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
-                                    placeholder="Descripción opcional del recurso"
+                                    placeholder="Optional resource description"
                                     disabled={isSaving}
                                     className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
                                 />
@@ -273,7 +273,7 @@ function EditResourceModal({
                             className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             <X className="w-4 h-4" />
-                            Cancelar
+                            Cancel
                         </button>
                         <button
                             onClick={handleSave}
@@ -281,7 +281,7 @@ function EditResourceModal({
                             className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             <Save className="w-4 h-4" />
-                            {isSaving ? 'Guardando...' : 'Guardar Cambios'}
+                            {isSaving ? 'Saving...' : 'Save Changes'}
                         </button>
                     </div>
                 </div>

@@ -19,8 +19,8 @@ function ConfirmDialog({
     onConfirm,
     title,
     description,
-    confirmText = "Confirmar",
-    cancelText = "Cancelar",
+    confirmText = "Confirm",
+    cancelText = "Cancel",
     isDestructive = false,
     isLoading = false
 }: ConfirmDialogProps) {

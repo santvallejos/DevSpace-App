@@ -112,7 +112,7 @@ function ResourceDetailDialog({
                 setIsCopied(true);
                 setTimeout(() => setIsCopied(false), 2000);
             } catch (error) {
-                console.error('Error al copiar el texto:', error);
+                console.error('Error copying text:', error);
             }
         }
     };
@@ -177,7 +177,7 @@ function ResourceDetailDialog({
                                             className="h-8"
                                         >
                                             <ExternalLink className="w-4 h-4 mr-2" />
-                                            Abrir
+                                            Open
                                         </Button>
                                     )}
                                     <Button
@@ -187,7 +187,7 @@ function ResourceDetailDialog({
                                         className="h-8"
                                     >
                                         <Copy className="w-4 h-4 mr-2" />
-                                        {isCopied ? 'Copiado' : 'Copiar'}
+                                        {isCopied ? 'Copied' : 'Copy'}
                                     </Button>
                                 </div>
                             </div>
@@ -225,7 +225,7 @@ function ResourceDetailDialog({
                                 onClick={() => onToggleFavorite(resource)}
                             >
                                 <Star className={`w-4 h-4 mr-2 ${resource.favorite ? 'fill-current text-yellow-400' : ''}`} />
-                                {resource.favorite ? 'Quitar favorito' : 'Agregar favorito'}
+                                {resource.favorite ? 'Remove favorite' : 'Add favorite'}
                             </Button>
                         )}
                         
@@ -236,7 +236,7 @@ function ResourceDetailDialog({
                                 onClick={() => onEdit(resource)}
                             >
                                 <Edit3 className="w-4 h-4 mr-2" />
-                                Editar
+                                Edit
                             </Button>
                         )}
                         
@@ -247,7 +247,7 @@ function ResourceDetailDialog({
                                 onClick={() => onMove(resource)}
                             >
                                 <Move className="w-4 h-4 mr-2" />
-                                Mover
+                                Move
                             </Button>
                         )}
                         
@@ -259,7 +259,7 @@ function ResourceDetailDialog({
                                 className="text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950"
                             >
                                 <Trash2 className="w-4 h-4 mr-2" />
-                                Eliminar
+                                Delete
                             </Button>
                         )}
                     </div>

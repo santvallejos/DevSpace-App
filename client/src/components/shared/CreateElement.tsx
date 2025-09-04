@@ -37,7 +37,7 @@ function CreateElment() {
             setNameNewFolder("");
             setIsFolderDialogOpen(false);
         } catch (error) {
-            console.log("No se ha creado la carpeta", error);
+            console.log("Folder was not created", error);
         }
     }
 
@@ -65,17 +65,17 @@ function CreateElment() {
                 </DialogTrigger>
                 <DialogContent>
                     <form onSubmit={handleCreateFolder}>
-                        <DialogTitle>Agregar una carpeta</DialogTitle>
+                        <DialogTitle>Add a folder</DialogTitle>
                         <DialogDescription>
-                            Crea una nueva carpeta para organizar tus recursos.
+                            Create a new folder to organize your resources.
                         </DialogDescription>
                         <DialogHeader>
-                            <Input type="text" placeholder="Name Folder" value={nameNewFolder} onChange={(e) => setNameNewFolder(e.target.value)} required />
+                            <Input type="text" placeholder="Folder Name" value={nameNewFolder} onChange={(e) => setNameNewFolder(e.target.value)} required />
                             <br />
                             <div>
-                                La carpeta se guardara en: {folderSelected[0]?.name || 'Root'}
+                                The folder will be saved in: {folderSelected[0]?.name || 'Root'}
                             </div>
-                            <span>Selecciona donde guardar la carpeta</span>
+                            <span>Select where to save the folder</span>
                             <FolderTree />
                         </DialogHeader>
                         <DialogFooter>
@@ -90,7 +90,7 @@ function CreateElment() {
                 variant="outline" 
                 onClick={() => setIsResourceTypeSelectorOpen(true)}
             >
-                + Recurso
+                + Resource
             </Button>
 
             {/* Selector de tipo de recurso */}

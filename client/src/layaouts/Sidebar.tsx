@@ -87,7 +87,7 @@ function AppSidebar() {
                     <div className="space-y-3">
                         {/* Developer info */}
                         <div className="text-center">
-                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Desarrollado por</p>
+                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Developed by</p>
                             <p className="text-xs text-gray-500 dark:text-gray-400">Santiago Vallejos</p>
                         </div>
                         
@@ -155,26 +155,26 @@ function AppSidebar() {
             {showCopyModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-background p-6 rounded-lg shadow-lg max-w-md w-full">
-                        <h2 className="text-xl font-semibold mb-4">Insertar o Crear Copia</h2>
+                        <h2 className="text-xl font-semibold mb-4">Insert or Create Copy</h2>
                         <div className="space-y-4">
                             <button
                                 className="w-full p-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
-                                onClick={() => {/* Manejar crear copia */ }}
+                                onClick={() => {/* Handle create copy */ }}
                             >
-                                Crear una copia de tu unidad
+                                Create a copy of your unit
                             </button>
                             <button
                                 className="w-full p-3 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/80"
-                                onClick={() => {/* Manejar insertar unidad externa */ }}
+                                onClick={() => {/* Handle insert external unit */ }}
                             >
-                                Insertar unidad externa
+                                Insert external unit
                             </button>
                         </div>
                         <button
                             className="mt-4 w-full p-2 border border-input rounded-md hover:bg-accent"
                             onClick={() => setShowCopyModal(false)}
                         >
-                            Cancelar
+                            Cancel
                         </button>
                     </div>
                 </div>

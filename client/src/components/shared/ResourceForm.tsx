@@ -29,13 +29,13 @@ function ResourceForm({ isOpen, onClose, resourceType, codeType }: ResourceFormP
     const getFormTitle = () => {
         switch (resourceType) {
             case ResourceType.Url:
-                return "Agregar URL / Enlace";
+                return "Add URL / Web Link";
             case ResourceType.Code:
-                return `Agregar Código ${getCodeTypeName()}`;
+                return `Add Code ${getCodeTypeName()}`;
             case ResourceType.Text:
-                return "Agregar Texto / Notas";
+                return "Add Text / Notes";
             default:
-                return "Agregar Recurso";
+                return "Add Resource";
         }
     };
 
@@ -69,13 +69,13 @@ function ResourceForm({ isOpen, onClose, resourceType, codeType }: ResourceFormP
     const getValuePlaceholder = () => {
         switch (resourceType) {
             case ResourceType.Url:
-                return "https://ejemplo.com";
+                return "https://example.com";
             case ResourceType.Code:
-                return `Escribe tu código ${getCodeTypeName()} aquí...`;
+                return `Write your ${getCodeTypeName()} code here...`;
             case ResourceType.Text:
-                return "Escribe tus notas o texto aquí...";
+                return "Write your notes or text here...";
             default:
-                return "Valor del recurso";
+                return "Resource value";
         }
     };
 
@@ -83,13 +83,13 @@ function ResourceForm({ isOpen, onClose, resourceType, codeType }: ResourceFormP
     const getFormDescription = () => {
         switch (resourceType) {
             case ResourceType.Url:
-                return "Agrega un enlace web a tu colección de recursos.";
+                return "Add a web link to your resource collection.";
             case ResourceType.Code:
-                return `Guarda un fragmento de código ${getCodeTypeName()} para uso futuro.`;
+                return `Save a ${getCodeTypeName()} code snippet for future use.`;
             case ResourceType.Text:
-                return "Guarda notas, documentación o cualquier texto importante.";
+                return "Save notes, documentation or any important text.";
             default:
-                return "Agrega un nuevo recurso a tu unidad.";
+                return "Add a new resource to your unit.";
         }
     };
 
@@ -115,7 +115,7 @@ function ResourceForm({ isOpen, onClose, resourceType, codeType }: ResourceFormP
             setValue("");
             onClose();
         } catch (error) {
-            console.log("Error al crear el recurso:", error);
+            console.log("Error creating resource:", error);
         } finally {
             setIsSubmitting(false);
         }
@@ -143,11 +143,11 @@ function ResourceForm({ isOpen, onClose, resourceType, codeType }: ResourceFormP
                     <div className="grid gap-4 py-4">
                         {/* Campo Nombre */}
                         <div className="grid gap-2">
-                            <Label htmlFor="name">Nombre del recurso *</Label>
+                            <Label htmlFor="name">Resource name *</Label>
                             <Input
                                 id="name"
                                 type="text"
-                                placeholder="Nombre descriptivo del recurso"
+                                placeholder="Descriptive name of the resource"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
@@ -156,11 +156,11 @@ function ResourceForm({ isOpen, onClose, resourceType, codeType }: ResourceFormP
 
                         {/* Campo Descripción */}
                         <div className="grid gap-2">
-                            <Label htmlFor="description">Descripción (opcional)</Label>
+                            <Label htmlFor="description">Description (optional)</Label>
                             <Input
                                 id="description"
                                 type="text"
-                                placeholder="Descripción del recurso"
+                                placeholder="Resource description"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                             />
@@ -170,7 +170,7 @@ function ResourceForm({ isOpen, onClose, resourceType, codeType }: ResourceFormP
                         <div className="grid gap-2">
                             <Label htmlFor="value">
                                 {resourceType === ResourceType.Url ? "URL" : 
-                                 resourceType === ResourceType.Code ? "Código" : "Contenido"}
+                                 resourceType === ResourceType.Code ? "Code" : "Content"}
                                 {resourceType !== ResourceType.Text ? " *" : ""}
                             </Label>
                             {resourceType === ResourceType.Code || resourceType === ResourceType.Text ? (
@@ -196,12 +196,12 @@ function ResourceForm({ isOpen, onClose, resourceType, codeType }: ResourceFormP
 
                         {/* Información de carpeta */}
                         <div className="grid gap-2">
-                            <Label>Ubicación</Label>
+                            <Label>Location</Label>
                             <div className="text-sm text-muted-foreground">
-                                Se guardará en: <strong>{folderSelected[0]?.name || 'Carpeta raíz'}</strong>
+                                Will be saved in: <strong>{folderSelected[0]?.name || 'Root folder'}</strong>
                             </div>
                             <div className="text-xs text-muted-foreground">
-                                Selecciona una carpeta diferente si es necesario:
+                                Select a different folder if needed:
                             </div>
                             <FolderTree />
                         </div>
@@ -209,10 +209,10 @@ function ResourceForm({ isOpen, onClose, resourceType, codeType }: ResourceFormP
 
                     <DialogFooter>
                         <Button type="button" variant="outline" onClick={handleClose}>
-                            Cancelar
+                            Cancel
                         </Button>
                         <Button type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? "Creando..." : "Crear Recurso"}
+                            {isSubmitting ? "Creating..." : "Create Resource"}
                         </Button>
                     </DialogFooter>
                 </form>

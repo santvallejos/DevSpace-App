@@ -72,9 +72,9 @@ function ResourceTypeSelector({ isOpen, onClose, onSelectType }: ResourceTypeSel
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Seleccionar tipo de recurso</DialogTitle>
+                    <DialogTitle>Select resource type</DialogTitle>
                     <DialogDescription>
-                        Elige el tipo de recurso que deseas crear
+                        Choose the type of resource you want to create
                     </DialogDescription>
                 </DialogHeader>
                 
@@ -87,7 +87,7 @@ function ResourceTypeSelector({ isOpen, onClose, onSelectType }: ResourceTypeSel
                                 URL / Enlace Web
                             </CardTitle>
                             <CardDescription>
-                                Guarda enlaces a páginas web, documentos online, videos, etc.
+                                Save links to web pages, online documents, videos, etc.
                             </CardDescription>
                         </CardHeader>
                     </Card>
@@ -100,7 +100,7 @@ function ResourceTypeSelector({ isOpen, onClose, onSelectType }: ResourceTypeSel
                                 Texto / Notas
                             </CardTitle>
                             <CardDescription>
-                                Guarda notas, documentación, ideas o cualquier texto plano.
+                                Save notes, documentation, ideas or any plain text.
                             </CardDescription>
                         </CardHeader>
                     </Card>
@@ -110,10 +110,10 @@ function ResourceTypeSelector({ isOpen, onClose, onSelectType }: ResourceTypeSel
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Code className="h-5 w-5 text-purple-500" />
-                                Código / Snippets
+                                Code / Snippets
                             </CardTitle>
                             <CardDescription>
-                                Guarda fragmentos de código, funciones, componentes, etc.
+                                Save code snippets, functions, components, etc.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>

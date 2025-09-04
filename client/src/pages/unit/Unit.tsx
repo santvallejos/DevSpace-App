@@ -101,7 +101,7 @@ function MyUnit() {
       {/* Header */}
       <div className="flex flex-col mb-6 pb-3 border-b">
         <div className="flex place-content-between">
-          <h1 className="text-2xl font-bold mb-3">Mi unidad</h1>
+          <h1 className="text-2xl font-bold mb-3">My Unit</h1>
           <div className="flex items-center gap-2">
             {/* <Search /> */}
             <CreateElment />
@@ -146,7 +146,7 @@ function MyUnit() {
         <div className="flex flex-col gap-6">
           {/* Folders Section */}
           <div>
-            <h2 className="text-xl font-semibold mb-3">Carpetas</h2>
+            <h2 className="text-xl font-semibold mb-3">Folders</h2>
             {currentFolders.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {currentFolders.map((folder) => (
@@ -160,13 +160,13 @@ function MyUnit() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500">No hay carpetas en esta ubicación.</p>
+              <p className="text-gray-500">No folders found in this location.</p>
             )}
           </div>
 
           {/* Resources Section */}
           <div>
-            <h2 className="text-xl font-semibold mb-3">Recursos</h2>
+            <h2 className="text-xl font-semibold mb-3">Resources</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
               {currentResourceFolder.length > 0 ? (
                 currentResourceFolder.map((resource, index) => (
@@ -181,7 +181,7 @@ function MyUnit() {
                   />
                 ))
               ) : (
-                <p className="text-gray-500">No hay recursos en esta ubicación.</p>
+                <p className="text-gray-500">No resources found in this location.</p>
               )}
             </div>
           </div>

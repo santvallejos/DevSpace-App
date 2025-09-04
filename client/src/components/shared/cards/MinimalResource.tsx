@@ -96,7 +96,7 @@ function MinimalCardResource(props: ResourceProps) {
             await deleteResource(id);
             setShowDeleteDialog(false);
         } catch (error) {
-            console.error("❌ Resource: Error al eliminar el recurso:", error);
+            console.error("❌ Resource: Error deleting resource:", error);
         } finally {
             setIsDeleting(false);
         }
@@ -119,7 +119,7 @@ function MinimalCardResource(props: ResourceProps) {
             await updateResourceFavorite(id);
             setIsFavorite(!isFavorite);
         } catch (error) {
-            console.error("❌ Error al actualizar favorito:", error);
+            console.error("❌ Error updating favorite:", error);
         }
     };
 
@@ -135,10 +135,10 @@ function MinimalCardResource(props: ResourceProps) {
         if (type === 1 || type === 0 && value) {
             navigator.clipboard.writeText(value)
                 .then(() => {
-                    console.log('Texto copiado al portapapeles:', value);
+                    console.log('Text copied to clipboard:', value);
                 })
                 .catch((error) => {
-                    console.error('Error al copiar el texto:', error);
+                    console.error('Error copying text:', error);
                 });
         }
     };
@@ -153,7 +153,7 @@ function MinimalCardResource(props: ResourceProps) {
             await updateResource(resourceId, updatedResource);
             // El store se encargará de actualizar la UI automáticamente
         } catch (error) {
-            console.error("❌ Error al actualizar el recurso:", error);
+            console.error("❌ Error updating resource:", error);
             throw error; // Re-lanzar para que el dialog pueda manejarlo
         }
     };
@@ -167,7 +167,7 @@ function MinimalCardResource(props: ResourceProps) {
         try {
             await moveResource(resourceId, moveData);
         } catch (error) {
-            console.error("❌ Error al mover el recurso:", error);
+            console.error("❌ Error moving resource:", error);
             throw error; // Re-lanzar para que el modal pueda manejarlo
         }
     };
@@ -222,7 +222,7 @@ function MinimalCardResource(props: ResourceProps) {
                                 handleToggleFavorite();
                             }}>
                                 <Star className="mr-2 h-4 w-4" />
-                                {isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+                                {isFavorite ? 'Remove from favorites' : 'Add to favorites'}
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={(e) => {
@@ -230,14 +230,14 @@ function MinimalCardResource(props: ResourceProps) {
                                 handleEdit();
                             }}>
                                 <Edit3 className="mr-2 h-4 w-4" />
-                                Editar
+                                Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={(e) => {
                                 e.stopPropagation();
                                 handleMove();
                             }}>
                                 <Move className="mr-2 h-4 w-4" />
-                                Mover
+                                Move
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem 
@@ -248,7 +248,7 @@ function MinimalCardResource(props: ResourceProps) {
                                 className="text-red-600 focus:text-red-600"
                             >
                                 <Trash2 className="mr-2 h-4 w-4" />
-                                Eliminar
+                                Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -267,7 +267,7 @@ function MinimalCardResource(props: ResourceProps) {
                             className="flex-1"
                         >
                             <Copy className="mr-2 h-4 w-4" />
-                            Copiar URL
+                            Copy URL
                         </Button>
                         <Button
                             variant="outline"

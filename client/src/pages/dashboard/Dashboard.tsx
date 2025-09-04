@@ -100,7 +100,7 @@ function AppDashboard() {
                 />
               ))
             ) : (
-              <p>No recents resources found.</p>
+              <p>No recent resources found.</p>
             )}
           </div>
         )}
