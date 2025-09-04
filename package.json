@@ -3,8 +3,6 @@
     "concurrently": "^8.2.2"
   },
   "scripts": {
-    "install:all": "npm install && cd client && npm install",
-    "dev": "concurrently \"npm:dev:*\"",
     "dev:client": "cd client && npm run dev",
     "dev:api": "cd api && dotnet run",
     "build:client": "cd client && npm run build"

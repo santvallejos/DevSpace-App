@@ -45,3 +45,6 @@ api/appsettings.Staging.json
 .env.local
 .env.production
 .env.staging
+
+api/appsettings.Development.json
+api/appsettings.json
