@@ -28,7 +28,7 @@ interface PreviewFolderProps {
  * Componente que muestra una vista previa de una carpeta con opciones para
  * eliminar, renombrar y mover la carpeta.
  */
-function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
+function PreviewFolder({ name = "Folder", onClick, id }: PreviewFolderProps) {
     const {
         folderSelected,
         deleteFolder,
@@ -201,7 +201,7 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
                                         </svg>
-                                        Renombrar
+                                        Rename
                                     </button>
                                 </li>
                                 <li>
@@ -217,7 +217,7 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
                                             <line x1="2" x2="22" y1="12" y2="12"/>
                                             <line x1="12" x2="12" y1="2" y2="22"/>
                                         </svg>
-                                        Mover
+                                        Move
                                     </button>
                                 </li>
                                 <li>
@@ -230,7 +230,7 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
                                             <polyline points="3,6 5,6 21,6"/>
                                             <path d="m19,6v14a2,2 0,0 1,-2,2H7a2,2 0,0 1,-2,-2V6m3,0V4a2,2 0,0 1,2,-2h4a2,2 0,0 1,2,2v2"/>
                                         </svg>
-                                        Eliminar
+                                        Delete
                                     </button>
                                 </li>
                             </ul>
@@ -247,24 +247,24 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
                             </svg>
-                            Renombrar carpeta
+                            Rename folder
                         </DialogTitle>
                         <DialogDescription>
-                            Introduce un nuevo nombre para la carpeta "{name}".
+                            Enter a new name for folder "{name}".
                         </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleRenameFolder}>
                         <div className="grid gap-4 py-4">
                             <div className="space-y-2">
                                 <Label htmlFor="name" className="text-sm font-medium">
-                                    Nuevo nombre
+                                    New name
                                 </Label>
                                 <Input
                                     id="name"
                                     type="text"
                                     value={newFolderName}
                                     onChange={(e) => setNewFolderName(e.target.value)}
-                                    placeholder="Introduce el nuevo nombre..."
+                                    placeholder="Enter the new name..."
                                     className="w-full"
                                     autoFocus
                                     onClick={stopPropagation}
@@ -274,12 +274,12 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
                         <DialogFooter className="gap-2">
                             <DialogClose asChild>
                                 <Button variant="outline" onClick={stopPropagation}>
-                                    Cancelar
+                                    Cancel
                                 </Button>
                             </DialogClose>
                             <DialogClose asChild>
                                 <Button type="submit" disabled={!newFolderName.trim()}>
-                                    Guardar cambios
+                                    Save changes
                                 </Button>
                             </DialogClose>
                         </DialogFooter>
@@ -300,16 +300,16 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
                                 <line x1="2" x2="22" y1="12" y2="12"/>
                                 <line x1="12" x2="12" y1="2" y2="22"/>
                             </svg>
-                            Mover carpeta
+                            Move folder
                         </DialogTitle>
                         <DialogDescription>
-                            Selecciona la carpeta de destino donde deseas mover "<span className="font-medium">{name}</span>".
+                            Select the destination folder where you want to move "<span className="font-medium">{name}</span>".
                         </DialogDescription>
                     </DialogHeader>
                     <div className="py-4">
                         <div className="mb-4 p-3 bg-muted/50 rounded-lg border">
-                            <p className="text-sm text-muted-foreground">Destino seleccionado:</p>
-                            <p className="font-medium">{folderSelected[0]?.name || 'Carpeta raíz'}</p>
+                            <p className="text-sm text-muted-foreground">Selected destination:</p>
+                            <p className="font-medium">{folderSelected[0]?.name || 'Root folder'}</p>
                         </div>
                         <div className="max-h-60 overflow-y-auto border rounded-lg">
                             <FolderTree />
@@ -318,12 +318,12 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
                     <DialogFooter className="gap-2">
                         <DialogClose asChild>
                             <Button variant="outline" onClick={stopPropagation}>
-                                Cancelar
+                                Cancel
                             </Button>
                         </DialogClose>
                         <DialogClose asChild>
                             <Button onClick={handleMoveFolder}>
-                                Mover carpeta
+                                Move folder
                             </Button>
                         </DialogClose>
                     </DialogFooter>
@@ -340,20 +340,20 @@ function PreviewFolder({ name = "Carpeta", onClick, id }: PreviewFolderProps) {
                                 <path d="M12 9v4"/>
                                 <path d="M12 17h.01"/>
                             </svg>
-                            ¿Eliminar esta carpeta?
+                            Delete this folder?
                         </AlertDialogTitle>
                         <AlertDialogDescription className="space-y-2">
-                            <p>Si eliminas la carpeta <span className='font-semibold text-foreground'>"{name}"</span>, también se eliminarán todas sus subcarpetas y recursos.</p>
-                            <p className="text-sm text-muted-foreground">Esta acción no se puede deshacer.</p>
+                            <p>If you delete the folder <span className='font-semibold text-foreground'>"{name}"</span>, all its subfolders and resources will also be deleted.</p>
+                            <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="gap-2">
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction 
                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90" 
                             onClick={handleDeleteFolder}
                         >
-                            Eliminar carpeta
+                            Delete folder
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

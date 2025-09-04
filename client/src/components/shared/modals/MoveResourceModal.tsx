@@ -149,7 +149,7 @@ function MoveResourceModal({
 
                             {/* Folder Tree */}
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Select a folder:
                                 </label>
                                 <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-3 bg-gray-50 dark:bg-gray-700/50 max-h-64 overflow-y-auto">

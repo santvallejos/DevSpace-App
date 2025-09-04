@@ -58,10 +58,10 @@ function ResourceDetailDialog({
     // Función para obtener el nombre del tipo de recurso
     const getResourceTypeName = () => {
         switch (resource.type) {
-            case 0: return "URL / Enlace";
-            case 1: return "Código";
-            case 2: return "Texto / Notas";
-            default: return "Desconocido";
+            case 0: return "URL / Link";
+            case 1: return "Code";
+            case 2: return "Text / Notes";
+            default: return "Unknown";
         }
     };
 
@@ -95,7 +95,7 @@ function ResourceDetailDialog({
 
     // Función para formatear la fecha
     const formatDate = (date: Date) => {
-        return new Intl.DateTimeFormat('es-ES', {
+        return new Intl.DateTimeFormat('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
@@ -166,7 +166,7 @@ function ResourceDetailDialog({
                         <div className="space-y-3">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Contenido
+                                    Content
                                 </h3>
                                 <div className="flex items-center gap-2">
                                     {resource.type === 0 && (
@@ -206,7 +206,7 @@ function ResourceDetailDialog({
                         <div className="space-y-2">
                             <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                                 <Calendar className="w-4 h-4" />
-                                <span>Fecha de creación</span>
+                                <span>Creation date</span>
                             </div>
                             <p className="text-sm font-medium">
                                 {formatDate(resource.createdOn)}

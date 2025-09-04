@@ -279,7 +279,7 @@ function MinimalCardResource(props: ResourceProps) {
                             className="flex-1"
                         >
                             <ExternalLink className="mr-2 h-4 w-4" />
-                            Abrir
+                            Open
                         </Button>
                     </div>
                 )}
@@ -290,10 +290,10 @@ function MinimalCardResource(props: ResourceProps) {
                 isOpen={showDeleteDialog}
                 onClose={() => setShowDeleteDialog(false)}
                 onConfirm={handleDeleteResource}
-                title="Eliminar recurso"
-                description={`¿Estás seguro de que deseas eliminar "${name}"? Esta acción no se puede deshacer.`}
-                confirmText="Eliminar"
-                cancelText="Cancelar"
+                title="Delete resource"
+                description={`Are you sure you want to delete "${name}"? This action cannot be undone.`}
+                confirmText="Delete"
+                cancelText="Cancel"
                 isDestructive={true}
                 isLoading={isDeleting}
             />
