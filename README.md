@@ -15,11 +15,80 @@ Devspace is an application designed to help you organize and access all your res
 - Electron
 - Shadcn UI y Magic UI
 
-## Basic outline of the project
-<img src="/client/public/Devspace - excalidraw.png" alt="Devspace"/>
 <hr />
 
-## Installation
+## Installation & Requirements
+
+### Prerequisites
+- [.NET 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) installed
+- A valid MongoDB Atlas connection URL
+
+### Installation Steps
+1. Clone or download the repository:
+   ```sh
+   git clone https://github.com/santvallejos/DevSpace-App.git
+   ```
+2. Open the project in your IDE
+3. (Optional) Install dependencies in the root folder:
+   ```sh
+   npm install
+   ```
+4. Go to the client directory and install dependencies:
+   ```sh
+   cd client
+   npm install
+   ```
+5. Go back to the root and enter the API directory:
+   ```sh
+   cd ../
+   cd api
+   ```
+6. Create the files `appsettings.json` and `appsettings.Development.json` inside the `api` folder.
+appsettings.json
+```json
+{
+    "Logging": {
+        "LogLevel": {
+            "Default": "Information",
+            "Microsoft.AspNetCore": "Warning"
+        }
+    },
+    "AllowedHosts": "*",
+    "MongoDB": {
+        "ConnectionString": "mongodb+srv://<username>:<db_password>@devspace.yu6f9pg.mongodb.net/?retryWrites=true&w=majority&appName=Devspace",
+        "DatabaseName": "Unity"
+    },
+    "ConnectionStrings": {
+        "DefaultConnection": "mongodb://localhost:27017/DevSpace",
+        "Database": "Unity"
+    }
+}
+```
+appsettings.Development.json
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+    "MongoDB": {
+        "ConnectionString": "mongodb+srv://<username>:<db_password>@devspace.yu6f9pg.mongodb.net/?retryWrites=true&w=majority&appName=Devspace",
+        "DatabaseName": "Unity"
+    } 
+}
+```
+
+7. Add your MongoDB Atlas connection URL in both files.
+8. Restore .NET dependencies:
+   ```sh
+   dotnet restore
+   ```
+9.  Run the API:
+   ```sh
+   dotnet run
+   ```
 
 
 ## Architecture
